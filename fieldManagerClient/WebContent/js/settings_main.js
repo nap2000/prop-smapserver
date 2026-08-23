@@ -91,6 +91,11 @@ const moment = window.moment;
 			e.preventDefault();
 			panelChange($(this), 'email');
 		});
+		$('#dhis2Tab a').on('click',function (e) {
+			e.preventDefault();
+			panelChange($(this), 'dhis2');
+			getDhis2Server();
+		});
 		$('#otherTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'other');
@@ -226,6 +231,17 @@ const moment = window.moment;
 					}
 				}
 			});
+		});
+
+		$('#saveDhis2').click(function() {
+			saveDhis2Server();
+		});
+		$('#testDhis2').click(function() {
+			// Save first, so the button tests what is on screen rather than what was stored
+			saveDhis2Server(testDhis2Server);
+		});
+		$('#deleteDhis2').click(function() {
+			deleteDhis2Server();
 		});
 
 		$('#saveOperationsSettings').click(function() {
@@ -1182,6 +1198,156 @@ const moment = window.moment;
 	/*
 	 * Get the Operations Monitor settings
 	 */
+	/*
+	 * DHIS2 connection.  One per organisation, a test instance belongs in its own organisation
+	 */
+	function getDhis2Server() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/dhis2/server",
+			dataType: 'json',
+			cache: false,
+			success: function(s) {
+				removeHourglass();
+				$('#dh_label').val(s.label || '');
+				$('#dh_base_url').val(s.base_url || '');
+				$('#dh_api_version').val(s.api_version || '');
+				$('#dh_enabled').prop('checked', s.label ? s.enabled : true);
+				$('#dh_last_test').text(s.last_test_result
+					? s.last_test_result + (s.last_tested ? ' (' + s.last_tested + ')' : '')
+					: '-');
+
+				// The token is never sent to the browser.  Blank means keep the stored one
+				$('#dh_api_token').val('');
+				$('#dh_token_help').text(s.token_set ? localise.set["u_dh_token_help"] : '');
+				$('#dh_test_result').empty();
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	function saveDhis2Server(callback) {
+
+		var s = {
+			label: $('#dh_label').val().trim(),
+			base_url: $('#dh_base_url').val().trim(),
+			api_version: $('#dh_api_version').val().trim(),
+			enabled: $('#dh_enabled').prop('checked')
+		};
+
+		// Only send the token when one has been typed, otherwise the stored one is kept
+		var token = $('#dh_api_token').val();
+		if(token && token.trim().length > 0) {
+			s.api_token = token.trim();
+		}
+
+		addHourglass();
+		$.ajax({
+			type: 'PUT',
+			url: "/surveyKPI/dhis2/server",
+			contentType: 'application/json',
+			data: JSON.stringify(s),
+			success: function() {
+				removeHourglass();
+				$('#dh_api_token').val('');
+				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success')
+					.html(localise.set["msg_upd"]);
+				getDhis2Server();
+				if(callback) {
+					callback();
+				}
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_upd"] + xhr.responseText);
+			}
+		});
+	}
+
+	function deleteDhis2Server() {
+		addHourglass();
+		$.ajax({
+			type: 'DELETE',
+			url: "/surveyKPI/dhis2/server",
+			success: function() {
+				removeHourglass();
+				getDhis2Server();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_del"] + xhr.responseText);
+			}
+		});
+	}
+
+	function testDhis2Server() {
+		$('#dh_test_result').empty();
+		addHourglass();
+		$.ajax({
+			type: 'POST',
+			url: "/surveyKPI/dhis2/server/test",
+			dataType: 'json',
+			success: function(t) {
+				removeHourglass();
+				showDhis2TestResult(t);
+				getDhis2Server();		// The result is stored against the connection
+			},
+			error: function(xhr) {
+				removeHourglass();
+				$('#dh_test_result').html('<div class="alert alert-danger"></div>');
+				$('#dh_test_result div').text(xhr.responseText || localise.set["msg_err_dh_test"]);
+			}
+		});
+	}
+
+	/*
+	 * A connection can be reachable and authenticated and still be unable to write anything, so
+	 * the warnings matter as much as the version
+	 */
+	function showDhis2TestResult(t) {
+
+		var $out = $('#dh_test_result').empty();
+
+		if(!t.reachable) {
+			$('<div class="alert alert-danger">').text(
+				localise.set["msg_err_dh_test"] + (t.error ? ': ' + t.error : '')).appendTo($out);
+		} else if(!t.authenticated) {
+			$('<div class="alert alert-danger">').text(t.error || '').appendTo($out);
+		} else {
+			$('<div class="alert alert-success">').text('DHIS2 ' + (t.version || '?')).appendTo($out);
+
+			var $dl = $('<dl class="row">').appendTo($out);
+			if(t.system_name) {
+				$('<dt class="col-sm-5">').text(localise.set["c_name"]).appendTo($dl);
+				$('<dd class="col-sm-7">').text(t.system_name).appendTo($dl);
+			}
+			if(t.database_name) {
+				$('<dt class="col-sm-5">').text('Database').appendTo($dl);
+				$('<dd class="col-sm-7">').text(t.database_name).appendTo($dl);
+			}
+			if(t.username) {
+				$('<dt class="col-sm-5">').text(localise.set["u_dh_user"]).appendTo($dl);
+				$('<dd class="col-sm-7">').text(t.username).appendTo($dl);
+			}
+			$('<dt class="col-sm-5">').text(localise.set["u_dh_capture_ou"]).appendTo($dl);
+			$('<dd class="col-sm-7">').text(t.capture_org_units).appendTo($dl);
+		}
+
+		if(t.warnings && t.warnings.length > 0) {
+			for(var i = 0; i < t.warnings.length; i++) {
+				$('<div class="alert alert-warning">').text(t.warnings[i]).appendTo($out);
+			}
+		}
+	}
+
 	function getOperationsSettings() {
 
 		addHourglass();

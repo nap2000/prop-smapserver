@@ -1788,8 +1788,9 @@ define({
     "u_sp_sync_now": "Sync Now",
     "msg_err_sp_sync": "Sync failed",
 
-    // dhis2 connections (shared resources tab)
+    // dhis2 connection (settings tab).  One per organisation
     "c_dhis2": "DHIS2",
+    "u_dh_msg": "Connect this organisation to a DHIS2 instance. A test instance should be set up in its own organisation.",
     "u_dh_name": "Name",
     "u_dh_url": "DHIS2 URL",
     "u_dh_token": "Personal Access Token",

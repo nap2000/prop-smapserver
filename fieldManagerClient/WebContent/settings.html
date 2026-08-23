@@ -105,6 +105,7 @@
 				<li id="deviceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_ft"></a></li>
 				<li id="webformTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_wf"></a></li>
 				<li id="emailTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_email"></a></li>
+				<li id="dhis2Tab" class="nav-item"><a href="#" class="nav-link lang" data-lang="c_dhis2"></a></li>
 				<li id="otherTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_other"></a></li>
 				<li id="operationsTab" class="nav-item restrict_role admin_role"><a href="#" class="nav-link lang" data-lang="ops_settings_tab"></a></li>
 				<li id="sensitiveTab" class="nav-item restrict_role security_role"><a href="#" class="nav-link lang" data-lang="u_sens_data"></a></li>
@@ -920,6 +921,71 @@
 				</div>
 
 				<!-- The panel for setting organisation email settings -->
+				<div id="dhis2Panel" style="display:none;" class="usertab mt-4">
+
+					<p class="lang" data-lang="u_dh_msg"></p>
+					<div class="container">
+						<form id="dhis2_form">
+
+							<div class="form-group row">
+								<label for="dh_label" data-lang="u_dh_name" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="dh_label" maxlength="64">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dh_base_url" data-lang="u_dh_url" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<input class="form-control" type="url" id="dh_base_url" placeholder="https://dhis2.example.org">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dh_api_token" data-lang="u_dh_token" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<input class="form-control" type="password" id="dh_api_token" autocomplete="new-password">
+									<small id="dh_token_help" class="form-text text-muted"></small>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dh_api_version" data-lang="u_dh_version" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="dh_api_version" maxlength="8" placeholder="42">
+									<small class="form-text text-muted lang" data-lang="u_dh_version_help"></small>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dh_enabled" data-lang="c_enabled" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<input type="checkbox" id="dh_enabled" checked>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label data-lang="u_dh_last_test" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<span id="dh_last_test" class="form-text"></span>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<div class="col-sm-4"></div>
+								<div class="col-sm-6">
+									<button id="saveDhis2" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+									<button id="testDhis2" type="button" class="btn btn-secondary lang" data-lang="u_dh_test_now"></button>
+									<button id="deleteDhis2" type="button" class="btn btn-danger float-end lang" data-lang="c_delete"></button>
+								</div>
+							</div>
+
+							<div id="dh_test_result" class="mt-3"></div>
+
+						</form>
+					</div>
+				</div>
+
 				<div id="otherPanel" style="display:none;" class="usertab mt-4">
 
 					<p class="lang" data-lang="u_other_msg"></p>

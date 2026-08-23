@@ -111,7 +111,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<li id="offlineMapTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_offline_maps"></a></li>
 				<li id="locationTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_location"></a></li>
 				<li id="spListTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_sharepoint_list"></a></li>
-				<li id="dhis2Tab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_dhis2"></a></li>
 			</ul>
 		</div>
 		<div class="card-body">
@@ -294,29 +293,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 									</tr>
 								</thead>
 								<tbody id="sp_list_body"></tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-
-				<div class="resourcePanel" id="dhis2Panel" style="display:none;">
-					<div class="container-responsive">
-						<div id="dh_msg" style="display:none;" class="alert" role="alert"></div>
-						<button type="button" id="addDhis2" class="btn btn-success mb-2">
-							<span class="lang" data-lang="c_add"></span>
-						</button>
-						<div class="table-responsive mt-2">
-							<table class="table table-striped" id="dhis2_table">
-								<thead>
-									<tr>
-										<th class="lang" data-lang="u_dh_name"></th>
-										<th class="lang" data-lang="u_dh_url"></th>
-										<th class="lang" data-lang="u_dh_last_test"></th>
-										<th class="lang" data-lang="c_enabled"></th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody id="dhis2_body"></tbody>
 							</table>
 						</div>
 					</div>
@@ -573,66 +549,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
 				<button id="saveSpList" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Popup to add/edit a DHIS2 connection -->
-<div id="dhis2EditPopup" class="modal fade" tabindex="-1" aria-labelledby="dhis2EditLabel" aria-hidden="true" data-bs-backdrop="static">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 id="dhis2EditLabel" class="modal-title lang" data-lang="c_dhis2"></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="dhis2EditForm">
-					<div class="mb-3">
-						<label class="form-label lang" data-lang="u_dh_name" for="dh_label"></label>
-						<input type="text" id="dh_label" class="form-control" maxlength="64" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label lang" data-lang="u_dh_url" for="dh_base_url"></label>
-						<input type="url" id="dh_base_url" class="form-control" placeholder="https://dhis2.example.org" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label lang" data-lang="u_dh_token" for="dh_api_token"></label>
-						<input type="password" id="dh_api_token" class="form-control" autocomplete="new-password">
-						<div id="dh_token_help" class="form-text lang" data-lang="u_dh_token_help"></div>
-					</div>
-					<div class="mb-3">
-						<label class="form-label lang" data-lang="u_dh_version" for="dh_api_version"></label>
-						<input type="text" id="dh_api_version" class="form-control" maxlength="8" placeholder="42">
-						<div class="form-text lang" data-lang="u_dh_version_help"></div>
-					</div>
-					<div class="mb-3 form-check">
-						<input type="checkbox" id="dh_enabled" class="form-check-input" checked>
-						<label class="form-check-label lang" data-lang="c_enabled" for="dh_enabled"></label>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
-				<button id="saveDhis2" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Result of testing a DHIS2 connection -->
-<div id="dhis2TestPopup" class="modal fade" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title lang" data-lang="u_dh_test_now"></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div id="dh_test_result"></div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
 			</div>
 		</div>
 	</div>
