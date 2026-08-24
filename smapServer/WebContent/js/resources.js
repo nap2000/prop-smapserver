@@ -304,6 +304,10 @@ $(function() {
 			$('#dh_name_preview').text($(this).val().trim());
 		});
 
+		$('#dh_resource_type').change(function() {
+			dhis2TypeChanged();
+		});
+
 		/*
          * Set up location tabs
          */
@@ -960,6 +964,7 @@ $(function() {
 			let m = data[i];
 			h[++idx] = '<tr>';
 			h[++idx] = '<td><code>dhis2_' + htmlEncode(m.smap_name) + '</code></td>';
+			h[++idx] = '<td>' + htmlEncode(dhis2TypeLabel(m.resource_type)) + '</td>';
 			h[++idx] = '<td>' + (m.row_count ? htmlEncode(String(m.row_count)) : '-') + '</td>';
 			h[++idx] = '<td>' + htmlEncode(String(m.refresh_minutes)) + '</td>';
 			// The result matters as much as the time, a sync that failed says why here
@@ -1042,33 +1047,93 @@ $(function() {
 		});
 	}
 
+	function dhis2TypeLabel(type) {
+		if(type === 'optionset') {
+			return localise.set["u_dh_type_optionset"];
+		}
+		return localise.set["u_dh_type_orgunits"];
+	}
+
+	/*
+	 * Each resource type needs different details, so only the relevant ones are shown
+	 */
+	function dhis2TypeChanged(selectedRef) {
+		let type = $('#dh_resource_type').val();
+		if(type === 'optionset') {
+			$('#dh_ou_filter_row').hide();
+			$('#dh_optionset_row').show();
+			loadDhis2OptionSets(selectedRef);
+		} else {
+			$('#dh_optionset_row').hide();
+			$('#dh_ou_filter_row').show();
+		}
+	}
+
+	/*
+	 * The option sets are read from the client's DHIS2, so the user chooses from a list rather
+	 * than having to know an identifier
+	 */
+	function loadDhis2OptionSets(selectedRef) {
+		$.ajax({
+			url: '/surveyKPI/dhis2/server/optionsets',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				if(handleLogout(data)) {
+					let $sel = $('#dh_optionset').empty();
+					(data || []).forEach(function(os) {
+						let label = os.name + (os.code ? ' (' + os.code + ')' : '');
+						$sel.append($('<option>').val(os.uid).text(label));
+					});
+					if(selectedRef) {
+						$sel.val(selectedRef);
+					}
+				}
+			},
+			error: function(xhr) {
+				// Usually no connection set up, or DHIS2 unreachable.  Say which
+				$('#dh_optionset').empty();
+				$('#dh_sync_msg')
+					.removeClass('alert-success').addClass('alert-danger')
+					.text(xhr.responseText || localise.set["c_error"])
+					.show();
+			}
+		});
+	}
+
 	function edit_dhis2_map(idx) {
 		$('#dh_sync_msg').hide();
 		if(typeof idx !== 'undefined') {
 			let m = gDhis2Maps[idx];
+			$('#dh_resource_type').val(m.resource_type || 'orgunits');
 			$('#dh_smap_name').val(m.smap_name);
 			$('#dh_ou_filter').val(m.ou_filter || '');
 			$('#dh_refresh_minutes').val(m.refresh_minutes);
 			$('#dh_map_enabled').prop('checked', m.enabled);
 			$('#dh_name_preview').text(m.smap_name);
 			gDhis2MapEditId = m.id;
+			dhis2TypeChanged(m.dhis2_ref);
 		} else {
+			$('#dh_resource_type').val('orgunits');
 			$('#dh_smap_name').val('');
 			$('#dh_ou_filter').val('');
 			$('#dh_refresh_minutes').val(1440);
 			$('#dh_map_enabled').prop('checked', true);
 			$('#dh_name_preview').text('');
 			gDhis2MapEditId = -1;
+			dhis2TypeChanged();
 		}
 	}
 
 	function saveDhis2Map() {
+		let type = $('#dh_resource_type').val();
 		let m = {
 			id: gDhis2MapEditId,
 			smap_name: $('#dh_smap_name').val().trim(),
-			// Only the organisation unit hierarchy is supported so far
-			resource_type: 'orgunits',
-			ou_filter: $('#dh_ou_filter').val().trim(),
+			resource_type: type,
+			// Each type carries only what it needs, so an old value cannot linger after a change
+			dhis2_ref: type === 'optionset' ? $('#dh_optionset').val() : '',
+			ou_filter: type === 'orgunits' ? $('#dh_ou_filter').val().trim() : '',
 			refresh_minutes: parseInt($('#dh_refresh_minutes').val(), 10) || 1440,
 			enabled: $('#dh_map_enabled').prop('checked')
 		};

@@ -310,6 +310,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<thead>
 									<tr>
 										<th class="lang" data-lang="u_sp_resource_name"></th>
+										<th class="lang" data-lang="c_type"></th>
 										<th class="lang" data-lang="c_records"></th>
 										<th class="lang" data-lang="u_sp_refresh_mins"></th>
 										<th class="lang" data-lang="u_sp_last_sync"></th>
@@ -614,11 +615,22 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-body">
 				<form id="dhis2MapEditForm">
 					<div class="mb-3">
+						<label class="form-label lang" data-lang="c_type" for="dh_resource_type"></label>
+						<select id="dh_resource_type" class="form-select">
+							<option value="orgunits" class="lang" data-lang="u_dh_type_orgunits"></option>
+							<option value="optionset" class="lang" data-lang="u_dh_type_optionset"></option>
+						</select>
+					</div>
+					<div class="mb-3">
 						<label class="form-label lang" data-lang="u_sp_resource_name" for="dh_smap_name"></label>
 						<input type="text" id="dh_smap_name" class="form-control" maxlength="64" required>
 						<div class="form-text"><code>dhis2_</code><span id="dh_name_preview"></span></div>
 					</div>
-					<div class="mb-3">
+					<div class="mb-3" id="dh_optionset_row" style="display:none;">
+						<label class="form-label lang" data-lang="u_dh_type_optionset" for="dh_optionset"></label>
+						<select id="dh_optionset" class="form-select"></select>
+					</div>
+					<div class="mb-3" id="dh_ou_filter_row">
 						<label class="form-label lang" data-lang="c_filter" for="dh_ou_filter"></label>
 						<input type="text" id="dh_ou_filter" class="form-control" maxlength="64">
 						<div class="form-text lang" data-lang="u_dh_ou_filter_help"></div>

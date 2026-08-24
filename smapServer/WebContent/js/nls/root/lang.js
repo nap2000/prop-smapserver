@@ -1808,6 +1808,8 @@ define({
     // dhis2 reference data (shared resources tab).  The rest of the labels on that tab reuse
     // the existing resource, refresh, sync and record strings
     "u_dh_ou_filter_help": "Optional. The identifier of an organisation unit, to copy only that part of the hierarchy",
+    "u_dh_type_orgunits": "Organisation units",
+    "u_dh_type_optionset": "Option set",
     "msg_err_dh_test": "Could not reach DHIS2",
 
     // workflow
