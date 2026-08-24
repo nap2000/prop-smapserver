@@ -970,6 +970,7 @@ $(function() {
 			h[++idx] = '<td>' + (m.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
 			h[++idx] = '<td class="text-nowrap">';
 			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 dh_edit_map"><i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-secondary btn-sm mx-1 dh_data_map"><i class="fas fa-list"></i></button>';
 			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-primary btn-sm mx-1 dh_sync_map" title="' + localise.set["u_sp_sync_now"] + '"><i class="fas fa-sync-alt"></i></button>';
 			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 dh_del_map"><i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
@@ -981,11 +982,63 @@ $(function() {
 			edit_dhis2_map($(this).data('idx'));
 			window.bsModalShow('#dhis2MapEditPopup');
 		});
+		$('.dh_data_map').click(function() {
+			show_dhis2_data(gDhis2Maps[$(this).data('idx')].id);
+		});
 		$('.dh_sync_map').click(function() {
 			sync_dhis2_map(gDhis2Maps[$(this).data('idx')].id);
 		});
 		$('.dh_del_map').click(function() {
 			delete_dhis2_map(gDhis2Maps[$(this).data('idx')].id);
+		});
+	}
+
+	/*
+	 * The columns are generated from the client's own DHIS2 level names and group set codes, so
+	 * they cannot be guessed when writing a choice filter.  Showing the data is the quickest way
+	 * to find out what to filter on
+	 */
+	function show_dhis2_data(id) {
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/dhis2/maps/' + id + '/data',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(!handleLogout(data)) {
+					return;
+				}
+
+				$('#dh_data_title').text(data.name);
+
+				let shown = (data.rows || []).length;
+				$('#dh_data_summary').text(shown
+					? shown + ' / ' + data.total + ' ' + localise.set["c_records"]
+					: localise.set["c_none"]);
+
+				let head = [], idx = -1;
+				(data.columns || []).forEach(function(c) {
+					head[++idx] = '<th>' + htmlEncode(c) + '</th>';
+				});
+				$('#dh_data_head').html(head.join(''));
+
+				let body = [], bidx = -1;
+				(data.rows || []).forEach(function(row) {
+					body[++bidx] = '<tr>';
+					row.forEach(function(v) {
+						body[++bidx] = '<td>' + htmlEncode(v) + '</td>';
+					});
+					body[++bidx] = '</tr>';
+				});
+				$('#dh_data_body').html(body.join(''));
+
+				window.bsModalShow('#dhis2DataPopup');
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(xhr.responseText || localise.set["c_error"]);
+			}
 		});
 	}
 

@@ -579,6 +579,30 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
+<!-- Shows the columns and first rows of a synchronised DHIS2 resource -->
+<div id="dhis2DataPopup" class="modal fade" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><span id="dh_data_title"></span></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p id="dh_data_summary" class="text-muted"></p>
+				<div class="table-responsive">
+					<table class="table table-sm table-striped">
+						<thead><tr id="dh_data_head"></tr></thead>
+						<tbody id="dh_data_body"></tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Popup to add/edit a DHIS2 reference data resource -->
 <div id="dhis2MapEditPopup" class="modal fade" tabindex="-1" aria-labelledby="dhis2MapEditLabel" aria-hidden="true" data-bs-backdrop="static">
 	<div class="modal-dialog">
