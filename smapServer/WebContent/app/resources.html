@@ -111,6 +111,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<li id="offlineMapTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_offline_maps"></a></li>
 				<li id="locationTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_location"></a></li>
 				<li id="spListTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_sharepoint_list"></a></li>
+				<li id="dhis2Tab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_dhis2"></a></li>
 			</ul>
 		</div>
 		<div class="card-body">
@@ -293,6 +294,30 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 									</tr>
 								</thead>
 								<tbody id="sp_list_body"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="resourcePanel" id="dhis2Panel" style="display:none;">
+					<div class="container-responsive">
+						<div id="dh_sync_msg" style="display:none;" class="alert" role="alert"></div>
+						<button type="button" id="addDhis2Map" class="btn btn-success mb-2">
+							<span class="lang" data-lang="c_add"></span>
+						</button>
+						<div class="table-responsive mt-2">
+							<table class="table table-striped" id="dhis2_map_table">
+								<thead>
+									<tr>
+										<th class="lang" data-lang="u_sp_resource_name"></th>
+										<th class="lang" data-lang="c_records"></th>
+										<th class="lang" data-lang="u_sp_refresh_mins"></th>
+										<th class="lang" data-lang="u_sp_last_sync"></th>
+										<th class="lang" data-lang="c_enabled"></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="dhis2_map_body"></tbody>
 							</table>
 						</div>
 					</div>
@@ -549,6 +574,44 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
 				<button id="saveSpList" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Popup to add/edit a DHIS2 reference data resource -->
+<div id="dhis2MapEditPopup" class="modal fade" tabindex="-1" aria-labelledby="dhis2MapEditLabel" aria-hidden="true" data-bs-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="dhis2MapEditLabel" class="modal-title lang" data-lang="c_dhis2"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="dhis2MapEditForm">
+					<div class="mb-3">
+						<label class="form-label lang" data-lang="u_sp_resource_name" for="dh_smap_name"></label>
+						<input type="text" id="dh_smap_name" class="form-control" maxlength="64" required>
+						<div class="form-text"><code>dhis2_</code><span id="dh_name_preview"></span></div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label lang" data-lang="c_filter" for="dh_ou_filter"></label>
+						<input type="text" id="dh_ou_filter" class="form-control" maxlength="64">
+						<div class="form-text lang" data-lang="u_dh_ou_filter_help"></div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label lang" data-lang="u_sp_refresh_mins" for="dh_refresh_minutes"></label>
+						<input type="number" id="dh_refresh_minutes" class="form-control" min="1" value="1440" required>
+					</div>
+					<div class="mb-3 form-check">
+						<input type="checkbox" id="dh_map_enabled" class="form-check-input" checked>
+						<label class="form-check-label lang" data-lang="c_enabled" for="dh_map_enabled"></label>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="saveDhis2Map" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>

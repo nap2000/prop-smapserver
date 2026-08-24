@@ -1804,6 +1804,10 @@ define({
     "u_dh_capture_ou": "Data capture organisation units",
     "u_dh_no_capture_ou": "This DHIS2 user has no data capture organisation units. Data sent from Smap will be rejected until org units are assigned to the user.",
     "u_dh_no_add_data": "This DHIS2 user does not report the authority to add data values. Exporting data may be rejected.",
+
+    // dhis2 reference data (shared resources tab).  The rest of the labels on that tab reuse
+    // the existing resource, refresh, sync and record strings
+    "u_dh_ou_filter_help": "Optional. The identifier of an organisation unit, to copy only that part of the hierarchy",
     "msg_err_dh_test": "Could not reach DHIS2",
 
     // workflow

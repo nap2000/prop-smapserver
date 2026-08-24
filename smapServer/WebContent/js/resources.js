@@ -282,6 +282,29 @@ $(function() {
 		$('#saveSpList').click(function() { saveSpList(); });
 
 		/*
+         * Set up DHIS2 reference data tab
+         */
+		$('#dhis2Tab a').click(function (e) {
+			e.preventDefault();
+			window.bsTabShow(this);
+			$('.resourcePanel').hide();
+			$('#dhis2Panel').show();
+			getDhis2Maps();
+		});
+
+		$('#addDhis2Map').click(function() {
+			edit_dhis2_map();
+			window.bsModalShow('#dhis2MapEditPopup');
+		});
+
+		$('#saveDhis2Map').click(function() { saveDhis2Map(); });
+
+		// Show the name a form will use, as it is typed
+		$('#dh_smap_name').on('input', function() {
+			$('#dh_name_preview').text($(this).val().trim());
+		});
+
+		/*
          * Set up location tabs
          */
 		$('#addNfc').click(function(){
@@ -302,7 +325,7 @@ $(function() {
 		 * Do it here as menus will have been set automatically according to security privileges
 		 */
 		if(gIsSurvey) {
-			$('#mapTab, #locationTab, #spListTab').hide();
+			$('#mapTab, #locationTab, #spListTab, #dhis2Tab').hide();
 			$('#m_monitor, #m_tm, #m_user, #m_settings, #m_logs').hide();
 			$('#m_form').show();
 			$('#page_title').text(localise.set["sr_sm"]);
@@ -900,6 +923,176 @@ $(function() {
 
 			$element.html(h.join(""));
 		}
+	}
+
+	// -------------------------------------------------------------------------
+	// DHIS2 reference data
+	// -------------------------------------------------------------------------
+
+	let gDhis2Maps = [];
+	let gDhis2MapEditId = -1;
+
+	function getDhis2Maps() {
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/dhis2/maps',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					gDhis2Maps = data;
+					updateDhis2MapTable(data);
+				}
+			},
+			error: function(xhr) {
+				removeHourglass();
+				if(xhr.readyState !== 0 && xhr.status !== 0) {
+					console.log("Error getting DHIS2 resources: " + xhr.responseText);
+				}
+			}
+		});
+	}
+
+	function updateDhis2MapTable(data) {
+		let h = [], idx = -1;
+		for(let i = 0; i < data.length; i++) {
+			let m = data[i];
+			h[++idx] = '<tr>';
+			h[++idx] = '<td><code>dhis2_' + htmlEncode(m.smap_name) + '</code></td>';
+			h[++idx] = '<td>' + (m.row_count ? htmlEncode(String(m.row_count)) : '-') + '</td>';
+			h[++idx] = '<td>' + htmlEncode(String(m.refresh_minutes)) + '</td>';
+			// The result matters as much as the time, a sync that failed says why here
+			h[++idx] = '<td>' + (m.last_sync ? htmlEncode(m.last_sync) : '-')
+					+ (m.last_sync_result && m.last_sync_result !== 'OK'
+						? '<br><span class="text-danger">' + htmlEncode(m.last_sync_result) + '</span>' : '')
+					+ '</td>';
+			h[++idx] = '<td>' + (m.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
+			h[++idx] = '<td class="text-nowrap">';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 dh_edit_map"><i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-primary btn-sm mx-1 dh_sync_map" title="' + localise.set["u_sp_sync_now"] + '"><i class="fas fa-sync-alt"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 dh_del_map"><i class="fas fa-trash-alt"></i></button>';
+			h[++idx] = '</td>';
+			h[++idx] = '</tr>';
+		}
+		$('#dhis2_map_body').html(h.join(''));
+
+		$('.dh_edit_map').click(function() {
+			edit_dhis2_map($(this).data('idx'));
+			window.bsModalShow('#dhis2MapEditPopup');
+		});
+		$('.dh_sync_map').click(function() {
+			sync_dhis2_map(gDhis2Maps[$(this).data('idx')].id);
+		});
+		$('.dh_del_map').click(function() {
+			delete_dhis2_map(gDhis2Maps[$(this).data('idx')].id);
+		});
+	}
+
+	function edit_dhis2_map(idx) {
+		$('#dh_sync_msg').hide();
+		if(typeof idx !== 'undefined') {
+			let m = gDhis2Maps[idx];
+			$('#dh_smap_name').val(m.smap_name);
+			$('#dh_ou_filter').val(m.ou_filter || '');
+			$('#dh_refresh_minutes').val(m.refresh_minutes);
+			$('#dh_map_enabled').prop('checked', m.enabled);
+			$('#dh_name_preview').text(m.smap_name);
+			gDhis2MapEditId = m.id;
+		} else {
+			$('#dh_smap_name').val('');
+			$('#dh_ou_filter').val('');
+			$('#dh_refresh_minutes').val(1440);
+			$('#dh_map_enabled').prop('checked', true);
+			$('#dh_name_preview').text('');
+			gDhis2MapEditId = -1;
+		}
+	}
+
+	function saveDhis2Map() {
+		let m = {
+			id: gDhis2MapEditId,
+			smap_name: $('#dh_smap_name').val().trim(),
+			// Only the organisation unit hierarchy is supported so far
+			resource_type: 'orgunits',
+			ou_filter: $('#dh_ou_filter').val().trim(),
+			refresh_minutes: parseInt($('#dh_refresh_minutes').val(), 10) || 1440,
+			enabled: $('#dh_map_enabled').prop('checked')
+		};
+		if(!m.smap_name) {
+			return;
+		}
+		// The server validates the name and says why it was rejected, so there is no second
+		// copy of the rule here to drift out of step
+		let isNew = gDhis2MapEditId < 0;
+		addHourglass();
+		$.ajax({
+			type: isNew ? 'POST' : 'PUT',
+			url: '/surveyKPI/dhis2/maps' + (isNew ? '' : '/' + gDhis2MapEditId),
+			contentType: 'application/json',
+			data: JSON.stringify(m),
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					window.bsModalHide('#dhis2MapEditPopup');
+					getDhis2Maps();
+				}
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_save"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	function delete_dhis2_map(id) {
+		addHourglass();
+		$.ajax({
+			type: 'DELETE',
+			url: '/surveyKPI/dhis2/maps/' + id,
+			success: function() {
+				removeHourglass();
+				getDhis2Maps();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_del"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	/*
+	 * A sync can fail for reasons the user can act on, a missing connection or a filter that
+	 * matches nothing, so show the reason from the server rather than a generic failure
+	 */
+	function sync_dhis2_map(id) {
+		$('#dh_sync_msg').hide();
+		addHourglass();
+		$.ajax({
+			type: 'POST',
+			url: '/surveyKPI/dhis2/maps/' + id + '/sync',
+			success: function(data) {
+				removeHourglass();
+				var count = '';
+				try {
+					var result = (typeof data === 'object') ? data : JSON.parse(data);
+					count = ' ' + result.count + ' ' + localise.set["c_records"];
+				} catch(e) {}
+				$('#dh_sync_msg')
+					.removeClass('alert-danger').addClass('alert-success')
+					.text(localise.set["c_success"] + count)
+					.show();
+				getDhis2Maps();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				$('#dh_sync_msg')
+					.removeClass('alert-success').addClass('alert-danger')
+					.text(xhr.responseText || localise.set["msg_err_sp_sync"])
+					.show();
+				getDhis2Maps();		// The failure is recorded against the resource
+			}
+		});
 	}
 
 	// -------------------------------------------------------------------------
