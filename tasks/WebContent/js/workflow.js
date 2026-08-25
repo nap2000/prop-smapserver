@@ -1886,7 +1886,15 @@ localise.initLocale(gUserLocale).then(function() {
 	window.localise = localise;
 
 	$(document).ready(function() {
-		localise.setlang();
+		/*
+		 * custom.js is replaced per server, so a server that has not taken this version of
+		 *  the template will not have the function.  Check before calling it, an unguarded
+		 *  call would throw and abandon the rest of this handler
+		 */
+		if (typeof setCustomWorkflow === "function") {
+			setCustomWorkflow();
+		}
+		localise.setlang();		// Run after setCustomWorkflow so any lang elements it adds are translated
 		setupUserProfile();
 		getLoggedInUser(loadWorkflow, false, false, undefined);
 
