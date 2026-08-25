@@ -257,6 +257,25 @@
 					</div>
 
 					<div class="row mb-3">
+						<div class="col-md-4 pt-4">
+							<div class="form-check">
+								<input type="checkbox" id="dh_exp_auto" class="form-check-input">
+								<label class="form-check-label lang" data-lang="u_dh_auto" for="dh_exp_auto"></label>
+							</div>
+							<div class="form-text lang" data-lang="u_dh_auto_help"></div>
+						</div>
+						<div class="col-md-4">
+							<label class="form-label lang" data-lang="u_sp_refresh_mins" for="dh_exp_schedule"></label>
+							<input type="number" id="dh_exp_schedule" class="form-control" min="1" value="1440">
+						</div>
+						<div class="col-md-4">
+							<label class="form-label lang" data-lang="u_dh_periods_back" for="dh_exp_periods_back"></label>
+							<input type="number" id="dh_exp_periods_back" class="form-control" min="0" value="1">
+							<div class="form-text lang" data-lang="u_dh_periods_back_help"></div>
+						</div>
+					</div>
+
+					<div class="row mb-3">
 						<div class="col-md-6">
 							<label class="form-label lang" data-lang="u_dh_period_q" for="dh_exp_period_q"></label>
 							<select id="dh_exp_period_q" class="form-select"></select>

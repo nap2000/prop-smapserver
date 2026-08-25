@@ -1826,6 +1826,10 @@ define({
     "u_dh_agg_one": "One value per submission",
     "u_dh_agg_count": "Count of submissions",
     "u_dh_agg_sum": "Sum",
+    "u_dh_auto": "Send automatically",
+    "u_dh_auto_help": "Only switch this on once a dry run has shown the mapping is right",
+    "u_dh_periods_back": "Periods to re-send",
+    "u_dh_periods_back_help": "Also re-send this many recent periods, so data arriving late is picked up",
     "msg_err_dh_test": "Could not reach DHIS2",
 
     // workflow

@@ -506,7 +506,9 @@ localise.initLocale(gUserLocale).then(function() {
                 h[++idx] = '<td>' + htmlEncode(e.dataset_name || e.dataset_uid) + '</td>';
                 h[++idx] = '<td>' + htmlEncode(e.period_type || '') + '</td>';
                 h[++idx] = '<td>' + (e.items ? e.items.length : 0) + '</td>';
-                h[++idx] = '<td>' + (e.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
+                h[++idx] = '<td>' + (e.enabled ? '<i class="fas fa-check text-success"></i>' : '') +
+                    (e.auto_export ? ' <i class="fas fa-clock text-primary" title="' +
+                        htmlEncode(localise.set['u_dh_auto']) + '"></i>' : '') + '</td>';
                 h[++idx] = '<td class="text-nowrap">';
                 h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 dh_exp_edit"><i class="far fa-edit"></i></button>';
                 h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 dh_exp_del"><i class="fas fa-trash-alt"></i></button>';
@@ -715,6 +717,9 @@ localise.initLocale(gUserLocale).then(function() {
 
             $('#dh_exp_period_type').val(e ? (e.period_type || 'Monthly') : 'Monthly');
             $('#dh_exp_enabled').prop('checked', e ? e.enabled : true);
+            $('#dh_exp_auto').prop('checked', e ? e.auto_export : false);
+            $('#dh_exp_schedule').val(e && e.schedule_minutes ? e.schedule_minutes : 1440);
+            $('#dh_exp_periods_back').val(e && typeof e.periods_back === 'number' ? e.periods_back : 1);
 
             loadDhis2Questions(e ? e.period_question : '', e ? e.orgunit_question : '', function () {
                 loadDhis2DataSets(e ? e.dataset_uid : '', function () {
@@ -749,6 +754,9 @@ localise.initLocale(gUserLocale).then(function() {
                 period_question: $('#dh_exp_period_q').val(),
                 orgunit_question: $('#dh_exp_ou_q').val(),
                 enabled: $('#dh_exp_enabled').prop('checked'),
+                auto_export: $('#dh_exp_auto').prop('checked'),
+                schedule_minutes: parseInt($('#dh_exp_schedule').val(), 10) || 1440,
+                periods_back: parseInt($('#dh_exp_periods_back').val(), 10) || 0,
                 items: items
             };
         }
