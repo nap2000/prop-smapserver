@@ -4357,6 +4357,96 @@ function getAccessibleSpLists($elem, includeNone) {
 	});
 }
 
+/*
+ * The DHIS2 reference data resources this organisation has set up
+ */
+function getAccessibleDhis2Resources($elem, includeNone) {
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/dhis2/maps',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				globals.gDhis2Maps = data;
+				var h = [], idx = -1;
+				if(includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"];
+					h[++idx] = '</option>';
+				}
+				for(var i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="';
+					h[++idx] = htmlEncode(data[i].smap_name);
+					h[++idx] = '">';
+					h[++idx] = htmlEncode(data[i].smap_name);
+					h[++idx] = '</option>';
+				}
+				$elem.empty().append(h.join(''));
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(handleLogout(xhr.responseText)) {
+				if(xhr.readyState == 0 || xhr.status == 0) { return; }
+				console.log("Error: Failed to get DHIS2 resources: " + err);
+			}
+		}
+	});
+}
+
+/*
+ * The columns of a DHIS2 resource, read from the data already synchronised rather than from
+ * DHIS2, so this works whether or not the instance is reachable at the time
+ */
+function getColumnsInDhis2Resource($elem, $elem_multiple, smapName, includeNone, callback) {
+	var map = globals.gDhis2Maps ? globals.gDhis2Maps.find(function(m) { return m.smap_name === smapName; }) : null;
+	if(!map) {
+		if($elem) $elem.empty();
+		if($elem_multiple) { $elem_multiple.empty(); $elem_multiple.multiselect('rebuild'); }
+		if(typeof callback === 'function') callback();
+		return;
+	}
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/dhis2/maps/' + map.id + '/data',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				var h = [], hm = [], idx = -1, idx_m = -1;
+				if(includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"];
+					h[++idx] = '</option>';
+				}
+				((data && data.columns) || []).forEach(function(c) {
+					hm[++idx_m] = h[++idx] = '<option value="';
+					hm[++idx_m] = h[++idx] = htmlEncode(c);
+					hm[++idx_m] = h[++idx] = '">';
+					hm[++idx_m] = h[++idx] = htmlEncode(c);
+					hm[++idx_m] = h[++idx] = '</option>';
+				});
+				if($elem) $elem.empty().append(h.join(''));
+				if($elem_multiple) {
+					$elem_multiple.empty().append(hm.join(''));
+					$elem_multiple.multiselect('deselectAll', false);
+					$elem_multiple.multiselect('rebuild');
+				}
+				if(typeof callback === 'function') callback();
+			}
+		},
+		error: function(xhr) {
+			removeHourglass();
+			if(xhr.readyState !== 0 && xhr.status !== 0 && xhr.status !== 401) {
+				console.log("Error loading DHIS2 resource columns: " + xhr.responseText);
+			}
+		}
+	});
+}
+
 function getQuestionsInSpList($elem, $elem_multiple, smapName, includeNone, callback) {
 	var map = globals.gSpListMaps ? globals.gSpListMaps.find(function(m) { return m.smap_name === smapName; }) : null;
 	if(!map) {
@@ -7584,6 +7674,7 @@ export {
 	getAccessibleSurveys,
 	getAccessibleCsvFiles,
 	getAccessibleSpLists,
+	getAccessibleDhis2Resources,
 	saveCurrentGroupSurvey,
 	saveCurrentProject,
 	setInLocalStorage,
@@ -7651,6 +7742,7 @@ export {
 	addLanguageOptions,
 	getQuestionsInCsvFile,
 	getQuestionsInSpList,
+	getColumnsInDhis2Resource,
 	getQuestionsInSurvey,
 	isTextStorageType,
 	setLanguages,
