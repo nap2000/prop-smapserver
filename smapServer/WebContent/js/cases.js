@@ -104,6 +104,31 @@ localise.initLocale(gUserLocale).then(function() {
                 e.preventDefault();
                 panelChange($(this), 'alerts');
             });
+            $('#dhis2Tab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'dhis2');
+                getDhis2Exports();
+            });
+
+            $('#addDhis2Export').click(function () {
+                edit_dhis2_export();
+                window.bsModalShow('#dhis2ExportPopup');
+            });
+            $('#dh_exp_add_item').click(function () {
+                addDhis2ItemRow();
+            });
+            $('#dh_exp_dataset').change(function () {
+                loadDhis2DataElements($(this).val());
+            });
+            $('#dh_exp_refresh_ds').click(function () {
+                refreshDhis2DataSets();
+            });
+            $('#dh_exp_save').click(function () {
+                saveDhis2Export(false);
+            });
+            $('#dh_exp_dryrun').click(function () {
+                saveDhis2Export(true);
+            });
         });
 
         function currentSurveyDone() {
@@ -433,5 +458,394 @@ localise.initLocale(gUserLocale).then(function() {
                 $('#cms_filter').val(cmsAlert.filter)
             }
             window.bsModalShow('#create_cms_popup');
+        }
+
+        // -------------------------------------------------------------------------
+        // DHIS2 export
+        // -------------------------------------------------------------------------
+
+        var gDhis2Exports = [];
+        var gDhis2EditId = -1;
+        var gDhis2Elements = [];        // Data elements of the chosen data set
+
+        function bundleIdent() {
+            return globals.gCmSettings ? globals.gCmSettings.group_survey_ident : undefined;
+        }
+
+        function getDhis2Exports() {
+            var ident = bundleIdent();
+            if(!ident) {
+                return;
+            }
+            addHourglass();
+            $.ajax({
+                url: '/surveyKPI/dhis2/exports/' + encodeURIComponent(ident),
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+                    if(handleLogout(data)) {
+                        gDhis2Exports = data || [];
+                        updateDhis2ExportTable();
+                    }
+                },
+                error: function (xhr) {
+                    removeHourglass();
+                    if(xhr.readyState !== 0 && xhr.status !== 0) {
+                        console.log('Error getting DHIS2 exports: ' + xhr.responseText);
+                    }
+                }
+            });
+        }
+
+        function updateDhis2ExportTable() {
+            var h = [], idx = -1;
+            for(var i = 0; i < gDhis2Exports.length; i++) {
+                var e = gDhis2Exports[i];
+                h[++idx] = '<tr>';
+                h[++idx] = '<td>' + htmlEncode(e.dataset_name || e.dataset_uid) + '</td>';
+                h[++idx] = '<td>' + htmlEncode(e.period_type || '') + '</td>';
+                h[++idx] = '<td>' + (e.items ? e.items.length : 0) + '</td>';
+                h[++idx] = '<td>' + (e.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
+                h[++idx] = '<td class="text-nowrap">';
+                h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 dh_exp_edit"><i class="far fa-edit"></i></button>';
+                h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 dh_exp_del"><i class="fas fa-trash-alt"></i></button>';
+                h[++idx] = '</td></tr>';
+                // The last result matters as much as the mapping, so show it under the row
+                if(e.last_export_result) {
+                    h[++idx] = '<tr><td colspan="5" class="text-muted small">' +
+                        htmlEncode(e.last_export) + ' &nbsp; ' + htmlEncode(e.last_export_result) + '</td></tr>';
+                }
+            }
+            $('#dhis2_export_body').html(h.join(''));
+
+            $('.dh_exp_edit').click(function () {
+                edit_dhis2_export($(this).data('idx'));
+                window.bsModalShow('#dhis2ExportPopup');
+            });
+            $('.dh_exp_del').click(function () {
+                delete_dhis2_export(gDhis2Exports[$(this).data('idx')].id);
+            });
+        }
+
+        /*
+         * The bundle's questions, by name.  The export binds on the question name, not its id,
+         * so the name is what goes in the select
+         */
+        function loadDhis2Questions(periodSel, ouSel, done) {
+            $.ajax({
+                url: '/surveyKPI/questionList/' + globals.gCurrentSurvey + '/none/group',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    if(handleLogout(data)) {
+                        var opts = ['<option value=""></option>'];
+                        var numeric = ['<option value=""></option>'];
+                        (data || []).forEach(function (q) {
+                            var o = '<option value="' + htmlEncode(q.name) + '">' + htmlEncode(q.name) + '</option>';
+                            opts.push(o);
+                            numeric.push(o);
+                        });
+                        $('#dh_exp_period_q').html(opts.join('')).val(periodSel || '');
+                        $('#dh_exp_ou_q').html(opts.join('')).val(ouSel || '');
+                        gDhis2Questions = opts.join('');
+                        if(typeof done === 'function') { done(); }
+                    }
+                },
+                error: function (xhr) {
+                    console.log('Error getting bundle questions: ' + xhr.responseText);
+                    if(typeof done === 'function') { done(); }
+                }
+            });
+        }
+        var gDhis2Questions = '<option value=""></option>';
+
+        function loadDhis2DataSets(selected, done) {
+            $.ajax({
+                url: '/surveyKPI/dhis2/metadata/dataset',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    if(handleLogout(data)) {
+                        var h = ['<option value=""></option>'];
+                        (data || []).forEach(function (d) {
+                            h.push('<option value="' + htmlEncode(d.uid) + '">' + htmlEncode(d.name) + '</option>');
+                        });
+                        $('#dh_exp_dataset').html(h.join('')).val(selected || '');
+                        if(selected) {
+                            loadDhis2DataElements(selected);
+                        }
+                        if(typeof done === 'function') { done(); }
+                    }
+                },
+                error: function (xhr) {
+                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                    if(typeof done === 'function') { done(); }
+                }
+            });
+        }
+
+        /*
+         * Read the list again from DHIS2.  Configuration time data, so it is refreshed when
+         * asked for rather than on a schedule
+         */
+        function refreshDhis2DataSets() {
+            addHourglass();
+            $.ajax({
+                type: 'POST',
+                url: '/surveyKPI/dhis2/metadata/dataset/refresh',
+                success: function () {
+                    removeHourglass();
+                    loadDhis2DataSets($('#dh_exp_dataset').val());
+                },
+                error: function (xhr) {
+                    removeHourglass();
+                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                }
+            });
+        }
+
+        /*
+         * The data elements of the chosen data set, with their category option combos, so a
+         * mapping is a choice from a list rather than a code typed from memory
+         */
+        function loadDhis2DataElements(uid) {
+            gDhis2Elements = [];
+            if(!uid) {
+                return;
+            }
+            addHourglass();
+            $.ajax({
+                url: '/surveyKPI/dhis2/metadata/dataset/' + encodeURIComponent(uid),
+                dataType: 'json',
+                cache: false,
+                success: function (d) {
+                    removeHourglass();
+                    (d.dataSetElements || []).forEach(function (dse) {
+                        var de = dse.dataElement || {};
+                        var cc = de.categoryCombo || {};
+                        gDhis2Elements.push({
+                            code: de.code,
+                            name: de.name,
+                            cocs: (cc.categoryOptionCombos || []).map(function (c) {
+                                return { code: c.code, name: c.name };
+                            })
+                        });
+                    });
+                    // The period type comes from the data set, so it cannot be set wrongly
+                    if(d.periodType) {
+                        $('#dh_exp_period_type').val(d.periodType);
+                    }
+                    refreshDhis2ItemSelects();
+                },
+                error: function (xhr) {
+                    removeHourglass();
+                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                }
+            });
+        }
+
+        function dhis2ElementOptions(selected) {
+            var h = ['<option value=""></option>'];
+            gDhis2Elements.forEach(function (e) {
+                if(!e.code) { return; }   // Cannot be mapped, the export sends codes
+                h.push('<option value="' + htmlEncode(e.code) + '"' +
+                    (e.code === selected ? ' selected' : '') + '>' + htmlEncode(e.name) + '</option>');
+            });
+            return h.join('');
+        }
+
+        function dhis2CocOptions(deCode, selected) {
+            var h = ['<option value=""></option>'];
+            var el = gDhis2Elements.find(function (e) { return e.code === deCode; });
+            if(el) {
+                el.cocs.forEach(function (c) {
+                    if(!c.code || c.code === 'default') { return; }  // default needs no combo
+                    h.push('<option value="' + htmlEncode(c.code) + '"' +
+                        (c.code === selected ? ' selected' : '') + '>' + htmlEncode(c.name) + '</option>');
+                });
+            }
+            return h.join('');
+        }
+
+        function refreshDhis2ItemSelects() {
+            $('#dh_exp_items_body tr').each(function () {
+                var $row = $(this);
+                var de = $row.find('.dh_item_de').val();
+                $row.find('.dh_item_de').html(dhis2ElementOptions(de));
+                $row.find('.dh_item_coc').html(dhis2CocOptions(de, $row.find('.dh_item_coc').val()));
+            });
+        }
+
+        function addDhis2ItemRow(item) {
+            item = item || {};
+            var aggs = [
+                ['sum', localise.set['u_dh_agg_sum']],
+                ['count', localise.set['u_dh_agg_count']],
+                ['one', localise.set['u_dh_agg_one']]
+            ];
+            var aggOpts = aggs.map(function (a) {
+                return '<option value="' + a[0] + '"' +
+                    (a[0] === item.aggregation ? ' selected' : '') + '>' + htmlEncode(a[1]) + '</option>';
+            }).join('');
+
+            var h = '<tr>' +
+                '<td><select class="form-select form-select-sm dh_item_q">' + gDhis2Questions + '</select></td>' +
+                '<td><select class="form-select form-select-sm dh_item_agg">' + aggOpts + '</select></td>' +
+                '<td><select class="form-select form-select-sm dh_item_de">' + dhis2ElementOptions(item.data_element) + '</select></td>' +
+                '<td><select class="form-select form-select-sm dh_item_coc">' + dhis2CocOptions(item.data_element, item.category_option_combo) + '</select></td>' +
+                '<td><button type="button" class="btn btn-danger btn-sm dh_item_del"><i class="fas fa-trash-alt"></i></button></td>' +
+                '</tr>';
+            var $row = $(h).appendTo('#dh_exp_items_body');
+            $row.find('.dh_item_q').val(item.question_name || '');
+            $row.find('.dh_item_del').click(function () { $row.remove(); });
+            $row.find('.dh_item_de').change(function () {
+                $row.find('.dh_item_coc').html(dhis2CocOptions($(this).val(), ''));
+            });
+        }
+
+        function edit_dhis2_export(idx) {
+            $('#dh_exp_edit_msg').hide();
+            $('#dh_exp_result').empty();
+            $('#dh_exp_items_body').empty();
+            gDhis2Elements = [];
+
+            var e = (typeof idx !== 'undefined') ? gDhis2Exports[idx] : null;
+            gDhis2EditId = e ? e.id : -1;
+
+            $('#dh_exp_period_type').val(e ? (e.period_type || 'Monthly') : 'Monthly');
+            $('#dh_exp_enabled').prop('checked', e ? e.enabled : true);
+
+            loadDhis2Questions(e ? e.period_question : '', e ? e.orgunit_question : '', function () {
+                loadDhis2DataSets(e ? e.dataset_uid : '', function () {
+                    if(e && e.items) {
+                        e.items.forEach(function (item) { addDhis2ItemRow(item); });
+                    } else {
+                        addDhis2ItemRow();
+                    }
+                });
+            });
+        }
+
+        function collectDhis2Export() {
+            var items = [];
+            $('#dh_exp_items_body tr').each(function () {
+                var $r = $(this);
+                var de = $r.find('.dh_item_de').val();
+                if(!de) { return; }     // A row with no data element is not a mapping
+                items.push({
+                    question_name: $r.find('.dh_item_q').val(),
+                    aggregation: $r.find('.dh_item_agg').val(),
+                    data_element: de,
+                    category_option_combo: $r.find('.dh_item_coc').val()
+                });
+            });
+
+            return {
+                id: gDhis2EditId,
+                dataset_uid: $('#dh_exp_dataset').val(),
+                dataset_name: $('#dh_exp_dataset option:selected').text(),
+                period_type: $('#dh_exp_period_type').val(),
+                period_question: $('#dh_exp_period_q').val(),
+                orgunit_question: $('#dh_exp_ou_q').val(),
+                enabled: $('#dh_exp_enabled').prop('checked'),
+                items: items
+            };
+        }
+
+        /*
+         * Saving and a dry run are one action, because a dry run has to test what is on screen
+         * rather than what was stored the last time
+         */
+        function saveDhis2Export(thenDryRun) {
+            var ident = bundleIdent();
+            if(!ident) { return; }
+
+            var e = collectDhis2Export();
+            addHourglass();
+            $.ajax({
+                type: 'PUT',
+                url: '/surveyKPI/dhis2/exports/' + encodeURIComponent(ident),
+                contentType: 'application/json',
+                data: JSON.stringify(e),
+                success: function (saved) {
+                    removeHourglass();
+                    if(handleLogout(saved)) {
+                        var obj = (typeof saved === 'object') ? saved : JSON.parse(saved);
+                        gDhis2EditId = obj.id;
+                        getDhis2Exports();
+                        if(thenDryRun) {
+                            runDhis2Export(obj.id);
+                        } else {
+                            window.bsModalHide('#dhis2ExportPopup');
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    removeHourglass();
+                    showDhis2EditMsg(localise.set['msg_err_save'] + ' ' + xhr.responseText, true);
+                }
+            });
+        }
+
+        function runDhis2Export(id) {
+            $('#dh_exp_result').empty();
+            addHourglass();
+            $.ajax({
+                type: 'POST',
+                url: '/surveyKPI/dhis2/exports/id/' + id + '/run',
+                dataType: 'json',
+                success: function (s) {
+                    removeHourglass();
+                    showDhis2Summary(s);
+                    getDhis2Exports();
+                },
+                error: function (xhr) {
+                    removeHourglass();
+                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                }
+            });
+        }
+
+        /*
+         * The per value conflicts are the useful part of a rejection, so they are listed rather
+         * than summarised as a count
+         */
+        function showDhis2Summary(s) {
+            var $out = $('#dh_exp_result').empty();
+            var cls = s.success ? 'alert-success' : 'alert-danger';
+            $('<div class="alert ' + cls + '">').text(
+                (s.dry_run ? localise.set['u_dh_dry_run'] + ': ' : '') +
+                s.sent + ' ' + localise.set['c_records'] +
+                ', imported ' + s.imported + ', updated ' + s.updated + ', ignored ' + s.ignored
+            ).appendTo($out);
+
+            (s.conflicts || []).forEach(function (c) {
+                $('<div class="alert alert-warning py-1 small">').text(c).appendTo($out);
+            });
+        }
+
+        function delete_dhis2_export(id) {
+            addHourglass();
+            $.ajax({
+                type: 'DELETE',
+                url: '/surveyKPI/dhis2/exports/id/' + id,
+                success: function () {
+                    removeHourglass();
+                    getDhis2Exports();
+                },
+                error: function (xhr) {
+                    removeHourglass();
+                    alert(localise.set['msg_err_del'] + ' ' + xhr.responseText);
+                }
+            });
+        }
+
+        function showDhis2EditMsg(text, isError) {
+            $('#dh_exp_edit_msg')
+                .removeClass('alert-success alert-danger')
+                .addClass(isError ? 'alert-danger' : 'alert-success')
+                .text(text)
+                .show();
         }
 });

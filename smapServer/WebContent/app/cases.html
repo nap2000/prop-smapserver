@@ -90,6 +90,7 @@
 				<li id="settingsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="active nav-link lang" data-lang="c_settings"></a></li>
 				<li id="keysTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_keys"></a></li>
 				<li id="alertsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_alerts"></a></li>
+				<li id="dhis2Tab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_dhis2"></a></li>
 			</ul>
 
 		</div>
@@ -189,9 +190,111 @@
 						</div>
 					</div>
 				</div>
+				<div id="dhis2Panel" class="cmtab mt-4 d-none">
+
+					<p class="text-muted lang" data-lang="u_dh_exp_msg"></p>
+					<div id="dh_exp_msg" style="display:none;" class="alert" role="alert"></div>
+
+					<div class="table-responsive">
+						<table class="table table-striped" id="dhis2_export_table">
+							<thead>
+								<tr>
+									<th class="lang" data-lang="u_dh_dataset"></th>
+									<th class="lang" data-lang="c_period"></th>
+									<th class="lang" data-lang="c_records"></th>
+									<th class="lang" data-lang="c_enabled"></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="dhis2_export_body"></tbody>
+						</table>
+					</div>
+					<button class="btn btn-success lang" id="addDhis2Export" data-lang="c_add"></button>
+				</div>
+
 				<div class="msg_alert alert alert-info mt-2" role="alert" style = "display:none;"></div>
 			</div>
 
+		</div>
+	</div>
+
+	<!-- Modal to set up an export of this bundle's data into a DHIS2 data set -->
+	<div id="dhis2ExportPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dhis2ExportLabel" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title lang" id="dhis2ExportLabel" data-lang="c_dhis2"></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<div id="dh_exp_edit_msg" style="display:none;" class="alert" role="alert"></div>
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label class="form-label lang" data-lang="u_dh_dataset" for="dh_exp_dataset"></label>
+							<div class="input-group">
+								<select id="dh_exp_dataset" class="form-select"></select>
+								<button class="btn btn-outline-secondary lang" type="button" id="dh_exp_refresh_ds" data-lang="c_refresh"></button>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label lang" data-lang="c_period" for="dh_exp_period_type"></label>
+							<select id="dh_exp_period_type" class="form-select">
+								<option value="Monthly">Monthly</option>
+								<option value="Weekly">Weekly</option>
+								<option value="Quarterly">Quarterly</option>
+								<option value="Yearly">Yearly</option>
+								<option value="Daily">Daily</option>
+							</select>
+						</div>
+						<div class="col-md-3 pt-4">
+							<div class="form-check">
+								<input type="checkbox" id="dh_exp_enabled" class="form-check-input" checked>
+								<label class="form-check-label lang" data-lang="c_enabled" for="dh_exp_enabled"></label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label class="form-label lang" data-lang="u_dh_period_q" for="dh_exp_period_q"></label>
+							<select id="dh_exp_period_q" class="form-select"></select>
+							<div class="form-text lang" data-lang="u_dh_period_q_help"></div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label lang" data-lang="u_dh_ou_q" for="dh_exp_ou_q"></label>
+							<select id="dh_exp_ou_q" class="form-select"></select>
+							<div class="form-text lang" data-lang="u_dh_ou_q_help"></div>
+						</div>
+					</div>
+
+					<h6 class="lang" data-lang="u_dh_values"></h6>
+					<div class="table-responsive">
+						<table class="table table-sm" id="dh_exp_items">
+							<thead>
+								<tr>
+									<th class="lang" data-lang="c_question"></th>
+									<th class="lang" data-lang="u_dh_aggregation"></th>
+									<th class="lang" data-lang="u_dh_data_element"></th>
+									<th class="lang" data-lang="u_dh_coc"></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="dh_exp_items_body"></tbody>
+						</table>
+					</div>
+					<button class="btn btn-secondary btn-sm lang" type="button" id="dh_exp_add_item" data-lang="c_add_row"></button>
+
+					<div id="dh_exp_result" class="mt-3"></div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+					<button id="dh_exp_dryrun" type="button" class="btn btn-info lang" data-lang="u_dh_dry_run"></button>
+					<button id="dh_exp_save" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+				</div>
+			</div>
 		</div>
 	</div>
 

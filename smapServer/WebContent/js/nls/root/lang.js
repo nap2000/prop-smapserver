@@ -1810,6 +1810,22 @@ define({
     "u_dh_ou_filter_help": "Optional. The identifier of an organisation unit, to copy only that part of the hierarchy",
     "u_dh_type_orgunits": "Organisation units",
     "u_dh_type_optionset": "Option set",
+
+    // dhis2 export (bundle and case management page).  The rest reuse existing strings
+    "u_dh_exp_msg": "Send this bundle's data to DHIS2 as aggregate data values. Always try a dry run first, DHIS2 will report what it would do without storing anything.",
+    "u_dh_dataset": "Data set",
+    "u_dh_period_q": "Period question",
+    "u_dh_period_q_help": "The question holding the reporting date. Leave blank to use the time the submission was uploaded",
+    "u_dh_ou_q": "Organisation unit question",
+    "u_dh_ou_q_help": "The question holding the DHIS2 organisation unit code",
+    "u_dh_values": "Values to send",
+    "u_dh_aggregation": "Aggregation",
+    "u_dh_data_element": "Data element",
+    "u_dh_coc": "Category option combo",
+    "u_dh_dry_run": "Dry run",
+    "u_dh_agg_one": "One value per submission",
+    "u_dh_agg_count": "Count of submissions",
+    "u_dh_agg_sum": "Sum",
     "msg_err_dh_test": "Could not reach DHIS2",
 
     // workflow
