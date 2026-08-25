@@ -3236,6 +3236,15 @@ function isLate(finish) {
 
 function downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId, pdfTemplateId) {
 
+	/*
+	 * Default the template to auto if the template dropdown has not been populated.
+	 * The server takes pdftemplate as an int, so sending "undefined" gets a 404 from the
+	 *  framework before the request reaches the application and its error handling
+	 */
+	if(typeof pdfTemplateId === "undefined" || pdfTemplateId === null || pdfTemplateId === "") {
+		pdfTemplateId = -2;		// auto
+	}
+
 	var docURL = "/surveyKPI/pdf/" + sIdent
 		+ "?language=" + language
 		+ "&instance=" + instanceId

@@ -329,7 +329,6 @@ localise.initLocale(gUserLocale).then(function () {
                 gGetSettings = true;
                 clearDrillDown();
                 mfSurveyChanged();
-                populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             });
         });
 
@@ -1332,6 +1331,7 @@ localise.initLocale(gUserLocale).then(function () {
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
+            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getGroupSurveys(globals.gCurrentSurvey,  groupsRetrieved);
             groupSurveyChanged();
@@ -1392,8 +1392,8 @@ localise.initLocale(gUserLocale).then(function () {
             gGetSettings = true;    // Use settings from server
 
             // Get the list of available surveys
+            // mfSurveyChanged populates the pdf template select once gCurrentSurvey is known
             loadManagedSurveys(globals.gCurrentProject, mfSurveyChanged);
-            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             getTaskUsers(globals.gCurrentProject);	// Get the users that have access to this project
         }
 
