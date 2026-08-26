@@ -118,16 +118,32 @@ localise.initLocale(gUserLocale).then(function() {
                 addDhis2ItemRow();
             });
             $('#dh_exp_dataset').change(function () {
+                /*
+                 * The rows are mapped to elements of the data set being left, so they are
+                 * cleared rather than carried across.  Without this they would be kept as
+                 * codes belonging to a data set that is no longer chosen
+                 */
+                $('#dh_exp_items_body tr').each(function () {
+                    $(this).data('de', '').data('coc', '');
+                });
                 loadDhis2DataElements($(this).val());
             });
             $('#dh_exp_refresh_ds').click(function () {
                 refreshDhis2DataSets();
             });
             $('#dh_exp_save').click(function () {
-                saveDhis2Export(false);
+                saveDhis2Export(null);
             });
             $('#dh_exp_dryrun').click(function () {
-                saveDhis2Export(true);
+                saveDhis2Export('dryrun');
+            });
+            $('#dh_exp_send').click(function () {
+                // This writes into the client's reporting system, so it is asked once
+                bootbox.confirm(localise.set['u_dh_send_confirm'], function (decision) {
+                    if(decision) {
+                        saveDhis2Export('send');
+                    }
+                });
             });
         });
 
@@ -574,10 +590,18 @@ localise.initLocale(gUserLocale).then(function() {
                             h.push('<option value="' + htmlEncode(d.uid) + '">' + htmlEncode(d.name) + '</option>');
                         });
                         $('#dh_exp_dataset').html(h.join('')).val(selected || '');
+
+                        /*
+                         * The data elements have to be in hand before the mapping rows are
+                         * built, because a row renders its data element as a choice from that
+                         * list.  Built too early the row has nothing to select from and the
+                         * stored mapping is lost
+                         */
                         if(selected) {
-                            loadDhis2DataElements(selected);
+                            loadDhis2DataElements(selected, done);
+                        } else if(typeof done === 'function') {
+                            done();
                         }
-                        if(typeof done === 'function') { done(); }
                     }
                 },
                 error: function (xhr) {
@@ -611,9 +635,10 @@ localise.initLocale(gUserLocale).then(function() {
          * The data elements of the chosen data set, with their category option combos, so a
          * mapping is a choice from a list rather than a code typed from memory
          */
-        function loadDhis2DataElements(uid) {
+        function loadDhis2DataElements(uid, done) {
             gDhis2Elements = [];
             if(!uid) {
+                if(typeof done === 'function') { done(); }
                 return;
             }
             addHourglass();
@@ -639,43 +664,74 @@ localise.initLocale(gUserLocale).then(function() {
                         $('#dh_exp_period_type').val(d.periodType);
                     }
                     refreshDhis2ItemSelects();
+                    if(typeof done === 'function') { done(); }
                 },
                 error: function (xhr) {
                     removeHourglass();
                     showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                    if(typeof done === 'function') { done(); }
                 }
             });
         }
 
+        /*
+         * A stored mapping that is not in the list is kept as an option of its own rather than
+         * dropped
+         *
+         * Otherwise a code the data set no longer lists, or one rendered before the list had
+         * arrived, would show as blank and then be discarded by collectDhis2Export on the next
+         * save.  Losing a mapping silently is far worse than showing a code with no name
+         */
         function dhis2ElementOptions(selected) {
             var h = ['<option value=""></option>'];
+            var found = false;
             gDhis2Elements.forEach(function (e) {
                 if(!e.code) { return; }   // Cannot be mapped, the export sends codes
+                if(e.code === selected) { found = true; }
                 h.push('<option value="' + htmlEncode(e.code) + '"' +
                     (e.code === selected ? ' selected' : '') + '>' + htmlEncode(e.name) + '</option>');
             });
+            if(selected && !found) {
+                h.push('<option value="' + htmlEncode(selected) + '" selected>' +
+                    htmlEncode(selected) + '</option>');
+            }
             return h.join('');
         }
 
         function dhis2CocOptions(deCode, selected) {
             var h = ['<option value=""></option>'];
+            var found = false;
             var el = gDhis2Elements.find(function (e) { return e.code === deCode; });
             if(el) {
                 el.cocs.forEach(function (c) {
                     if(!c.code || c.code === 'default') { return; }  // default needs no combo
+                    if(c.code === selected) { found = true; }
                     h.push('<option value="' + htmlEncode(c.code) + '"' +
                         (c.code === selected ? ' selected' : '') + '>' + htmlEncode(c.name) + '</option>');
                 });
             }
+            if(selected && !found) {
+                h.push('<option value="' + htmlEncode(selected) + '" selected>' +
+                    htmlEncode(selected) + '</option>');
+            }
             return h.join('');
         }
 
+        /*
+         * Re-render the selects against the list, keeping what each row is mapped to
+         *
+         * The row remembers its mapping rather than the select being asked for it, because a
+         * select rendered before the list arrived reports an empty value even though the row
+         * was created from a stored mapping
+         */
         function refreshDhis2ItemSelects() {
             $('#dh_exp_items_body tr').each(function () {
                 var $row = $(this);
-                var de = $row.find('.dh_item_de').val();
+                var de = $row.find('.dh_item_de').val() || $row.data('de') || '';
+                var coc = $row.find('.dh_item_coc').val() || $row.data('coc') || '';
                 $row.find('.dh_item_de').html(dhis2ElementOptions(de));
-                $row.find('.dh_item_coc').html(dhis2CocOptions(de, $row.find('.dh_item_coc').val()));
+                $row.find('.dh_item_coc').html(dhis2CocOptions(de, coc));
+                $row.data('de', de).data('coc', coc);
             });
         }
 
@@ -699,10 +755,15 @@ localise.initLocale(gUserLocale).then(function() {
                 '<td><button type="button" class="btn btn-danger btn-sm dh_item_del"><i class="fas fa-trash-alt"></i></button></td>' +
                 '</tr>';
             var $row = $(h).appendTo('#dh_exp_items_body');
+            $row.data('de', item.data_element || '').data('coc', item.category_option_combo || '');
             $row.find('.dh_item_q').val(item.question_name || '');
             $row.find('.dh_item_del').click(function () { $row.remove(); });
             $row.find('.dh_item_de').change(function () {
+                $row.data('de', $(this).val()).data('coc', '');
                 $row.find('.dh_item_coc').html(dhis2CocOptions($(this).val(), ''));
+            });
+            $row.find('.dh_item_coc').change(function () {
+                $row.data('coc', $(this).val());
             });
         }
 
@@ -765,7 +826,11 @@ localise.initLocale(gUserLocale).then(function() {
          * Saving and a dry run are one action, because a dry run has to test what is on screen
          * rather than what was stored the last time
          */
-        function saveDhis2Export(thenDryRun) {
+        /*
+         * Saving, a dry run and a send are one action, because both of the latter have to act on
+         * what is on screen rather than on what was stored the last time
+         */
+        function saveDhis2Export(thenRun) {
             var ident = bundleIdent();
             if(!ident) { return; }
 
@@ -782,8 +847,8 @@ localise.initLocale(gUserLocale).then(function() {
                         var obj = (typeof saved === 'object') ? saved : JSON.parse(saved);
                         gDhis2EditId = obj.id;
                         getDhis2Exports();
-                        if(thenDryRun) {
-                            runDhis2Export(obj.id);
+                        if(thenRun) {
+                            runDhis2Export(obj.id, thenRun === 'send');
                         } else {
                             window.bsModalHide('#dhis2ExportPopup');
                         }
@@ -796,12 +861,12 @@ localise.initLocale(gUserLocale).then(function() {
             });
         }
 
-        function runDhis2Export(id) {
+        function runDhis2Export(id, commit) {
             $('#dh_exp_result').empty();
             addHourglass();
             $.ajax({
                 type: 'POST',
-                url: '/surveyKPI/dhis2/exports/id/' + id + '/run',
+                url: '/surveyKPI/dhis2/exports/id/' + id + '/run' + (commit ? '?commit=true' : ''),
                 dataType: 'json',
                 success: function (s) {
                     removeHourglass();

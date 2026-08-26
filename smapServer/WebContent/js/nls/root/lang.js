@@ -1824,6 +1824,8 @@ define({
     "u_dh_data_element": "Data element",
     "u_dh_coc": "Category option combo",
     "u_dh_dry_run": "Dry run",
+    "u_dh_send": "Send to DHIS2",
+    "u_dh_send_confirm": "Send these values to DHIS2 now? Existing values for the same periods and organisation units will be replaced.",
     "u_dh_agg_one": "One value per submission",
     "u_dh_agg_count": "Count of submissions",
     "u_dh_agg_sum": "Sum",
