@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, makeSearchableSelect, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
+import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, makeSearchableSelect, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveDhis2, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -165,6 +165,8 @@ $(document).ready(function() {
 			notification = saveReference();		// References give read only access - no email
 		} else if(target === "sharepoint_list") {
 			notification = saveSharePointList();
+		} else if(target === "dhis2") {
+			notification = saveDhis2();
 		}
 
 		if(!notification.error) {

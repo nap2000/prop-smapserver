@@ -5642,7 +5642,7 @@ function bundleSelectChanged() {
 var gSpColumns = [];
 
 function setTargetDependencies(target) {
-	$('.sms_options, .webhook_options, .email_options, .escalate_options, .reference_options, .conv_options, .sharepoint_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options, .reference_options, .conv_options, .sharepoint_options, .dhis2_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
 		initMsgNotPopup(target);
@@ -5662,6 +5662,12 @@ function setTargetDependencies(target) {
 	} else if(target === "sharepoint_list") {
 		$('.sharepoint_options').show();
 		loadSpListNames();
+	} else if(target === "dhis2") {
+		/*
+		 * Nothing to configure here.  What is sent is decided by the export mapping on the
+		 * bundle, so this only explains where that lives
+		 */
+		$('.dhis2_options').show();
 	}
 }
 
@@ -6060,6 +6066,21 @@ function saveConversation(columns, theirNumber, ourNumber, msgChannel, record) {
 /*
  * Process a save notification when the target is "webhook"
  */
+/*
+ * A DHIS2 notification carries no settings of its own.  It says only that when a record
+ * changes, the totals for its period should be recalculated and sent, and what to send is
+ * held in the export mapping on the bundle
+ */
+function saveDhis2() {
+
+	var notification = {};
+
+	notification.target = "dhis2";
+	notification.notifyDetails = {};
+
+	return notification;
+}
+
 function saveWebhook() {
 
 	var error = false,
@@ -7747,6 +7768,7 @@ export {
 	setSurveyViewLanguages,
 	setSurveyViewQuestions,
 	getNotificationTypes,
+	saveDhis2,
 	resultsURL,
 	populateTaskGroupList,
 	setupNotificationDialog,
