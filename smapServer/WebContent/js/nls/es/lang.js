@@ -245,6 +245,7 @@ define(
     "c_date": "Fecha",
     "c_dateq": "Pregunta con Fecha",
     "c_none": "Ninguno",
+    "c_highlight": "Resaltar",
     "c_period": "Período",
     "c_hour": "Hora",
     "c_day": "Día",
