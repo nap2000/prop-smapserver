@@ -598,7 +598,7 @@ function openEditDrawer(cardEl) {
 	gEditTGs         = [];
 
 	const saveBtn = document.getElementById("wf-drawer-save");
-	if (saveBtn) saveBtn.innerHTML = '<span class="lang" data-lang="c_save">Save</span>';
+	if (saveBtn) saveBtn.textContent = localise.set["c_save"];
 
 	const fwdIds   = JSON.parse(cardEl.dataset.fwdIds   || "[]");
 	const tgIds    = JSON.parse(cardEl.dataset.tgIds    || "[]");
@@ -641,7 +641,7 @@ function closeEditDrawer() {
 	gDrawerCreateMode  = false;
 	// Restore footer defaults
 	const saveBtn = document.getElementById("wf-drawer-save");
-	if (saveBtn) saveBtn.innerHTML = '<span class="lang" data-lang="c_save">Save</span>';
+	if (saveBtn) saveBtn.textContent = localise.set["c_save"];
 }
 
 /*
@@ -776,6 +776,14 @@ function renderDrawerContent(type) {
 	document.getElementById("wf-drawer-advanced").style.display = "";
 	document.getElementById("wf-drawer-delete").style.display   = "";
 
+	/*
+	 * Reset the save label, a create mode render leaves it reading "create step".
+	 * Set the text from the bundle rather than writing a data-lang element, localise.setlang()
+	 *  only runs over the page once at startup so it would not translate one added here.
+	 * The create mode branches below set their own label after this
+	 */
+	document.getElementById("wf-drawer-save").textContent = l["c_save"];
+
 	// Derive shared values from the first available record
 	const firstNotif = gEditNotifs[0] || null;
 	const firstTG    = gEditTGs[0]    || null;
@@ -869,7 +877,6 @@ function renderDrawerContent(type) {
 		document.getElementById("wf-conditions").style.display      = "none";
 		document.getElementById("wf-drawer-advanced").style.display = "none";
 		document.getElementById("wf-drawer-delete").style.display   = "";
-		document.getElementById("wf-drawer-save").innerHTML = '<span class="lang" data-lang="c_save">Save</span>';
 		return;
 	}
 
@@ -1879,7 +1886,15 @@ localise.initLocale(gUserLocale).then(function() {
 	window.localise = localise;
 
 	$(document).ready(function() {
-		localise.setlang();
+		/*
+		 * custom.js is replaced per server, so a server that has not taken this version of
+		 *  the template will not have the function.  Check before calling it, an unguarded
+		 *  call would throw and abandon the rest of this handler
+		 */
+		if (typeof setCustomWorkflow === "function") {
+			setCustomWorkflow();
+		}
+		localise.setlang();		// Run after setCustomWorkflow so any lang elements it adds are translated
 		setupUserProfile();
 		getLoggedInUser(loadWorkflow, false, false, undefined);
 

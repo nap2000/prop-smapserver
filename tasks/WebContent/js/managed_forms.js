@@ -114,6 +114,7 @@ localise.initLocale(gUserLocale).then(function () {
     var gDeleteReasonColumn = -1;   // The index of the column that has the reason for a delete
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
+    var gTableSearch = "";          // Remembered value of the table search box, it is lost when the table is recreated
     var gPreviousUrl = "";
     var gEditUrl = '#';
 
@@ -328,7 +329,6 @@ localise.initLocale(gUserLocale).then(function () {
                 gGetSettings = true;
                 clearDrillDown();
                 mfSurveyChanged();
-                populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             });
         });
 
@@ -1331,6 +1331,7 @@ localise.initLocale(gUserLocale).then(function () {
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
+            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getGroupSurveys(globals.gCurrentSurvey,  groupsRetrieved);
             groupSurveyChanged();
@@ -1391,8 +1392,8 @@ localise.initLocale(gUserLocale).then(function () {
             gGetSettings = true;    // Use settings from server
 
             // Get the list of available surveys
+            // mfSurveyChanged populates the pdf template select once gCurrentSurvey is known
             loadManagedSurveys(globals.gCurrentProject, mfSurveyChanged);
-            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             getTaskUsers(globals.gCurrentProject);	// Get the users that have access to this project
         }
 
@@ -1554,6 +1555,9 @@ localise.initLocale(gUserLocale).then(function () {
             data: dataSet.data,
             columns: shownColumns,
             order: [0],
+            search: {
+                search: gTableSearch        // Restore the search from before the table was recreated
+            },
             initComplete: function (settings, json) {
 
                 if(parameters && parameters.form_data === 'off') {
@@ -1665,8 +1669,12 @@ localise.initLocale(gUserLocale).then(function () {
         });
 
         // Respond to change of search
-        $('#trackingTable_filter input').focusout(function () {
-            globals.gMainTable.draw();
+        // Remember the value as the search box is recreated, and loses its value, whenever
+        //  the table is redrawn.  The search box is not referred to by id as data tables
+        //  generates a new one, dt-search-n, each time it creates the box
+        globals.gMainTable.off('search.dt.mf').on('search.dt.mf', function () {
+            gTableSearch = globals.gMainTable.search();
+            checkFilters();
         });
 
         /*
@@ -3709,7 +3717,13 @@ localise.initLocale(gUserLocale).then(function () {
         var filtersOn = false,
             i;
 
-        for(i = 0; i < window.filters.length; i++) {
+        // The table search box is checked here rather than being added to window.filters as
+        //  data tables generates its id, dt-search-n, anew each time it creates the box
+        if(gTableSearch && gTableSearch.trim().length > 0) {
+            filtersOn = true;
+        }
+
+        for(i = 0; !filtersOn && i < window.filters.length; i++) {
 
             if(window.filters[i].type === 'text') {
                 var v = $('#' + window.filters[i].id).val();
@@ -3751,6 +3765,11 @@ localise.initLocale(gUserLocale).then(function () {
             } else  if(window.filters[i].type === 'checkbox') {
                 $('#' + window.filters[i].id).prop('checked', window.filters[i].value);
             }
+        }
+
+        if(gTableSearch && gTableSearch.trim().length > 0) {
+            gTableSearch = "";
+            globals.gMainTable.search("");      // Also clears the search box
         }
 
         globals.gMainTable.draw();

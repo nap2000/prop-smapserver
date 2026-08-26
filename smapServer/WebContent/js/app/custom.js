@@ -61,6 +61,9 @@ function setCustomMonitor() {
 function setCustomManage() {
 }
 
+function setCustomWorkflow() {
+}
+
 function setCustomChanges() {
 }
 
