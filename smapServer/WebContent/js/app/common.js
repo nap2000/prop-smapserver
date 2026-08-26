@@ -7506,8 +7506,18 @@ function isTwoFactorRequired(data) {
 	if(!data) {
 		return false;
 	}
+	/*
+	 * The value matters, not just the presence of the key.  Every user object carries
+	 * twoFactorRequired, usually false, and a service that does not declare it produces
+	 * json leaves it to be matched as text - so testing for the name alone sent users
+	 * who have no two factor set up to the challenge page.
+	 */
 	if(typeof data === "string") {
-		return data.indexOf('"twoFactorRequired"') >= 0;
+		try {
+			return JSON.parse(data).twoFactorRequired === true;
+		} catch (e) {
+			return /"twoFactorRequired"\s*:\s*true/.test(data);
+		}
 	}
 	return data.twoFactorRequired === true;
 }
