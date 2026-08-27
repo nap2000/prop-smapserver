@@ -887,11 +887,19 @@ localise.initLocale(gUserLocale).then(function() {
         function showDhis2Summary(s) {
             var $out = $('#dh_exp_result').empty();
             var cls = s.success ? 'alert-success' : 'alert-danger';
-            $('<div class="alert ' + cls + '">').text(
-                (s.dry_run ? localise.set['u_dh_dry_run'] + ': ' : '') +
+
+            /*
+             * Say plainly whether it worked.  Counts alone read as a result rather than as a
+             * failure, so a rejected send looked like a report of nothing much happening
+             */
+            var txt = (s.dry_run ? localise.set['u_dh_dry_run'] + ': ' : '') +
+                (s.success ? localise.set['c_success'] : localise.set['c_error']) + ': ' +
                 s.sent + ' ' + localise.set['c_records'] +
-                ', imported ' + s.imported + ', updated ' + s.updated + ', ignored ' + s.ignored
-            ).appendTo($out);
+                ', imported ' + s.imported + ', updated ' + s.updated + ', ignored ' + s.ignored;
+            if(s.deleted) {
+                txt += ', ' + localise.set['c_deleted'].toLowerCase() + ' ' + s.deleted;
+            }
+            $('<div class="alert ' + cls + '">').text(txt).appendTo($out);
 
             (s.conflicts || []).forEach(function (c) {
                 $('<div class="alert alert-warning py-1 small">').text(c).appendTo($out);
