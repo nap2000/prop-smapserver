@@ -532,7 +532,7 @@ $(document).ready(function() {
     function getDateColName(id) {
 	    var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
 	    if(sMeta && sMeta.dates) {
-		    for (i = 0; i < sMeta.dates.length; i++) {
+		    for (var i = 0; i < sMeta.dates.length; i++) {
 		    	if(sMeta.dates[i].id == id) {
 				    return(sMeta.dates[i].col);
 			    }
@@ -546,7 +546,7 @@ $(document).ready(function() {
 	function getDateId(name) {
 		var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
 		if(sMeta && sMeta.dates) {
-			for (i = 0; i < sMeta.dates.length; i++) {
+			for (var i = 0; i < sMeta.dates.length; i++) {
 				if(sMeta.dates[i].name == name) {
 					return(sMeta.dates[i].id);
 				}
@@ -933,8 +933,8 @@ $(document).ready(function() {
 			];
 
 			// Set up the dialog according to the required parameters
-			idx = -1;
-			h = [];
+			var idx = -1;
+			var h = [];
 
 			for(i = 0; i < gConfig.length; i++) {
 				h[++idx] = '<div class="form-group row">';

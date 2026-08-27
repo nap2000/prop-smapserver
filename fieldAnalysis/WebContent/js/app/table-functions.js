@@ -314,6 +314,8 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 		cols = data.cols,
 		types = data.types,
 		groupLabels = data.groups,
+		isGrouped = false,
+		isPeriod = false,
 		numberCols,
 		numberGroups,
 		repeatCols = 1,

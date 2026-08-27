@@ -280,6 +280,8 @@ $(document).ready(function() {
 			msg,
 			levelName,
 			higherName,
+			orgIdx,
+			entIdx,
 			hasParam = false;
 
 	    url = "/surveyKPI/billing/rates";

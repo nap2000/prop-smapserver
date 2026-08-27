@@ -107,11 +107,11 @@ $(window).on('load', function() {
                     openModal('reportContainer');
 
                     // Populate gReport from the existing data
-                    gReport = data;
-                    gReport.smap.data_bounds = new OpenLayers.Bounds(data.smap.bbox[0], data.smap.bbox[1], data.smap.bbox[2], data.smap.bbox[3]).
+                    window.gReport = data;
+                    window.gReport.smap.data_bounds = new OpenLayers.Bounds(data.smap.bbox[0], data.smap.bbox[1], data.smap.bbox[2], data.smap.bbox[3]).
                     transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
 
-                    setReport(gReport);
+                    setReport(window.gReport);
                     reportIdent = undefined;
                 }, error: function(data, status) {
                     alert(localise.set("c_error"));

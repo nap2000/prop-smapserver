@@ -478,7 +478,7 @@ localise.initLocale(gUserLocale).then(function () {
             e.preventDefault();
 
             $('#addChartForm')[0].reset();
-            gSelectedChart = -1;
+            window.gSelectedChart = -1;
             setChartPopupControls();
             window.bsModalShow('#chart_settings_popup');
         });
@@ -1128,7 +1128,7 @@ localise.initLocale(gUserLocale).then(function () {
 
     function setupChartEdit() {
         $('.fa-sliders-h','#chartcontent').closest('button').click(function(){
-            gSelectedChart = $(this).data("idx");
+            window.gSelectedChart = $(this).data("idx");
             $('#addChartForm')[0].reset();
             $('#cs_subject').val(gTasks.cache.currentData.settings.charts[gSelectedChart].subject);
             $('#cs_chart_type').val(gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type);
