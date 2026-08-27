@@ -230,16 +230,19 @@
 
 					<div id="dh_exp_edit_msg" style="display:none;" class="alert" role="alert"></div>
 
-					<div class="row mb-3">
-						<div class="col-md-6">
-							<label class="form-label lang" data-lang="u_dh_dataset" for="dh_exp_dataset"></label>
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label lang" data-lang="u_dh_dataset" for="dh_exp_dataset"></label>
+						<div class="col-sm-8">
 							<div class="input-group">
 								<select id="dh_exp_dataset" class="form-select"></select>
 								<button class="btn btn-outline-secondary lang" type="button" id="dh_exp_refresh_ds" data-lang="c_refresh"></button>
 							</div>
 						</div>
-						<div class="col-md-3">
-							<label class="form-label lang" data-lang="c_period" for="dh_exp_period_type"></label>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label lang" data-lang="c_period" for="dh_exp_period_type"></label>
+						<div class="col-sm-8">
 							<select id="dh_exp_period_type" class="form-select">
 								<option value="Monthly">Monthly</option>
 								<option value="Weekly">Weekly</option>
@@ -248,7 +251,26 @@
 								<option value="Daily">Daily</option>
 							</select>
 						</div>
-						<div class="col-md-3 pt-4">
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label lang" data-lang="u_dh_period_q" for="dh_exp_period_q"></label>
+						<div class="col-sm-8">
+							<select id="dh_exp_period_q" class="form-select"></select>
+							<div class="form-text lang" data-lang="u_dh_period_q_help"></div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label lang" data-lang="u_dh_ou_q" for="dh_exp_ou_q"></label>
+						<div class="col-sm-8">
+							<select id="dh_exp_ou_q" class="form-select"></select>
+							<div class="form-text lang" data-lang="u_dh_ou_q_help"></div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-8 offset-sm-4">
 							<div class="form-check">
 								<input type="checkbox" id="dh_exp_enabled" class="form-check-input" checked>
 								<label class="form-check-label lang" data-lang="c_enabled" for="dh_exp_enabled"></label>
@@ -256,35 +278,28 @@
 						</div>
 					</div>
 
-					<div class="row mb-3">
-						<div class="col-md-4 pt-4">
+					<div class="form-group row">
+						<div class="col-sm-8 offset-sm-4">
 							<div class="form-check">
 								<input type="checkbox" id="dh_exp_auto" class="form-check-input">
 								<label class="form-check-label lang" data-lang="u_dh_auto" for="dh_exp_auto"></label>
 							</div>
 							<div class="form-text lang" data-lang="u_dh_auto_help"></div>
 						</div>
-						<div class="col-md-4">
-							<label class="form-label lang" data-lang="u_sp_refresh_mins" for="dh_exp_schedule"></label>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label lang" data-lang="u_sp_refresh_mins" for="dh_exp_schedule"></label>
+						<div class="col-sm-8">
 							<input type="number" id="dh_exp_schedule" class="form-control" min="1" value="1440">
-						</div>
-						<div class="col-md-4">
-							<label class="form-label lang" data-lang="u_dh_periods_back" for="dh_exp_periods_back"></label>
-							<input type="number" id="dh_exp_periods_back" class="form-control" min="0" value="1">
-							<div class="form-text lang" data-lang="u_dh_periods_back_help"></div>
 						</div>
 					</div>
 
-					<div class="row mb-3">
-						<div class="col-md-6">
-							<label class="form-label lang" data-lang="u_dh_period_q" for="dh_exp_period_q"></label>
-							<select id="dh_exp_period_q" class="form-select"></select>
-							<div class="form-text lang" data-lang="u_dh_period_q_help"></div>
-						</div>
-						<div class="col-md-6">
-							<label class="form-label lang" data-lang="u_dh_ou_q" for="dh_exp_ou_q"></label>
-							<select id="dh_exp_ou_q" class="form-select"></select>
-							<div class="form-text lang" data-lang="u_dh_ou_q_help"></div>
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label lang" data-lang="u_dh_periods_back" for="dh_exp_periods_back"></label>
+						<div class="col-sm-8">
+							<input type="number" id="dh_exp_periods_back" class="form-control" min="0" value="1">
+							<div class="form-text lang" data-lang="u_dh_periods_back_help"></div>
 						</div>
 					</div>
 
