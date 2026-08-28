@@ -4496,8 +4496,10 @@ function getColumnsInDhis2Resource($elem, $elem_multiple, smapName, includeNone,
 		},
 		error: function(xhr) {
 			removeHourglass();
-			if(xhr.readyState !== 0 && xhr.status !== 0 && xhr.status !== 401) {
-				console.log("Error loading DHIS2 resource columns: " + xhr.responseText);
+			if(handleLogout(xhr.responseText)) {
+				if(xhr.readyState !== 0 && xhr.status !== 0 && xhr.status !== 401) {
+					console.log("Error loading DHIS2 resource columns: " + xhr.responseText);
+				}
 			}
 		}
 	});

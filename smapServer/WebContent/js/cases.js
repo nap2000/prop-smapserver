@@ -507,10 +507,12 @@ localise.initLocale(gUserLocale).then(function() {
                 },
                 error: function (xhr) {
                     removeHourglass();
-                    if(xhr.readyState !== 0 && xhr.status !== 0) {
-                        console.log('Error getting DHIS2 exports: ' + xhr.responseText);
+                    if(handleLogout(xhr.responseText)) {
+                    	if(xhr.readyState !== 0 && xhr.status !== 0) {
+                    	    console.log('Error getting DHIS2 exports: ' + xhr.responseText);
+                    	}
                     }
-                }
+                   }
             });
         }
 
@@ -571,9 +573,11 @@ localise.initLocale(gUserLocale).then(function() {
                     }
                 },
                 error: function (xhr) {
-                    console.log('Error getting bundle questions: ' + xhr.responseText);
-                    if(typeof done === 'function') { done(); }
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	console.log('Error getting bundle questions: ' + xhr.responseText);
+                    	if(typeof done === 'function') { done(); }
+                    }
+                   }
             });
         }
         var gDhis2Questions = '<option value=""></option>';
@@ -605,9 +609,11 @@ localise.initLocale(gUserLocale).then(function() {
                     }
                 },
                 error: function (xhr) {
-                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
-                    if(typeof done === 'function') { done(); }
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                    	if(typeof done === 'function') { done(); }
+                    }
+                   }
             });
         }
 
@@ -620,14 +626,18 @@ localise.initLocale(gUserLocale).then(function() {
             $.ajax({
                 type: 'POST',
                 url: '/surveyKPI/dhis2/metadata/dataset/refresh',
-                success: function () {
+                success: function (data) {
                     removeHourglass();
-                    loadDhis2DataSets($('#dh_exp_dataset').val());
-                },
+                    if(handleLogout(data)) {
+                    	loadDhis2DataSets($('#dh_exp_dataset').val());
+                    }
+                   },
                 error: function (xhr) {
                     removeHourglass();
-                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                    }
+                   }
             });
         }
 
@@ -648,29 +658,33 @@ localise.initLocale(gUserLocale).then(function() {
                 cache: false,
                 success: function (d) {
                     removeHourglass();
-                    (d.dataSetElements || []).forEach(function (dse) {
-                        var de = dse.dataElement || {};
-                        var cc = de.categoryCombo || {};
-                        gDhis2Elements.push({
-                            code: de.code,
-                            name: de.name,
-                            cocs: (cc.categoryOptionCombos || []).map(function (c) {
-                                return { code: c.code, name: c.name };
-                            })
-                        });
-                    });
-                    // The period type comes from the data set, so it cannot be set wrongly
-                    if(d.periodType) {
-                        $('#dh_exp_period_type').val(d.periodType);
+                    if(handleLogout(d)) {
+                    	(d.dataSetElements || []).forEach(function (dse) {
+                    	    var de = dse.dataElement || {};
+                    	    var cc = de.categoryCombo || {};
+                    	    gDhis2Elements.push({
+                    	        code: de.code,
+                    	        name: de.name,
+                    	        cocs: (cc.categoryOptionCombos || []).map(function (c) {
+                    	            return { code: c.code, name: c.name };
+                    	        })
+                    	    });
+                    	});
+                    	// The period type comes from the data set, so it cannot be set wrongly
+                    	if(d.periodType) {
+                    	    $('#dh_exp_period_type').val(d.periodType);
+                    	}
+                    	refreshDhis2ItemSelects();
+                    	if(typeof done === 'function') { done(); }
                     }
-                    refreshDhis2ItemSelects();
-                    if(typeof done === 'function') { done(); }
-                },
+                   },
                 error: function (xhr) {
                     removeHourglass();
-                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
-                    if(typeof done === 'function') { done(); }
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                    	if(typeof done === 'function') { done(); }
+                    }
+                   }
             });
         }
 
@@ -856,8 +870,10 @@ localise.initLocale(gUserLocale).then(function() {
                 },
                 error: function (xhr) {
                     removeHourglass();
-                    showDhis2EditMsg(localise.set['msg_err_save'] + ' ' + xhr.responseText, true);
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	showDhis2EditMsg(localise.set['msg_err_save'] + ' ' + xhr.responseText, true);
+                    }
+                   }
             });
         }
 
@@ -870,13 +886,17 @@ localise.initLocale(gUserLocale).then(function() {
                 dataType: 'json',
                 success: function (s) {
                     removeHourglass();
-                    showDhis2Summary(s);
-                    getDhis2Exports();
-                },
+                    if(handleLogout(s)) {
+                    	showDhis2Summary(s);
+                    	getDhis2Exports();
+                    }
+                   },
                 error: function (xhr) {
                     removeHourglass();
-                    showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	showDhis2EditMsg(xhr.responseText || localise.set['c_error'], true);
+                    }
+                   }
             });
         }
 
@@ -911,14 +931,18 @@ localise.initLocale(gUserLocale).then(function() {
             $.ajax({
                 type: 'DELETE',
                 url: '/surveyKPI/dhis2/exports/id/' + id,
-                success: function () {
+                success: function (data) {
                     removeHourglass();
-                    getDhis2Exports();
-                },
+                    if(handleLogout(data)) {
+                    	getDhis2Exports();
+                    }
+                   },
                 error: function (xhr) {
                     removeHourglass();
-                    alert(localise.set['msg_err_del'] + ' ' + xhr.responseText);
-                }
+                    if(handleLogout(xhr.responseText)) {
+                    	alert(localise.set['msg_err_del'] + ' ' + xhr.responseText);
+                    }
+                   }
             });
         }
 

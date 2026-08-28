@@ -1210,25 +1210,29 @@ const moment = window.moment;
 			cache: false,
 			success: function(s) {
 				removeHourglass();
-				$('#dh_label').val(s.label || '');
-				$('#dh_base_url').val(s.base_url || '');
-				$('#dh_api_version').val(s.api_version || '');
-				$('#dh_enabled').prop('checked', s.label ? s.enabled : true);
-				$('#dh_last_test').text(s.last_test_result
-					? s.last_test_result + (s.last_tested ? ' (' + s.last_tested + ')' : '')
-					: '-');
+				if(handleLogout(s)) {
+					$('#dh_label').val(s.label || '');
+					$('#dh_base_url').val(s.base_url || '');
+					$('#dh_api_version').val(s.api_version || '');
+					$('#dh_enabled').prop('checked', s.label ? s.enabled : true);
+					$('#dh_last_test').text(s.last_test_result
+						? s.last_test_result + (s.last_tested ? ' (' + s.last_tested + ')' : '')
+						: '-');
 
-				// The token is never sent to the browser.  Blank means keep the stored one
-				$('#dh_api_token').val('');
-				$('#dh_token_help').text(s.token_set ? localise.set["u_dh_token_help"] : '');
-				$('#dh_test_result').empty();
+					// The token is never sent to the browser.  Blank means keep the stored one
+					$('#dh_api_token').val('');
+					$('#dh_token_help').text(s.token_set ? localise.set["u_dh_token_help"] : '');
+					$('#dh_test_result').empty();
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
 				}
 			}
 		});
@@ -1255,19 +1259,23 @@ const moment = window.moment;
 			url: "/surveyKPI/dhis2/server",
 			contentType: 'application/json',
 			data: JSON.stringify(s),
-			success: function() {
+			success: function(data) {
 				removeHourglass();
-				$('#dh_api_token').val('');
-				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success')
-					.html(localise.set["msg_upd"]);
-				getDhis2Server();
-				if(callback) {
-					callback();
+				if(handleLogout(data)) {
+					$('#dh_api_token').val('');
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success')
+						.html(localise.set["msg_upd"]);
+					getDhis2Server();
+					if(callback) {
+						callback();
+					}
 				}
 			},
 			error: function(xhr) {
 				removeHourglass();
-				alert(localise.set["msg_err_upd"] + xhr.responseText);
+				if(handleLogout(xhr.responseText)) {
+					alert(localise.set["msg_err_upd"] + xhr.responseText);
+				}
 			}
 		});
 	}
@@ -1277,13 +1285,17 @@ const moment = window.moment;
 		$.ajax({
 			type: 'DELETE',
 			url: "/surveyKPI/dhis2/server",
-			success: function() {
+			success: function(data) {
 				removeHourglass();
-				getDhis2Server();
+				if(handleLogout(data)) {
+					getDhis2Server();
+				}
 			},
 			error: function(xhr) {
 				removeHourglass();
-				alert(localise.set["msg_err_del"] + xhr.responseText);
+				if(handleLogout(xhr.responseText)) {
+					alert(localise.set["msg_err_del"] + xhr.responseText);
+				}
 			}
 		});
 	}
@@ -1297,13 +1309,17 @@ const moment = window.moment;
 			dataType: 'json',
 			success: function(t) {
 				removeHourglass();
-				showDhis2TestResult(t);
-				getDhis2Server();		// The result is stored against the connection
+				if(handleLogout(t)) {
+					showDhis2TestResult(t);
+					getDhis2Server();		// The result is stored against the connection
+				}
 			},
 			error: function(xhr) {
 				removeHourglass();
-				$('#dh_test_result').html('<div class="alert alert-danger"></div>');
-				$('#dh_test_result div').text(xhr.responseText || localise.set["msg_err_dh_test"]);
+				if(handleLogout(xhr.responseText)) {
+					$('#dh_test_result').html('<div class="alert alert-danger"></div>');
+					$('#dh_test_result div').text(xhr.responseText || localise.set["msg_err_dh_test"]);
+				}
 			}
 		});
 	}

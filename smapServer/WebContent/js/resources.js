@@ -951,8 +951,10 @@ $(function() {
 			},
 			error: function(xhr) {
 				removeHourglass();
-				if(xhr.readyState !== 0 && xhr.status !== 0) {
-					console.log("Error getting DHIS2 resources: " + xhr.responseText);
+				if(handleLogout(xhr.responseText)) {
+					if(xhr.readyState !== 0 && xhr.status !== 0) {
+						console.log("Error getting DHIS2 resources: " + xhr.responseText);
+					}
 				}
 			}
 		});
@@ -1042,7 +1044,9 @@ $(function() {
 			},
 			error: function(xhr) {
 				removeHourglass();
-				alert(xhr.responseText || localise.set["c_error"]);
+				if(handleLogout(xhr.responseText)) {
+					alert(xhr.responseText || localise.set["c_error"]);
+				}
 			}
 		});
 	}
@@ -1091,12 +1095,14 @@ $(function() {
 				}
 			},
 			error: function(xhr) {
-				// Usually no connection set up, or DHIS2 unreachable.  Say which
-				$('#dh_optionset').empty();
-				$('#dh_sync_msg')
-					.removeClass('alert-success').addClass('alert-danger')
-					.text(xhr.responseText || localise.set["c_error"])
-					.show();
+				if(handleLogout(xhr.responseText)) {
+					// Usually no connection set up, or DHIS2 unreachable.  Say which
+					$('#dh_optionset').empty();
+					$('#dh_sync_msg')
+						.removeClass('alert-success').addClass('alert-danger')
+						.text(xhr.responseText || localise.set["c_error"])
+						.show();
+				}
 			}
 		});
 	}
@@ -1158,7 +1164,9 @@ $(function() {
 			},
 			error: function(xhr) {
 				removeHourglass();
-				alert(localise.set["msg_err_save"] + " " + xhr.responseText);
+				if(handleLogout(xhr.responseText)) {
+					alert(localise.set["msg_err_save"] + " " + xhr.responseText);
+				}
 			}
 		});
 	}
@@ -1168,13 +1176,17 @@ $(function() {
 		$.ajax({
 			type: 'DELETE',
 			url: '/surveyKPI/dhis2/maps/' + id,
-			success: function() {
+			success: function(data) {
 				removeHourglass();
-				getDhis2Maps();
+				if(handleLogout(data)) {
+					getDhis2Maps();
+				}
 			},
 			error: function(xhr) {
 				removeHourglass();
-				alert(localise.set["msg_err_del"] + " " + xhr.responseText);
+				if(handleLogout(xhr.responseText)) {
+					alert(localise.set["msg_err_del"] + " " + xhr.responseText);
+				}
 			}
 		});
 	}
@@ -1191,24 +1203,28 @@ $(function() {
 			url: '/surveyKPI/dhis2/maps/' + id + '/sync',
 			success: function(data) {
 				removeHourglass();
-				var count = '';
-				try {
-					var result = (typeof data === 'object') ? data : JSON.parse(data);
-					count = ' ' + result.count + ' ' + localise.set["c_records"];
-				} catch(e) {}
-				$('#dh_sync_msg')
-					.removeClass('alert-danger').addClass('alert-success')
-					.text(localise.set["c_success"] + count)
-					.show();
-				getDhis2Maps();
+				if(handleLogout(data)) {
+					var count = '';
+					try {
+						var result = (typeof data === 'object') ? data : JSON.parse(data);
+						count = ' ' + result.count + ' ' + localise.set["c_records"];
+					} catch(e) {}
+					$('#dh_sync_msg')
+						.removeClass('alert-danger').addClass('alert-success')
+						.text(localise.set["c_success"] + count)
+						.show();
+					getDhis2Maps();
+				}
 			},
 			error: function(xhr) {
 				removeHourglass();
-				$('#dh_sync_msg')
-					.removeClass('alert-success').addClass('alert-danger')
-					.text(xhr.responseText || localise.set["msg_err_sp_sync"])
-					.show();
-				getDhis2Maps();		// The failure is recorded against the resource
+				if(handleLogout(xhr.responseText)) {
+					$('#dh_sync_msg')
+						.removeClass('alert-success').addClass('alert-danger')
+						.text(xhr.responseText || localise.set["msg_err_sp_sync"])
+						.show();
+					getDhis2Maps();		// The failure is recorded against the resource
+				}
 			}
 		});
 	}
