@@ -35,7 +35,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			headers: { "Content-Type": "application/json",
 				"X-Requested-With": "XMLHttpRequest"},
 			body: JSON.stringify(payload)
-		}).finally(function () {
+		}).catch(function () {
+			// A failed report must not itself become an unhandled rejection
+		}).then(function () {
 			_posting = false;
 		});
 	}
