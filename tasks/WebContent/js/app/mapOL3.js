@@ -45,6 +45,27 @@ export default {
 	setSelectedFeature: setSelectedFeature
 };
 
+		/*
+		 * Fit the map to an extent
+		 * Silently ignore empty / infinite extents, otherwise open layers throws an assertion error
+		 */
+		function fitExtent(map, extent) {
+			if(!map || !extent || extent.length !== 4) {
+				return;
+			}
+			if(!isFinite(extent[0]) || !isFinite(extent[1]) || !isFinite(extent[2]) || !isFinite(extent[3])) {
+				return;		// No features
+			}
+			if(extent[2] < extent[0] || extent[3] < extent[1]) {
+				return;		// Empty extent
+			}
+			var size = map.getSize();
+			if(!size || !size[0] || !size[1]) {
+				return;		// Map not yet rendered
+			}
+			map.getView().fit(extent, size);
+		}
+
 		function deleteLayers() {
 			var i;
 			if(gLayers) {
@@ -241,7 +262,7 @@ export default {
             if(layer.enabled) {
                 map.addLayer(gVectorLayers[index]);
             }
-            map.getView().fit(gVectorSources[index].getExtent(), map.getSize());
+            fitExtent(map, gVectorSources[index].getExtent());
         }
 
         function deleteLayer(index) {
@@ -590,7 +611,7 @@ export default {
                         });
                         config.map.addLayer(layer);
 
-                        config.map.getView().fit(source.getExtent(), config.map.getSize());
+                        fitExtent(config.map, source.getExtent());
 
                     } catch(err) {
 
@@ -790,6 +811,6 @@ export default {
                 config.map.addLayer(config.selectLayer);
             }
             if(recenter) {
-                config.map.getView().fit(config.selectSource.getExtent(), config.map.getSize());
+                fitExtent(config.map, config.selectSource.getExtent());
             }
 	}

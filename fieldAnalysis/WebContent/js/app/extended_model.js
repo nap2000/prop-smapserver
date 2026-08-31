@@ -206,7 +206,7 @@ export default {
 	function click(d) {
 		
 		// Make sure the node is marked as selected if it is in the list
-		for(i = 0; i < selected.length; i++) {
+		for(var i = 0; i < selected.length; i++) {
 			if(selected[i] == d.id) {
 				d.selected = true;
 			}
@@ -318,8 +318,8 @@ export default {
 		if(paths[end]) {
 			selectedPath = paths[end];
 			console.log("path: " + selectedPath.join());
-			for(j = 0; j < selectedPath.length - 1; j++) {
-				for(i = 0; i < graph.links.length; i++) {
+			for(var j = 0; j < selectedPath.length - 1; j++) {
+				for(var i = 0; i < graph.links.length; i++) {
 					var sourceId = +graph.links[i].source.id;
 					var targetId = +graph.links[i].target.id;
 					
@@ -339,7 +339,8 @@ export default {
 	function addPaths(paths, end) {
 		
 		var path,
-			pathId;
+			pathId,
+			lastForm;
 		
 		for(pathId in paths) {
 			if (paths.hasOwnProperty(pathId)) {
@@ -348,7 +349,7 @@ export default {
 				path = paths[pathId];
 				lastForm = +path[path.length - 1];
 				
-				for(i = 0; i < graph.links.length; i++) {
+				for(var i = 0; i < graph.links.length; i++) {
 					var sourceId = +graph.links[i].source.id;
 					var targetId = +graph.links[i].target.id;
 					if(sourceId === lastForm) {

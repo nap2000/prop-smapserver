@@ -35,7 +35,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			headers: { "Content-Type": "application/json",
 				"X-Requested-With": "XMLHttpRequest"},
 			body: JSON.stringify(payload)
-		}).finally(function () {
+		}).catch(function () {
+			// A failed report must not itself become an unhandled rejection
+		}).then(function () {
 			_posting = false;
 		});
 	}
@@ -55,17 +57,86 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		return false;  // allow default browser handling to continue
 	};
 
+	/*
+	 * Rejection reasons are often not Errors - jqXHR objects, DOM events or
+	 * plain objects all used to be logged as "[object Object]" which said
+	 * nothing about the cause.  Describe whatever we are given.
+	 */
+	function safeString(value) {
+		try {
+			return String(value);
+		} catch (e) {
+			return "[unprintable]";   // e.g. an object with a null prototype
+		}
+	}
+
+	function describeReason(reason) {
+
+		if (reason === null || typeof reason === "undefined") {
+			return { message: safeString(reason), stack: "" };
+		}
+
+		// Errors, including cross realm ones where instanceof fails
+		if (typeof reason.message === "string" && typeof reason.stack === "string") {
+			return { message: (reason.name ? reason.name + ": " : "") + reason.message,
+				stack: reason.stack };
+		}
+
+		// jQuery jqXHR / XMLHttpRequest
+		if (typeof reason.readyState !== "undefined" && typeof reason.status !== "undefined") {
+			var body = "";
+			try {
+				body = (reason.responseText || "").substring(0, 200);
+			} catch (e) { /* responseText not always readable */ }
+			return { message: "ajax " + reason.status + " " + (reason.statusText || "") +
+					(body ? " " + body : ""),
+				stack: "" };
+		}
+
+		if (typeof Event !== "undefined" && reason instanceof Event) {
+			return { message: "event " + reason.type +
+					(reason.target && reason.target.src ? " " + reason.target.src : ""),
+				stack: "" };
+		}
+
+		if (typeof reason === "object") {
+			var text;
+			try {
+				var seen = [];
+				text = JSON.stringify(reason, function (key, value) {
+					if (value && typeof value === "object") {
+						if (seen.indexOf(value) > -1) {
+							return "[circular]";
+						}
+						seen.push(value);
+					}
+					return value;
+				});
+			} catch (e) {
+				text = "";
+			}
+			var name = (reason.constructor && reason.constructor.name) || "Object";
+			return { message: name + " " + (text && text !== "{}" ? text.substring(0, 500) : safeString(reason)),
+				stack: typeof reason.stack === "string" ? reason.stack : "" };
+		}
+
+		return { message: safeString(reason), stack: "" };
+	}
+
 	window.addEventListener("unhandledrejection", function (event) {
-		var reason = event.reason;
-		var message = (reason instanceof Error) ? reason.message : String(reason);
-		var stack = (reason instanceof Error) ? (reason.stack || "") : "";
+		var described;
+		try {
+			described = describeReason(event.reason);
+		} catch (e) {
+			described = { message: "unable to describe rejection reason", stack: "" };
+		}
 		postError({
 			level: "error",
-			message: "Unhandled promise rejection: " + message,
+			message: "Unhandled promise rejection: " + described.message,
 			source: "",
 			line: 0,
 			col: 0,
-			stack: stack,
+			stack: described.stack,
 			url: window.location.href,
 			userAgent: navigator.userAgent,
 			ts: new Date().toISOString()

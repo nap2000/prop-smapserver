@@ -26,8 +26,6 @@ export function setGraphSurvey(view) {
 	
 	$chartdiv = $('#chartdiv' + view.pId);
 	
-	$panel = $('#p' + view.pId);
-	
 	// Make the container visible temporarily in case it has been hidden
 	$pc = $('#panel-container');
 	if(!$pc.is(':visible')) {

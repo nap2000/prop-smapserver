@@ -1990,7 +1990,7 @@ localise.initLocale(gUserLocale).then(function () {
 		clearDraggableMarker('mapModal');
 		$('#nfc_uid').val("");
 		$('#location_save_panel').hide();
-		gSaveType = '';
+		window.gSaveType = '';
 
 		if(idx != -1) {
 			$('#nfc_uid').val(window.gTags[idx].uid);
@@ -2263,7 +2263,7 @@ localise.initLocale(gUserLocale).then(function () {
 		if(!val || val === '') {
 			$('#location_save_al').prop('checked', true);      // default
 		}
-		gSaveType = val;
+		window.gSaveType = val;
 
 		if (locationIdx >= 0) {
 			$('#location_save_ul').prop('disabled', false);

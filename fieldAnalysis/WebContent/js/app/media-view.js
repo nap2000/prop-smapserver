@@ -104,7 +104,7 @@ export function setMediaSurvey(view) {
 			if (mediaType === "image") { mediaType = "photo"; }
 		}
 
-		gReport = {
+		window.gReport = {
 			imageURL: media,
 			title: "media",
 			thumbnail_url: thumbnail,
@@ -114,7 +114,7 @@ export function setMediaSurvey(view) {
 			smap: { sId: view.sId, data_gen_type: mediaType }
 		};
 
-		$('#report_title').val(gReport.title);
+		$('#report_title').val(window.gReport.title);
 		bootstrap.Modal.getOrCreateInstance(document.getElementById('reportContainer')).show();
 		initialiseReportMap();
 		return false;
