@@ -163,8 +163,28 @@ function _render() {
 
 function _queueStatus(data) {
     if (!data || !data.workers || data.workers.length === 0) { return 'dead'; }
+    if (_pausedUntil(data)) { return 'paused'; }
     if (data.error_rpm > 0) { return 'warn'; }
     return 'live';
+}
+
+/*
+ * The relay has told the subscriber to stop sending, so a growing backlog and no
+ * throughput is the queue waiting its turn rather than anything being broken.
+ * Returns the Date sending resumes, or null.
+ */
+function _pausedUntil(data) {
+    if (!data || !data.email_paused_until) { return null; }
+    var until = new Date(data.email_paused_until);
+    return until > new Date() ? until : null;
+}
+
+function _timeOfDay(d) {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function _escape(text) {
+    return $('<div/>').text(text == null ? '' : text).html();
 }
 
 function _renderCards() {
@@ -172,13 +192,17 @@ function _renderCards() {
     QUEUES.forEach(function(q) {
         var data   = gLatest[q.id];
         var status = _queueStatus(data);
-        var badge  = status === 'live'  ? 'bg-success' :
-                     status === 'warn'  ? 'bg-warning text-dark' : 'bg-danger';
-        var label  = status === 'live'  ? 'Live' :
-                     status === 'warn'  ? 'Errors' : 'Dead';
-        var dot    = status === 'live'  ? '#28a745' :
-                     status === 'warn'  ? '#ffc107' : '#dc3545';
+        var badge  = status === 'live'   ? 'bg-success' :
+                     status === 'paused' ? 'bg-info text-dark' :
+                     status === 'warn'   ? 'bg-warning text-dark' : 'bg-danger';
+        var label  = status === 'live'   ? 'Live' :
+                     status === 'paused' ? 'Paused' :
+                     status === 'warn'   ? 'Errors' : 'Dead';
+        var dot    = status === 'live'   ? '#28a745' :
+                     status === 'paused' ? '#0dcaf0' :
+                     status === 'warn'   ? '#ffc107' : '#dc3545';
         var nWorkers = data && data.workers ? data.workers.length : 0;
+        var paused = _pausedUntil(data);
 
         h.push('<div class="col-sm-6 col-xl-3">');
         h.push('<div class="card shadow-sm h-100 sq-queue-card" data-queue="' + q.id + '" style="cursor:pointer;border-left:4px solid ' + dot + '">');
@@ -193,6 +217,14 @@ function _renderCards() {
         h.push(_metricCell(data ? data.processed_rpm : '–',   'Done / min','text-success'));
         h.push(_metricCell(data ? data.error_rpm : '–',       'Errors / min', data && data.error_rpm > 0 ? 'text-danger' : ''));
         h.push('</div>');
+        if (paused) {
+            h.push('<div class="mt-2 small text-info-emphasis" title="' + _escape(data.email_paused_reason) + '">');
+            h.push('<i class="fas fa-pause-circle me-1"></i>Email paused until ' + _timeOfDay(paused));
+            if (data.email_paused_reason) {
+                h.push('<div class="text-muted text-truncate" style="font-size:.7rem">' + _escape(data.email_paused_reason) + '</div>');
+            }
+            h.push('</div>');
+        }
         h.push('<div class="mt-2 text-muted small"><i class="fas fa-server me-1"></i>' + nWorkers + ' worker' + (nWorkers !== 1 ? 's' : '') + ' active</div>');
         h.push('</div></div></div>');
     });
@@ -276,12 +308,18 @@ function _renderWorkerTables() {
             h.push('<div class="table-responsive">');
             h.push('<table class="table table-sm table-striped table-bordered mb-0">');
             h.push('<thead class="table-dark"><tr>');
-            ['Host', 'PID', 'Type', 'Queue', 'Started', 'Last Heartbeat', 'Done / min', 'Errors / min'].forEach(function(col) {
+            ['Host', 'PID', 'Type', 'Queue', 'Started', 'Last Heartbeat', 'Done / min', 'Errors / min', 'Email'].forEach(function(col) {
                 h.push('<th>' + col + '</th>');
             });
             h.push('</tr></thead><tbody>');
             workers.forEach(function(w) {
-                var rowClass = w.error_rpm > 0 ? ' class="table-danger"' : '';
+                /*
+                 * The pause is per process, so one subscriber can be held up while the
+                 * other is sending normally.  Show it per row rather than only in total.
+                 */
+                var wPaused = _pausedUntil({ workers: workers, email_paused_until: w.email_paused_until });
+                var rowClass = w.error_rpm > 0 ? ' class="table-danger"' :
+                               wPaused ? ' class="table-info"' : '';
                 h.push('<tr' + rowClass + '>');
                 h.push('<td>' + w.hostname + '</td>');
                 h.push('<td>' + w.pid + '</td>');
@@ -291,6 +329,12 @@ function _renderWorkerTables() {
                 h.push('<td class="text-muted small">' + w.heartbeat + '</td>');
                 h.push('<td class="fw-bold text-success">' + w.processed_rpm + '</td>');
                 h.push('<td class="' + (w.error_rpm > 0 ? 'fw-bold text-danger' : '') + '">' + w.error_rpm + '</td>');
+                if (wPaused) {
+                    h.push('<td class="small" title="' + _escape(w.email_paused_reason) + '">'
+                        + '<i class="fas fa-pause-circle me-1"></i>Paused until ' + _timeOfDay(wPaused) + '</td>');
+                } else {
+                    h.push('<td class="text-muted small">Sending</td>');
+                }
                 h.push('</tr>');
             });
             h.push('</tbody></table></div>');
