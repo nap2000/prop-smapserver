@@ -36,6 +36,7 @@ window.gUserLocale = gUserLocale;
 localise.initLocale(gUserLocale).then(function () {
 
     var gToken;
+    var gBatch;
     var gSubscribe;
     var gOrgList;
 
@@ -57,13 +58,19 @@ localise.initLocale(gUserLocale).then(function () {
             param = pArray[i].split("=");
             if ( param[0] === "token" ) {
                 gToken = param[1];
+            } else if ( param[0] === "batch" ) {
+                gBatch = param[1];
             } else if ( param[0] === "subscribe" ) {
                 gSubscribe = param[1];
             }
         }
 
         $('.hideme').hide();
-        if(gToken && !gSubscribe) {
+        if(gBatch) {
+            // The message went to several people so it cannot know which of them is here
+            $('#heading').text(localise.set["c_unsubscribe"]);
+            $('#unsubscribeBatch').show();
+        } else if(gToken && !gSubscribe) {
             $('#heading').text(localise.set["c_unsubscribe"]);
             $('#unsubscribe').show();
         } else if(gToken && gSubscribe) {
@@ -87,6 +94,34 @@ localise.initLocale(gUserLocale).then(function () {
             $.ajax({
                 cache: false,
                 url: "/surveyKPI/subscriptions/unsubscribe/" + gToken,
+                success: function (data, status) {
+                    removeHourglass();
+                    showResult(localise.set["msg_uns"]);
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+        // Unsubscribe from a message that was sent to several recipients
+        $('#unsubscribeBatchSubmit').click(function (e) {
+            e.preventDefault();
+
+            if (!$('#unsubscribeBatchForm')[0].checkValidity()) {
+                $('#unsubscribeBatchForm')[0].reportValidity();
+                return;
+            }
+
+            addHourglass();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/surveyKPI/subscriptions/unsubscribeBatch",
+                data: {
+                    batch: gBatch,
+                    email: $('#batchEmail').val()
+                },
                 success: function (data, status) {
                     removeHourglass();
                     showResult(localise.set["msg_uns"]);

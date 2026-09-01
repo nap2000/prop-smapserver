@@ -52,6 +52,25 @@
                 </div>
             </div>
 
+            <!-- Unsubscribe from a message that went to several recipients, so the link in it
+                 identifies the message rather than one person and we have to ask who is asking -->
+            <div id="unsubscribeBatch" class="hideme col-sm-12 mt-2">
+                <p class="lang col-sm-12 mt-4" data-lang="msg_subs_ub"></p>
+                <form method="POST" action="" id="unsubscribeBatchForm" class="col-sm-12">
+                    <div class="form-group row">
+                        <label class="col-sm-4 control-label lang" data-lang="c_email" for="batchEmail">your email</label>
+                        <div class="col-sm-8">
+                            <input id="batchEmail" class="form-control" name="email" type="email" minlength="1" required/>
+                        </div>
+                    </div>
+                    <div class="text-center my-2">
+                        <button id="unsubscribeBatchSubmit" type="submit" class="btn btn-secondary btn-primary lang my-2"
+                                data-lang="c_unsubscribe">
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <div id="subscribe2" class="hideme col-sm-12 mt-2">
                 <p class="lang col-sm-12 mt-4" data-lang="msg_subs_s"></p>
                 <div class="col-sm-12 text-center">

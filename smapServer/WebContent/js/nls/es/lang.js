@@ -744,6 +744,7 @@ define(
     "msg_res_name": "%s1 es un nombre reservado",
     "msg_trans_to": "La solicitud de traducción ha alcanzado el límite. Sin embargo debería estar trabajando en segundo plano y se verán los resultados al refrescar la página",
     "msg_subs_bg": "Si ha cancelado su suscripción para recibir notificaciones por correo electrónico, puede volver a suscribirse para volver a recibirlas mediante esta página. La decisión de enviar notificaciones a una dirección de correo electrónico la toma un administrador, por lo que, aunque puede cancelar la suscripción a estas y luego volver a suscribirse en esta página, no puede solicitar notificaciones por correo electrónico cuando no se le envía ninguna.",
+    "msg_subs_ub": "Este mensaje se envi\u00f3 a varias personas, por lo que no podemos saber cu\u00e1l de ellas es usted. Ingrese la direcci\u00f3n de correo a la que se envi\u00f3 y esa direcci\u00f3n dejar\u00e1 de recibir notificaciones de esta organizaci\u00f3n.",
     "msg_subs_u": "Puede dejar de recibir notificaciones de la organización que le envió el correo electrónico haciendo clic en el botón de cancelación de suscripción que aparece a continuación. Si más adelante desea volver a recibir correos electrónicos de esa organización, puede seleccionar el menú \"Suscribirse\" en la página de inicio.",
     "msg_subs_s": "Haga clic en el botón de abajo para suscribirse",
     "msg_fgt_p": "Ingrese la dirección de correo electrónico asociada a su cuenta. Se enviará un enlace a esa dirección que le permitirá restablecer su contraseña.",
