@@ -648,6 +648,7 @@ localise.initLocale(gUserLocale).then(function() {
         function loadDhis2DataElements(uid, done) {
             gDhis2Elements = [];
             if(!uid) {
+                updateDhis2Unmapped();     // Nothing chosen, so nothing can be missing
                 if(typeof done === 'function') { done(); }
                 return;
             }
@@ -747,6 +748,55 @@ localise.initLocale(gUserLocale).then(function() {
                 $row.find('.dh_item_coc').html(dhis2CocOptions(de, coc));
                 $row.data('de', de).data('coc', coc);
             });
+            updateDhis2Unmapped();
+        }
+
+        /*
+         * How many of the data set's values have no mapping row
+         *
+         * A missing row is silent otherwise: the export runs, reports success, and the figure
+         * the user is looking for never appears in DHIS2.  This was found by filming a demo,
+         * where under 5 cases and under 5 deaths had no rows and nothing said so.
+         *
+         * A value is an (element, category option combo) pair.  An element whose combo is the
+         * default one is a single value, since the export sends no combo for it.
+         */
+        function updateDhis2Unmapped() {
+            var $out = $('#dh_exp_unmapped');
+            if(!gDhis2Elements.length) {
+                $out.empty();          // No data set chosen, so there is nothing to be missing
+                return;
+            }
+
+            var slots = [];
+            gDhis2Elements.forEach(function (e) {
+                if(!e.code) { return; }        // Cannot be mapped, the export sends codes
+                var cocs = e.cocs.filter(function (c) { return c.code && c.code !== 'default'; });
+                if(cocs.length) {
+                    cocs.forEach(function (c) { slots.push(e.code + '|' + c.code); });
+                } else {
+                    slots.push(e.code + '|');
+                }
+            });
+
+            var mapped = {};
+            $('#dh_exp_items_body tr').each(function () {
+                var $row = $(this);
+                var de = $row.find('.dh_item_de').val() || $row.data('de') || '';
+                var coc = $row.find('.dh_item_coc').val() || $row.data('coc') || '';
+                if(de) { mapped[de + '|' + coc] = true; }
+            });
+
+            var missing = slots.filter(function (s) { return !mapped[s]; }).length;
+
+            if(missing === 0) {
+                $out.removeClass('text-danger').addClass('text-muted')
+                    .text(localise.set['u_dh_all_mapped'].replace('%s1', slots.length));
+            } else {
+                $out.removeClass('text-muted').addClass('text-danger')
+                    .text(localise.set['u_dh_unmapped']
+                        .replace('%s1', missing).replace('%s2', slots.length));
+            }
         }
 
         function addDhis2ItemRow(item) {
@@ -771,20 +821,24 @@ localise.initLocale(gUserLocale).then(function() {
             var $row = $(h).appendTo('#dh_exp_items_body');
             $row.data('de', item.data_element || '').data('coc', item.category_option_combo || '');
             $row.find('.dh_item_q').val(item.question_name || '');
-            $row.find('.dh_item_del').click(function () { $row.remove(); });
+            $row.find('.dh_item_del').click(function () { $row.remove(); updateDhis2Unmapped(); });
             $row.find('.dh_item_de').change(function () {
                 $row.data('de', $(this).val()).data('coc', '');
                 $row.find('.dh_item_coc').html(dhis2CocOptions($(this).val(), ''));
+                updateDhis2Unmapped();
             });
             $row.find('.dh_item_coc').change(function () {
                 $row.data('coc', $(this).val());
+                updateDhis2Unmapped();
             });
+            updateDhis2Unmapped();
         }
 
         function edit_dhis2_export(idx) {
             $('#dh_exp_edit_msg').hide();
             $('#dh_exp_result').empty();
             $('#dh_exp_items_body').empty();
+            $('#dh_exp_unmapped').empty();
             gDhis2Elements = [];
 
             var e = (typeof idx !== 'undefined') ? gDhis2Exports[idx] : null;

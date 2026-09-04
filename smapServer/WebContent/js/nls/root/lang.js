@@ -1833,6 +1833,8 @@ define({
     "u_dh_auto_help": "Only switch this on once a dry run has shown the mapping is right",
     "u_dh_periods_back": "Periods to re-send",
     "u_dh_periods_back_help": "Also re-send this many recent periods, so data arriving late is picked up",
+    "u_dh_unmapped": "%s1 of the %s2 values in this data set are not mapped. Anything left unmapped is simply never sent.",
+    "u_dh_all_mapped": "All %s1 values in this data set are mapped.",
     "u_dh_not_msg": "There is nothing to set here. When a record is added, changed or deleted, the totals for its period and organisation unit are recalculated and sent to DHIS2. What is sent is set by the DHIS2 tab on the bundle and case management page.",
     "msg_err_dh_test": "Could not reach DHIS2",
 
