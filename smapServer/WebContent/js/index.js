@@ -40,15 +40,6 @@ localise.initLocale(gUserLocale).then(function () {
 	getServerVersion();
 
 	/*
-     * Enable self registration
-     */
-	if(isSelfRegistrationServer()) {
-		$('#signup').show().removeClass('d-none');
-	} else {
-		$('#signup').hide();
-	}
-
-	/*
      * Add links to download fieldTask
      */
 	androidVersion = parseFloat(getAndroidVersion());
@@ -74,17 +65,31 @@ function isLoggedIn() {
 				$('.notloggedin').hide();
 			} else {
 				$('.restrict_role').hide();
-				$('.notloggedin').show().removeClass('d-none');;
+				$('.notloggedin').show().removeClass('d-none');
 				$('.loggedin').hide();
 			}
+			enableSelfRegistration();
 
 		}, error: function (data, status) {
 			$('.restrict_role').hide();
-			$('.notloggedin').show().removeClass('d-none');;
+			$('.notloggedin').show().removeClass('d-none');
 			$('.loggedin').hide();
+			enableSelfRegistration();
 
 		}
 	});
+}
+
+/*
+ * Enable self registration - only on approved servers
+ * Must run after the .notloggedin class is processed as #signup has that class
+ */
+function enableSelfRegistration() {
+	if(isSelfRegistrationServer()) {
+		$('#signup').show().removeClass('d-none');
+	} else {
+		$('#signup').hide().addClass('d-none');
+	}
 }
 
 function getServerVersion() {

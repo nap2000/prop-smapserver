@@ -2682,11 +2682,12 @@ function isSelfRegistrationServer() {
 	var hostname = location.hostname;
 	var sr = true;
 
+	// Must match GeneralUtilityMethods.assertSelfRegistrationServer() in smapserver2
 	if(hostname !== 'localhost' &&
 		hostname !== 'sg.smap.com.au' &&
-		hostname.indexOf('reachnettechnologies.com') < 0 &&
-		hostname.indexOf('.icanreach.com') < 0 &&
-		hostname.indexOf('encontactone.com') < 0 &&
+		!hostname.endsWith('reachnettechnologies.com') &&
+		!hostname.endsWith('datacollect.icanreach.com') &&
+		!hostname.endsWith('encontactone.com') &&
 		hostname !== 'app.kontrolid.com' &&
 		hostname !== 'kontrolid.smap.com.au') {
 		sr = false;

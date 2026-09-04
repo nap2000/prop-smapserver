@@ -20,7 +20,7 @@
 
 import "./libs/bootbox-bootstrap-bridge.js";
 import localise from "./app/localise.js";
-import { addHourglass, removeHourglass } from "./app/common";
+import { addHourglass, removeHourglass, isSelfRegistrationServer } from "./app/common";
 
 const $ = window.$;
 
@@ -34,7 +34,18 @@ if (typeof localStorage !== "undefined") {
 }
 window.gUserLocale = gUserLocale;
 
+/*
+ * Self registration is only permitted on approved servers. The server rejects the
+ * POST anyway, this stops a form being presented that can never be submitted
+ */
+if(!isSelfRegistrationServer()) {
+    window.location.replace('/');
+}
+
 localise.initLocale(gUserLocale).then(function () {
+    if(!isSelfRegistrationServer()) {
+        return;
+    }
     setCustomRegister();			// Apply custom javascript
     localise.setlang();
 
