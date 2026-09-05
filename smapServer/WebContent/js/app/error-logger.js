@@ -123,8 +123,31 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		return { message: safeString(reason), stack: "" };
 	}
 
+	/*
+	 * Browser wallet extensions inject a provider into every page and their
+	 * rejections surface here as ours.  They are EIP-1193 / JSON-RPC provider
+	 * errors: a plain object with a numeric code and no stack, from code we
+	 * do not ship.  Nothing we can act on, so don't log them.
+	 */
+	function isExtensionProviderError(reason) {
+
+		if (!reason || typeof reason !== "object" || typeof reason.code !== "number") {
+			return false;
+		}
+		if (typeof reason.stack === "string" && reason.stack.length > 0) {
+			return false;       // Has a stack, could be ours
+		}
+		return (reason.code >= 4001 && reason.code <= 4999) ||
+			(reason.code <= -32000 && reason.code >= -32099);
+	}
+
 	window.addEventListener("unhandledrejection", function (event) {
 		var described;
+
+		if (isExtensionProviderError(event.reason)) {
+			return;
+		}
+
 		try {
 			described = describeReason(event.reason);
 		} catch (e) {
