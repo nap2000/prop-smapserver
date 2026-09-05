@@ -1173,6 +1173,19 @@ localise.initLocale(gUserLocale).then(function () {
             i;
 
         /*
+         * The export buttons are bound with a delegated handler so they stay
+         * live even when there is no table - before a survey is chosen, or
+         * after a data load failed and the table was destroyed.  Nothing to
+         * export in that case.
+         */
+        if (!globals.gMainTable || !gTasks.cache.currentData || !gTasks.cache.currentData.schema) {
+            $('.genfile').removeClass("disabled");
+            $('#dashboardInfo').show().removeClass('alert-success').addClass('alert-danger')
+                .html(localise.set["c_no_data"]);
+            return;
+        }
+
+        /*
          * Get the settings
          */
         settingsObj = globals.gMainTable.settings();
@@ -3769,10 +3782,14 @@ localise.initLocale(gUserLocale).then(function () {
 
         if(gTableSearch && gTableSearch.trim().length > 0) {
             gTableSearch = "";
-            globals.gMainTable.search("");      // Also clears the search box
+            if(globals.gMainTable) {
+                globals.gMainTable.search("");      // Also clears the search box
+            }
         }
 
-        globals.gMainTable.draw();
+        if(globals.gMainTable) {                    // May have been destroyed by a failed load
+            globals.gMainTable.draw();
+        }
         $('.filtersChanged').hide();
 
         gLocalDefaults.myRecords = $('#my_records').prop('checked');
@@ -4327,6 +4344,7 @@ localise.initLocale(gUserLocale).then(function () {
         if ( $.fn.dataTable.isDataTable( $("#trackingTable")) && globals.gMainTable) {
             globals.gMainTable.destroy();
         }
+        globals.gMainTable = undefined;     // Destroyed, don't let anything keep using it
         $("#trackingTable").empty()
     }
 
