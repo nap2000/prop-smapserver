@@ -44,6 +44,7 @@ import localise from "./localise.js";
         GROUP_CONSOLE_ADMIN : 14,
         GROUP_MCP_ACCESS : 15,
         GROUP_DPO : 16,
+        GROUP_MCP_ACCESS : 15,
 
         REC_LIMIT: 200,     // Page size for table views in analysis
 	    MAP_REC_LIMIT: 10000,    // Max size for map views in analysis
@@ -71,6 +72,7 @@ import localise from "./localise.js";
         gIsLinkFollower: false,
         gIsServerOwner: false,
         gIsConsoleAdmin: false,
+        gIsMcp: false,
         gViewData: false,
 	    gManageTasks: false,
         gBillingData: false,

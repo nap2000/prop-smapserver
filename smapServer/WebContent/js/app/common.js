@@ -607,6 +607,8 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 				globals.gIsConsoleAdmin = true;
 			} else if(groups[i].id === globals.GROUP_DPO) {
 				globals.gIsDpo = true;
+			} else if(groups[i].id === globals.GROUP_MCP_ACCESS) {
+				globals.gIsMcp = true;
 			}
 		}
 	}
@@ -659,6 +661,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	}
 	if(globals.gIsDpo) {
 		$('.dpo_role').removeClass('d-none').show();
+	}
+	if(globals.gIsMcp) {
+		$('.mcp_role').removeClass('d-none').show();
 	}
 
 	if(globals.gTraining) {

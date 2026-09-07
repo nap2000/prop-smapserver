@@ -10,7 +10,8 @@ module.exports = {
     monitor: "./WebContent/js/monitor.js",
     notifications: "./WebContent/js/notifications.js",
     billing: "./WebContent/js/billing.js",
-    privacy: "./WebContent/js/privacy.js"
+    privacy: "./WebContent/js/privacy.js",
+    mcpaccess: "./WebContent/js/mcpaccess.js"
   },
   output: {
     filename: "[name].bundle.js",
