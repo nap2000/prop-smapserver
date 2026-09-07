@@ -806,6 +806,10 @@ const moment = window.moment;
 		$('#s_api_max_records').val(data.api_max_records);
 		$('#s_p_strength').val(data.password_strength);
 		$('#s_sec_mgr_del').prop('checked', data.sec_mgr_del);
+		$('#s_mcp_enabled').prop('checked', data.mcp_enabled);
+		$('#s_mcp_client_registration').val(data.mcp_client_registration || 'cimd+dcr');
+		$('#s_mcp_max_rows').val(data.mcp_max_rows);
+		$('#s_mcp_token_ttl').val(data.mcp_token_ttl);
 		gCssFile = data.css;
 
 		$('#sp_url').val(data.sharepoint_url);
@@ -848,6 +852,10 @@ const moment = window.moment;
 				api_max_records: $('#s_api_max_records').val(),
 				password_strength: $('#s_p_strength').val(),
 				sec_mgr_del: $('#s_sec_mgr_del').prop('checked'),
+				mcp_enabled: $('#s_mcp_enabled').prop('checked'),
+				mcp_client_registration: $('#s_mcp_client_registration').val(),
+				mcp_max_rows: $('#s_mcp_max_rows').val() || 0,
+				mcp_token_ttl: $('#s_mcp_token_ttl').val() || 3600,
 				css: $('#cssSelect').val(),
 				sharepoint_url: $('#sp_url').val(),
 				sharepoint_client_id: $('#sp_client_id').val(),

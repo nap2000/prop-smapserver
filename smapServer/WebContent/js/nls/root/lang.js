@@ -1244,6 +1244,14 @@ define({
 
     // Users
     "u_sec_mgr_del": "Require security manager privilege to delete data",
+    "u_mcp": "MCP Server",
+    "u_mcp_enabled": "Enable the MCP server",
+    "u_mcp_client_registration": "How AI clients register",
+    "u_mcp_reg_cimd_dcr": "Client ID Metadata Documents, with dynamic registration for older clients",
+    "u_mcp_reg_cimd": "Client ID Metadata Documents only",
+    "u_mcp_reg_off": "No self registration",
+    "u_mcp_max_rows": "Max rows an MCP request may return",
+    "u_mcp_token_ttl": "MCP access token lifetime (seconds)",
     "u_other_msg": "These settings apply to the current organisation",
     "u_show_u": "Show users with security group",
     "u_show_p": "Show users in project",
