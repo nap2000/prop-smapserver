@@ -7355,6 +7355,11 @@ function restoreEscalateAssignType(remoteUser) {
  * class reveals them both - call this afterwards to hide the one not in use
  */
 function applyEscalateAssignType() {
+	var target = $('#target').val();
+	if(target !== 'escalate' && target !== 'reference') {
+		$('#esc_user_row, #esc_role_row').hide();	// The assign rows only apply to escalate and reference targets
+		return;
+	}
 	if($('#esc_assign_role_type').hasClass('active')) {
 		$('#esc_user_row').hide();
 		$('#esc_role_row').show();
