@@ -1264,6 +1264,7 @@ define({
     "mcp_token_days": "Valid for (days, blank for no expiry)",
     "mcp_token_create": "Create token",
     "mcp_token_once": "Copy this now. It will not be shown again.",
+    "mcp_via": "via",
     "mcp_no_access": "Your account does not have AI access. A server owner can grant it from user management.",
     "u_mcp_enabled": "Enable the MCP server",
     "u_mcp_client_registration": "How AI clients register",

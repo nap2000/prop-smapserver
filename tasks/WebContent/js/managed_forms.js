@@ -2798,6 +2798,16 @@ localise.initLocale(gUserLocale).then(function () {
                     if(data[i].userName) {
                         h[++idx] = htmlEncode(data[i].userName);
                     }
+                    /*
+                     * The person and the program that acted for them are different facts. The user
+                     * is who the change is attributed to; the agent is what made it, and is absent
+                     * for anything a person did themselves in the console.
+                     */
+                    if(data[i].agent) {
+                        h[++idx] = '<div class="text-muted small">';
+                        h[++idx] = localise.set["mcp_via"] + ' ' + htmlEncode(data[i].agent);
+                        h[++idx] = '</div>';
+                    }
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td class="mincol">';    // Survey
