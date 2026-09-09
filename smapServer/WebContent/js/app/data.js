@@ -150,32 +150,29 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
    }
  
 /*
- * Returns {fromDate, toDate, dateQuestionId} for a view, applying the
+ * Returns {fromDate, toDate, dateQuestionId, dateRange} for a view, applying the
  * dashboard-wide relative range (globals.gDashboardDateRange) only when the
  * view has no date range of its own ("fill blanks").  Non-mutating.
+ *
+ * The range is passed to the server as it stands rather than as a pair of dates.  The server
+ * measures it back from the current time, so "last day" is the last 24 hours right up until
+ * now, including a submission that has only just been received.
+ *
+ * uploadTimeId is the date question id that means "upload time" for the service being called
  */
-function getEffectiveDateFilter(view) {
+function getEffectiveDateFilter(view, uploadTimeId) {
 	var fromDate = view.fromDate,
 		toDate = view.toDate,
 		dateQuestionId = view.dateQuestionId,
-		range = globals.gDashboardDateRange;
+		dateRange = globals.gDashboardDateRange;
 
-	if(range && range !== 'all' && !fromDate && !toDate) {
-		var now = new Date(),
-			from = new Date();
-		if(range === '1d') {
-			from.setDate(from.getDate() - 1);
-		} else if(range === '1w') {
-			from.setDate(from.getDate() - 7);
-		} else if(range === '1m') {
-			from.setMonth(from.getMonth() - 1);
-		}
-		var fmt = function(d) { return d.toISOString().slice(0, 10); };	// YYYY-MM-DD
-		fromDate = fmt(from);
-		toDate = fmt(now);
-		dateQuestionId = -100;	// Relative ranges always filter on Upload Time, not the view's (often arbitrary) date question
+	if(dateRange && dateRange !== 'all' && !fromDate && !toDate) {
+		// Relative ranges always filter on upload time, not the view's (often arbitrary) date question
+		dateQuestionId = (typeof uploadTimeId === "undefined") ? -100 : uploadTimeId;
+	} else {
+		dateRange = undefined;
 	}
-	return { fromDate: fromDate, toDate: toDate, dateQuestionId: dateQuestionId };
+	return { fromDate: fromDate, toDate: toDate, dateQuestionId: dateQuestionId, dateRange: dateRange };
 }
 
 //Get data at the survey level
@@ -230,7 +227,8 @@ function processSurveyData(fId, f_sId, f_view, surveyName, replace, start_rec) {
 				f_view.advanced_filter,  // Get all records with all features
 				tz,
 				f_view.inc_ro,
-				f_view.geomFormQuestions);
+				f_view.geomFormQuestions,
+				df.dateRange);
 	
 	console.log("[processSurveyData] type=" + f_view.type + " bBad=" + bBad + " url=" + url);
 	addHourglass();
@@ -306,11 +304,11 @@ function getUserData(view, start_rec) {
 		tz = globals.gTimezone,
 		data;
 
-	var df = getEffectiveDateFilter(view);
-	var url = userItemsURL(view, start_rec, rec_limit,  df.dateQuestionId, df.fromDate, df.toDate,tz);
+	var df = getEffectiveDateFilter(view, 1);		// 1 is upload time for the user activity service
+	var url = userItemsURL(view, start_rec, rec_limit,  df.dateQuestionId, df.fromDate, df.toDate, tz, df.dateRange);
 	data = globals.gSelector.getItem(url);      // check cache
 
-	if(data) {
+	if(data && !df.dateRange) {		// A relative range is measured up until now so must not be served from the cache
 		if (typeof view.start_recs === "undefined") {
 			view.start_recs = {};
 		}
@@ -444,11 +442,11 @@ function getUserLocationsData(view, start_rec, nocache) {
  function getResults(view) {
 	 
 	 	function getAsyncResults(view, sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
-	 			fromDate, toDate, qId_is_calc) {
+	 			fromDate, toDate, qId_is_calc, dateRange) {
 			
 			var url = resultsURL (sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
 					fromDate, toDate, qId_is_calc, view.filter, view.advanced_filter, view.geomFormQuestions,
-					view.selectedGeomQuestion);
+					view.selectedGeomQuestion, dateRange);
 			
 			addHourglass();
 
@@ -490,7 +488,8 @@ function getUserLocationsData(view, start_rec, nocache) {
 			view.timeGroup,
 			df.fromDate,
 			df.toDate,
-			view.qId_is_calc);
+			view.qId_is_calc,
+			df.dateRange);
  }
  
  function lookup(key, array) {

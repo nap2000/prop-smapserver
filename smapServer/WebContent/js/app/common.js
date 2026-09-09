@@ -3265,7 +3265,7 @@ function downloadPdf(language, orientation, include_references, launched_only, s
 }
 
 function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-	endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
+	endDate, advanced_filter, tz, inc_ro, geomFormQuestions, dateRange) {
 	var url = "/surveyKPI/items/";
 	url += form;
 	var sep = "?";
@@ -3313,12 +3313,15 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 	if(tz) {
 		url += "&tz=" + encodeURIComponent(tz);
 	}
+	if(dateRange) {
+		url += "&dateRange=" + encodeURIComponent(dateRange);
+	}
 	return url;
 }
 
 function resultsURL(sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
 	startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
-	selectedGeomQuestion) {
+	selectedGeomQuestion, dateRange) {
 
 	var url = "/surveyKPI/results/";
 	url += sId;
@@ -3377,16 +3380,21 @@ function resultsURL(sId, qId, dateId, groupId, groupType, geoTable, fn, lang, ti
 		url+= "&selected_geom_question=" + encodeURIComponent(selectedGeomQuestion);
 	}
 
+	if(dateRange) {
+		url+= "&dateRange=" + encodeURIComponent(dateRange);
+	}
+
 	return url;
 }
 
-function userItemsURL(view, start_key, rec_limit, dateId, startDate, endDate, tz) {
+function userItemsURL(view, start_key, rec_limit, dateId, startDate, endDate, tz, dateRange) {
 	var url = "/surveyKPI/items/user/" + view.uId + "?start_key=" + start_key;
 	if(rec_limit) { url += "&rec_limit=" + rec_limit; }
 	if(dateId != null) { url += "&dateId=" + dateId; }
 	if(typeof startDate !== "undefined" && startDate.length > 0) { url += "&startDate=" + startDate; }
 	if(typeof endDate !== "undefined" && endDate.length > 0) { url += "&endDate=" + endDate; }
 	if(tz) { url += "&tz=" + encodeURIComponent(tz); }
+	if(dateRange) { url += "&dateRange=" + encodeURIComponent(dateRange); }
 	return url;
 }
 
