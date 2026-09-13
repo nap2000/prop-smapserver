@@ -150,6 +150,15 @@ function setChangesHtml($element, survey) {
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = htmlEncode(changes[i].userName);
+				/*
+				 * The application that made the change, when one did. The user stays the person it
+				 * was made for; nothing is shown here for a change a person made themselves.
+				 */
+				if(changes[i].agent) {
+					h[++idx] = '<div class="text-muted small">';
+					h[++idx] = localise.set["mcp_via"] + ' ' + htmlEncode(changes[i].agent);
+					h[++idx] = '</div>';
+				}
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = changes[i].updatedTime;
