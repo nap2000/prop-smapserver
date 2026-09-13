@@ -108,7 +108,7 @@
 ## Data Fetching / AJAX
 - Prefer existing helper modules (`app/common`, `app/globals`, etc.) when available.
 - Respect locale handling (`gUserLocale`, `localise.setlang`).
-- Handle auth/session expiry paths consistent with current flows.
+- Handle session expiry on **every** call, in both callbacks: `handleLogout(data)` in `success` and `handleLogout(xhr.responseText)` in `error`. A timed out GET returns the login page as 200 HTML and only reaches `success`; a timed out POST or PUT is refused by Tomcat with 405 and only reaches `error`. Guarding one of the two leaves the other broken. See CLAUDE.md, "Session expiry".
 - Debounce rapid requests that mutate state.
 
 ## UI / DOM

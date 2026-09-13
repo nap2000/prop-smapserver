@@ -83,6 +83,37 @@ fetch('/surveyKPI/dsar?identifier=' + encodeURIComponent(ident))
 fetch('/surveyKPI/rest/dsar?identifier=' + encodeURIComponent(ident))
 ```
 
+## Session expiry: every service call needs `handleLogout`
+
+When the session times out the request never reaches the REST layer, and **what comes back depends on the HTTP method**. Both cases have to be handled, so every `$.ajax` to `/surveyKPI/...` needs a guard in **both** callbacks:
+
+```javascript
+$.ajax({
+    url: '/surveyKPI/thing',
+    success: function(data) {
+        removeHourglass();
+        if(handleLogout(data)) {
+            ...
+        }
+    },
+    error: function(xhr, textStatus, err) {
+        removeHourglass();
+        if(handleLogout(xhr.responseText)) {
+            ...
+        }
+    }
+});
+```
+
+- **GET** falls through to the login page and returns **200 with HTML**. Caught in `success` by `handleLogout(data)`.
+- **POST, PUT and DELETE** never reach Jersey, fall through to Tomcat's `DefaultServlet`, which refuses write methods on a static path with **405**. That only ever reaches the `error` callback, so `handleLogout(xhr.responseText)` is the one that catches it.
+
+`handleLogout` is in `app/common.js` and already tests for `status === 405` and matches `"method not allowed"`, so it is built for this. Pass `xhr.responseText`, not `xhr`, matching `resources.js`, `globals.js`, `changeset.js` and `api.js`.
+
+- **The trap:** guarding only `success` looks correct and leaves every write action broken. On timeout the user gets a raw 405 alert instead of being sent to log in. This is how the DHIS2 code shipped: half the calls guarded, and no write action guarded at all.
+- `removeHourglass()` stays **outside** the guard, or the hourglass is left spinning on the way to the login page.
+- A handler written `success: function()` with no parameter must be given one before it can pass the response to `handleLogout`. `node --check` will not catch the missing variable, because it is a runtime `ReferenceError`.
+
 ## JavaScript conventions
 
 - ES modules throughout (`import`/`export`); `"use strict"` at top
