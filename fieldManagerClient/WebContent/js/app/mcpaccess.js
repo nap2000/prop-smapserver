@@ -174,10 +174,22 @@ function describeScopes(scopes) {
 	if(!scopes) {
 		return '';
 	}
-	// Shown without the smap: prefix, which is machinery rather than meaning
-	return scopes.split(' ').map(function(s) {
-		return s.replace('smap:', '');
-	}).join(', ');
+	/*
+	 * Each scope named once, without the smap: prefix, which is machinery rather than meaning.
+	 *
+	 * The query aggregates with a distinct over each token's whole scope STRING, not over the scopes
+	 * inside it, so a client holding one token for read and write and another for read, write and
+	 * admin arrives here as "smap:read smap:write smap:read smap:write smap:admin". Read aloud that
+	 * says the application is allowed to read twice, which is not a thing.
+	 */
+	var seen = [];
+	scopes.split(' ').forEach(function(s) {
+		var name = s.replace('smap:', '');
+		if(name && seen.indexOf(name) < 0) {
+			seen.push(name);
+		}
+	});
+	return seen.join(', ');
 }
 
 function shortDate(value) {
