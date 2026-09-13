@@ -1273,6 +1273,7 @@ define({
     "u_mcp_reg_off": "No self registration",
     "u_mcp_max_rows": "Max rows an MCP request may return",
     "u_mcp_token_ttl": "MCP access token lifetime (seconds)",
+    "u_mcp_allow_access": "Allow AI clients to manage users and their permissions",
     "u_other_msg": "These settings apply to the current organisation",
     "u_show_u": "Show users with security group",
     "u_show_p": "Show users in project",
