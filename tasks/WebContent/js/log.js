@@ -152,6 +152,27 @@ localise.initLocale(gUserLocale).then(function () {
 				render: function (data, type, full, meta) {
 					return localTime(data);
 				}
+			},
+			{
+				/*
+				 * The person, and under it the application that acted for them.
+				 *
+				 * Two different facts: the user is who the entry is attributed to, the agent is what
+				 * made it. Absent for anything somebody did themselves, which is most entries - and
+				 * kept out of the filter and the search, which are about the person.
+				 */
+				targets: [3],
+				render: function (data, type, full, meta) {
+					if (type !== 'display') {
+						return data;
+					}
+					var h = data ? $('<div>').text(data).html() : '';
+					if (full.agent) {
+						h += '<div class="text-muted small">' + localise.set["mcp_via"] + ' ' +
+							$('<div>').text(full.agent).html() + '</div>';
+					}
+					return h;
+				}
 			}
 			],
 			initComplete: function () {
