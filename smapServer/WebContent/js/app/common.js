@@ -2765,6 +2765,23 @@ function getUtcDate($element, start, end) {
 /*
  * Get a description from a change made in the editor
  */
+/*
+ * The name of a form by its index in the survey, for a change log entry that names one.
+ *
+ * A change record is history: it was written by whatever wrote it, possibly long ago and possibly
+ * by something that did not fill this in. An index of -1, or one past the end because the form has
+ * since been deleted, gave "Cannot read properties of undefined" and took the whole changes page
+ * down - every entry, not just the one that was incomplete.
+ *
+ * A change nobody can read is better than a page nobody can open.
+ */
+function formName(forms, index) {
+	if(!forms || typeof index !== "number" || index < 0 || index >= forms.length || !forms[index]) {
+		return '<span style="color:grey;">?</span>';
+	}
+	return htmlEncode(forms[index].name);
+}
+
 function getChangeDescription(change, version) {
 
 	var h =[],
@@ -2940,18 +2957,16 @@ function getChangeDescription(change, version) {
 				h[++idx] = '</span> from position <span style="color:red;">';
 				h[++idx] = htmlEncode(change.question.sourceSeq);
 				h[++idx] = '</span> in form ';
-				h[++idx] = htmlEncode(forms[change.question.sourceFormIndex].name);
+				h[++idx] = formName(forms, change.question.sourceFormIndex);
 			} else {
 				h[++idx] = '</span> from form ';
-				h[++idx] = htmlEncode(forms[change.question.sourceFormIndex].name);
+				h[++idx] = formName(forms, change.question.sourceFormIndex);
 			}
 			h[++idx] = '</span> to position <span style="color:red;">';
 			h[++idx] = htmlEncode(change.question.seq);
 			h[++idx] = '</span>';
 			h[++idx] = ' in form ';
-			if(change.question.formIndex < forms.length) {	// Allow for a form being deleted
-				h[++idx] = htmlEncode(forms[change.question.formIndex].name);
-			}
+			h[++idx] = formName(forms, change.question.formIndex);
 
 
 		} else if(change.type === "option") {
