@@ -35,6 +35,7 @@ let gPositions = {};   // id -> {x, y}  (updated live during drag)
  * dropped it and never followed the layout again.
  */
 let gPlaced = new Set();
+let gView = "diagram";   // diagram | people
 let gHighlight = "none";
 
 // Edit-drawer state
@@ -519,6 +520,105 @@ function hideLegend() {
 	if (leg) leg.style.display = "none";
 }
 
+/*
+ * Show the diagram or the table.  Both are rendered from the same response, so switching between
+ * them costs nothing and neither can be out of date with respect to the other.
+ */
+function applyView() {
+	const canvas = document.getElementById("workflow-canvas");
+	const people = document.getElementById("workflow-people");
+	if (!canvas || !people) return;
+	const table = gView === "people";
+	canvas.hidden = table;
+	people.hidden = !table;
+	// The highlight menu colours cards, which the table does not have
+	const hl = document.getElementById("m_highlight");
+	if (hl && hl.parentElement) hl.parentElement.hidden = table;
+	const reset = document.getElementById("m_reset_layout");
+	if (reset && reset.parentElement) reset.parentElement.hidden = table;
+	if (table) renderPeople();
+}
+
+/*
+ * Every stage of every process that has a person attached, grouped by process.
+ *
+ * The diagram answers what leads to what. This answers who, which it cannot show: a step assigned
+ * to a role nobody holds, or to somebody who is not in the project holding the form they are sent
+ * to, draws as an ordinary step and silently does nothing. The server works both out because both
+ * need role membership and project membership, which the page does not hold.
+ */
+function renderPeople() {
+	const body = document.getElementById("wf-people-body");
+	if (!body) return;
+	const rows = (gData && gData.people) ? gData.people : [];
+	const l = localise.set;
+	if (rows.length === 0) {
+		body.innerHTML = `<p style="color:#6c757d;font-style:italic;">${esc(l["c_no_data"] || "Nothing to show")}</p>`;
+		return;
+	}
+
+	// Group by process, the ones belonging to no process last
+	const byProcess = new Map();
+	rows.forEach(function(r) {
+		const k = r.process || "";
+		if (!byProcess.has(k)) byProcess.set(k, []);
+		byProcess.get(k).push(r);
+	});
+	const names = Array.from(byProcess.keys()).sort(function(a, b) {
+		if (a === "") return 1;
+		if (b === "") return -1;
+		return a.localeCompare(b);
+	});
+
+	const problems = rows.filter(function(r) { return !r.ok; }).length;
+	let html = "";
+	if (problems > 0) {
+		html += `<div style="margin-bottom:16px;padding:10px 14px;border-radius:6px;`
+			+ `background:#fff3cd;border:1px solid #ffc107;font-size:13px;">`
+			+ `<strong>${problems}</strong> `
+			+ esc(problems === 1 ? "step has nobody who can do it."
+					: "steps have nobody who can do them.")
+			+ ` ${esc("They are marked below.")}</div>`;
+	}
+
+	/*
+	 * One table, with the process as a row spanning it. Separate tables let each size its own
+	 * columns, so a column moved sideways from one process to the next and nothing lined up.
+	 */
+	html += `<table id="wf-people-table"><thead><tr>`
+		+ `<th>${esc(l["c_stage"] || "Stage")}</th>`
+		+ `<th>${esc(l["c_when"] || "When")}</th>`
+		+ `<th>${esc(l["c_form"] || "Form")}</th>`
+		+ `<th>${esc(l["c_project"] || "Project")}</th>`
+		+ `<th>${esc(l["c_assigned_to"] || "Assigned to")}</th>`
+		+ `<th>${esc(l["c_who"] || "Who that is")}</th>`
+		+ `</tr></thead><tbody>`;
+
+	names.forEach(function(name) {
+		html += `<tr class="wf-process"><td colspan="6">`
+			+ esc(name || (l["c_not_in_a_process"] || "Not part of a process")) + `</td></tr>`;
+		byProcess.get(name).forEach(function(r) {
+			const bad = !r.ok;
+			html += `<tr${bad ? ' class="wf-bad"' : ''}>`
+				+ `<td><strong>${esc(r.stage)}</strong>`
+				+ `<div class="wf-type">${esc(typeLabel(r.type))}</div></td>`
+				+ `<td>${r.when ? `<code>${esc(r.when)}</code>`
+						: `<span style="color:#6c757d;">${esc(l["c_always"] || "always")}</span>`}</td>`
+				+ `<td>${esc(r.form || "")}</td>`
+				+ `<td>${esc(r.project || "")}</td>`
+				+ `<td>${esc(r.assignedTo || "")}</td>`
+				+ `<td>${(r.people && r.people.length) ? esc(r.people.join(", "))
+						: `<span style="color:#dc3545;">${esc(l["c_nobody"] || "nobody")}</span>`}`
+				+ (bad && r.problem
+						? `<div class="wf-problem">${esc(r.problem)}</div>`
+						: "")
+				+ `</td></tr>`;
+		});
+	});
+	html += `</tbody></table>`;
+	body.innerHTML = html;
+}
+
 function renderWorkflow(data) {
 	gData         = data;
 	gPositions    = {};
@@ -555,6 +655,8 @@ function renderWorkflow(data) {
 
 	drawArrows();
 	applyHighlight();
+	// Keep whichever view is open in step with the data just loaded
+	applyView();
 }
 
 function loadWorkflow(afterRender) {
@@ -1965,6 +2067,14 @@ localise.initLocale(gUserLocale).then(function() {
 		$("#m_reset_layout").on("click", function(e) { e.preventDefault(); resetLayout(); });
 
 		// Highlight dropdown
+		$(document).on("click", "[data-view]", function(e) {
+			e.preventDefault();
+			gView = $(this).data("view");
+			$("[data-view]").removeClass("active");
+			$(this).addClass("active");
+			applyView();
+		});
+
 		$(document).on("click", "[data-highlight]", function(e) {
 			e.preventDefault();
 			gHighlight = $(this).data("highlight");

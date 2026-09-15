@@ -25,6 +25,48 @@
 
 
 <style>
+/*
+ * ---- Who does what ----
+ * One table for every process rather than one per process, so a column sits in the same place all
+ * the way down the page and the eye can run down it. Ruled between columns as well as between rows:
+ * six columns of short text with nothing between them read as a paragraph.
+ */
+#wf-people-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+#wf-people-table th,
+#wf-people-table td {
+    border: 1px solid #dee2e6;
+    padding: 7px 10px;
+    vertical-align: top;
+    text-align: left;
+}
+#wf-people-table thead th {
+    background: #f1f3f5;
+    font-weight: 700;
+    color: #495057;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+/* The process a run of rows belongs to, spanning the width so the columns below stay aligned */
+#wf-people-table tr.wf-process td {
+    background: #e9ecef;
+    font-weight: 700;
+    font-size: 14px;
+    color: #212529;
+    border-top: 2px solid #adb5bd;
+}
+#wf-people-table tr.wf-bad td { background: #fff5f5; }
+#wf-people-table tr.wf-bad:hover td { background: #ffecec; }
+#wf-people-table tbody tr:not(.wf-process):hover td { background: #f8f9fa; }
+#wf-people-table .wf-type { color: #6c757d; font-size: 11px; }
+#wf-people-table .wf-problem { color: #dc3545; font-size: 11px; margin-top: 3px; }
+#wf-people-table code { color: #d63384; background: none; padding: 0; }
+
 /* ---- Edit drawer ---- */
 #wf-drawer {
     position: fixed;
@@ -197,13 +239,19 @@
                 </div>
             </li>
 
-            <li id="m_notify" class="nav-item restrict_role admin_role analyst_role"><a
-                    class="nav-link" href="/app/fieldManager/notifications.html"><span
-                    class="lang" data-lang="m_notify"></span></a></li>
-
             <li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/taskManagement.html"><span class="lang" data-lang="m_assign"></span></a></li>
-            <li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/fieldManager/notifications.html"><span class="lang" data-lang="m_notify"></span></a></li>
+            <li id="m_notify" class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/fieldManager/notifications.html"><span class="lang" data-lang="m_notify"></span></a></li>
 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="m_view" role="button"
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="lang" data-lang="c_view">View</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="m_view">
+                    <a class="dropdown-item active" href="#" data-view="diagram"><span class="lang" data-lang="c_diagram">Diagram</span></a>
+                    <a class="dropdown-item" href="#" data-view="people"><span class="lang" data-lang="c_who_does_what">Who does what</span></a>
+                </div>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="m_highlight" role="button"
                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -239,6 +287,12 @@
 <div id="workflow-canvas" style="position:relative; width:100%; height:calc(100vh - 56px); overflow:auto;">
     <svg id="wf-arrows" style="position:absolute;top:0;left:0;pointer-events:none;"></svg>
     <div id="wf-nodes"></div>
+</div>
+
+<!-- Who does what: the same workflow read by person rather than by arrow -->
+<div id="workflow-people" hidden
+     style="width:100%; height:calc(100vh - 56px); overflow:auto; padding:18px 22px; box-sizing:border-box;">
+    <div id="wf-people-body"></div>
 </div>
 
 <!-- Edit drawer -->
