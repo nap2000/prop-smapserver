@@ -206,18 +206,26 @@ function nodeCard(x, y, item) {
 	div.dataset.name     = item.name     || "";
 	div.dataset.project  = item.project  || "";
 	div.dataset.bundle   = item.bundle   || "";
+	// The bundle to colour by: worked out from the links, so a case or a decision has one too
+	div.dataset.band     = item.band     || item.bundle || "";
 	div.dataset.assignee = item.assignee || "";
 	div.dataset.fwdIds       = JSON.stringify(item.fwdIds    || []);
 	div.dataset.tgIds        = JSON.stringify(item.tgIds     || []);
 	div.dataset.startIds     = JSON.stringify(item.startIds  || []);
 	div.dataset.caseSurveyId = item.caseSurveyId || 0;
+	// What the card wears with no highlight on, so switching the highlight off restores it exactly
+	div.dataset.baseBorder   = isDecision ? "#fd7e14" : "#dee2e6";
+	div.dataset.baseHeaderBg = isDecision ? "#fff3cd" : "#f8f9fa";
 
-	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
+	// border-box so a thick highlight border does not widen the card away from the arrows,
+	// which are drawn against CARD_W
+	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;box-sizing:border-box;`
 		+ `background:#fff;border-radius:6px;cursor:${isDecision ? "pointer" : "grab"};user-select:none;`
 		+ `box-shadow:0 2px 8px rgba(0,0,0,0.12);`
 		+ `border:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};font-family:sans-serif;`;
 
 	const header = document.createElement("div");
+	header.className = "wf-node-header";
 	header.style.cssText = `background:${isDecision ? "#fff3cd" : "#f8f9fa"};`
 		+ `border-bottom:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};`
 		+ `height:32px;display:flex;align-items:center;padding:0 8px;gap:7px;`
@@ -415,7 +423,7 @@ function buildColourMap(dimension) {
 	}
 	const values = new Set();
 	items.forEach(function(item) {
-		const v = dimension === "project" ? item.project : item.bundle;
+		const v = dimension === "project" ? item.project : (item.band || item.bundle);
 		if (v) values.add(v);
 	});
 	const sorted = Array.from(values).sort();
@@ -424,12 +432,30 @@ function buildColourMap(dimension) {
 	return map;
 }
 
+/*
+ * A colour at low opacity over white, so a tinted header stays light enough to read dark text on
+ * whatever the palette produces.
+ */
+function tint(hex, alpha) {
+	const m = /^#?([0-9a-f]{6})$/i.exec(hex || "");
+	if (!m) return "#f8f9fa";
+	const n = parseInt(m[1], 16);
+	const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+	const mix = function(c) { return Math.round(255 - (255 - c) * alpha); };
+	return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+}
+
 function applyHighlight() {
 	const cards = document.querySelectorAll("#wf-nodes [data-id]");
 	if (gHighlight === "none") {
 		cards.forEach(function(el) {
-			const isDecision = el.dataset.role === "decision";
-			el.style.borderLeft = `1px solid ${isDecision ? "#fd7e14" : "#dee2e6"}`;
+			const header = el.querySelector(".wf-node-header");
+			el.style.border     = `1px solid ${el.dataset.baseBorder}`;
+			el.style.borderLeft = `1px solid ${el.dataset.baseBorder}`;
+			if (header) {
+				header.style.background  = el.dataset.baseHeaderBg;
+				header.style.borderBottom = `1px solid ${el.dataset.baseBorder}`;
+			}
 		});
 		hideLegend();
 		return;
@@ -438,9 +464,21 @@ function applyHighlight() {
 	cards.forEach(function(el) {
 		const val = gHighlight === "type"    ? el.dataset.type
 		          : gHighlight === "project" ? el.dataset.project
-		          :                            el.dataset.bundle;
+		          :                            el.dataset.band;
 		const colour = (val && colourMap[val]) ? colourMap[val] : "#ccc";
-		el.style.borderLeft = `4px solid ${colour}`;
+		const header = el.querySelector(".wf-node-header");
+		/*
+		 * A thin rule down one edge was easy to miss on a canvas of two dozen cards, which is the
+		 * size at which knowing what belongs with what starts to matter. The colour now runs round
+		 * the whole card, with a bar down the leading edge and the header tinted to match, so a
+		 * band reads as one group at a glance rather than on inspection.
+		 */
+		el.style.border     = `2px solid ${colour}`;
+		el.style.borderLeft = `10px solid ${colour}`;
+		if (header) {
+			header.style.background   = tint(colour, 0.18);
+			header.style.borderBottom = `1px solid ${colour}`;
+		}
 	});
 	showLegend(colourMap);
 }
