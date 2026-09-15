@@ -27,6 +27,14 @@ const CARD_H = 88;   // expanded to fit assignee row on task/case cards
 // Module-level state
 let gData      = null;
 let gPositions = {};   // id -> {x, y}  (updated live during drag)
+/*
+ * The nodes this user has actually placed, as opposed to the ones sitting where the default layout
+ * put them.  Only these are saved.  Sending every node - which is what used to happen, because the
+ * whole of gPositions went up on each drag - wrote computed defaults back as though they had been
+ * chosen, so a node that had just lost its saved position got pinned to wherever the default had
+ * dropped it and never followed the layout again.
+ */
+let gPlaced = new Set();
 let gHighlight = "none";
 
 // Edit-drawer state
@@ -387,6 +395,7 @@ function makeDraggable(el) {
 					el.removeEventListener("click", suppressClick, true);
 				}, true);
 				// Auto-persist so refresh / add-step / delete all restore dragged positions
+				gPlaced.add(el.dataset.id);
 				saveLayout();
 			}
 		}
@@ -473,6 +482,7 @@ function hideLegend() {
 function renderWorkflow(data) {
 	gData         = data;
 	gPositions    = {};
+	gPlaced       = new Set();
 	gSelectedNode = null;
 	gTriggerSurveyId = 0;
 
@@ -487,6 +497,10 @@ function renderWorkflow(data) {
 			fwdIds: item.fwdIds || [],
 			tgIds:  item.tgIds  || []
 		};
+		// pinned means the server matched a position this user saved, so it stays saved
+		if (item.pinned) {
+			gPlaced.add(item.id);
+		}
 	});
 
 	const nodesEl = document.getElementById("wf-nodes");
@@ -552,6 +566,7 @@ function positionNewFormItems(knownIds) {
 		pos.y = freeY;			// Update in place so the backing record ids are kept
 		el.style.left = pos.x + "px";
 		el.style.top  = freeY + "px";
+		gPlaced.add(id);		// deliberately placed clear of the others, so worth keeping
 		moved = true;
 	});
 	if (moved) {
@@ -561,11 +576,18 @@ function positionNewFormItems(knownIds) {
 }
 
 function saveLayout() {
+	// Only the nodes this user placed. The server merges them into whatever is already saved.
+	const placed = {};
+	gPlaced.forEach(function(id) {
+		if (gPositions[id]) {
+			placed[id] = gPositions[id];
+		}
+	});
 	fetch("/surveyKPI/workflow/positions", {
 		method:      "PUT",
 		credentials: "include",
 		headers:     { "Content-Type": "application/json" },
-		body:        JSON.stringify(gPositions)
+		body:        JSON.stringify(placed)
 	}).catch(function(err) {
 		console.error("saveLayout error:", err);
 	});
