@@ -96,6 +96,7 @@ define({
     "c_auto": "Auto",
     "c_before": "Before",
     "c_bundle": "Bundle",
+    "c_process": "Process",
     "c_channel": "Channel",
     "c_closed": "Closed",
     "c_cm": "Bundle and Case Management",

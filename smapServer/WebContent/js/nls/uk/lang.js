@@ -72,6 +72,7 @@ define({
     "c_auto": "Авто",
     "c_before": "До",
     "c_bundle": "Пакет",
+    "c_process": "Процес",
     "c_channel": "Канал",
     "c_closed": "Закрито",
     "c_cm": "Управління справами",

@@ -496,7 +496,9 @@ function showLegend(colourMap) {
 		canvas.appendChild(leg);
 	}
 	const l2 = localise.set;
-	const labels = { type: l2["c_type"], project: l2["c_project"], bundle: l2["c_bundle"] };
+	// "bundle" is what the dimension is called in the data; a process is what it means to whoever
+	// is reading the page, so that is what the menu and this legend say
+	const labels = { type: l2["c_type"], project: l2["c_project"], bundle: l2["c_process"] };
 	let html = `<div style="font-weight:700;margin-bottom:8px;color:#495057;">${labels[gHighlight] || gHighlight}</div>`;
 	const entries = Object.entries(colourMap);
 	if (entries.length === 0) {

@@ -93,6 +93,7 @@ define(
     "c_auto": "Automática",
     "c_before": "Antes",
     "c_bundle": "Paquete",
+    "c_process": "Proceso",
     "c_channel": "Canal",
     "c_closed": "Cerrado",
     "c_cm": "Gestión de casos y paquetes",
