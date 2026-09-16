@@ -209,6 +209,9 @@ function nodeCard(x, y, item) {
 	div.dataset.bundle   = item.bundle   || "";
 	// The bundle to colour by: worked out from the links, so a case or a decision has one too
 	div.dataset.band     = item.band     || item.bundle || "";
+	// The survey this step concerns, worked out server side: a form's own, or the form a case sends
+	// its assignee to
+	div.dataset.survey   = item.survey   || "";
 	div.dataset.assignee = item.assignee || "";
 	div.dataset.fwdIds       = JSON.stringify(item.fwdIds    || []);
 	div.dataset.tgIds        = JSON.stringify(item.tgIds     || []);
@@ -424,7 +427,9 @@ function buildColourMap(dimension) {
 	}
 	const values = new Set();
 	items.forEach(function(item) {
-		const v = dimension === "project" ? item.project : (item.band || item.bundle);
+		const v = dimension === "project" ? item.project
+				: dimension === "survey"  ? item.survey
+				:                           (item.band || item.bundle);
 		if (v) values.add(v);
 	});
 	const sorted = Array.from(values).sort();
@@ -465,6 +470,7 @@ function applyHighlight() {
 	cards.forEach(function(el) {
 		const val = gHighlight === "type"    ? el.dataset.type
 		          : gHighlight === "project" ? el.dataset.project
+		          : gHighlight === "survey"  ? el.dataset.survey
 		          :                            el.dataset.band;
 		const colour = (val && colourMap[val]) ? colourMap[val] : "#ccc";
 		const header = el.querySelector(".wf-node-header");
@@ -506,7 +512,8 @@ function showLegend(colourMap) {
 	const l2 = localise.set;
 	// "bundle" is what the dimension is called in the data; a process is what it means to whoever
 	// is reading the page, so that is what the menu and this legend say
-	const labels = { type: l2["c_type"], project: l2["c_project"], bundle: l2["c_process"] };
+	const labels = { type: l2["c_type"], project: l2["c_project"], bundle: l2["c_process"],
+			survey: l2["c_survey"] };
 	let html = `<div style="font-weight:700;margin-bottom:8px;color:#495057;">${labels[gHighlight] || gHighlight}</div>`;
 	const entries = Object.entries(colourMap);
 	if (entries.length === 0) {
