@@ -506,8 +506,9 @@ function showLegend(colourMap) {
 			+ "border:1px solid #dee2e6;border-radius:6px;padding:10px 14px;z-index:10;"
 			+ "font-family:sans-serif;font-size:12px;min-width:130px;"
 			+ "max-height:calc(100vh - 80px);overflow-y:auto;"
-			+ "box-shadow:0 2px 8px rgba(0,0,0,0.12);pointer-events:none;";
+			+ "box-shadow:0 2px 8px rgba(0,0,0,0.12);cursor:move;user-select:none;";
 		canvas.appendChild(leg);
+		makeLegendDraggable(leg);
 	}
 	const l2 = localise.set;
 	// "bundle" is what the dimension is called in the data; a process is what it means to whoever
@@ -527,6 +528,88 @@ function showLegend(colourMap) {
 	});
 	leg.innerHTML = html;
 	leg.style.display = "";
+	placeLegend(leg);
+}
+
+/* Where this user last put the legend. Their own convenience, so it lives in their own browser. */
+const WF_LEGEND_POS = "wf_legend_pos";
+
+function legendSavedPos() {
+	try {
+		const v = localStorage.getItem(WF_LEGEND_POS);
+		return v ? JSON.parse(v) : null;
+	} catch (e) {
+		return null;		// private window, or storage blocked
+	}
+}
+
+function legendSavePos(left, top) {
+	try {
+		localStorage.setItem(WF_LEGEND_POS, JSON.stringify({ left: left, top: top }));
+	} catch (e) {
+		// Not being able to remember where it was put is not a reason to stop it being moved
+	}
+}
+
+/*
+ * Put the legend where it was left, or at the top right the first time.
+ *
+ * Always clamped to the window. A position saved against a wider window, or against a legend that
+ * has since grown a longer list, would otherwise put it partly or wholly off screen - where it
+ * cannot be reached to drag it back.
+ */
+function placeLegend(leg) {
+	const w = leg.offsetWidth;
+	const h = leg.offsetHeight;
+	const minLeft = 8, minTop = 60;		// below the navbar
+	const maxLeft = Math.max(minLeft, window.innerWidth  - w - 8);
+	const maxTop  = Math.max(minTop,  window.innerHeight - h - 8);
+
+	const pos = legendSavedPos();
+	const left = pos ? pos.left : window.innerWidth - w - 16;
+	const top  = pos ? pos.top  : 64;
+
+	leg.style.left  = Math.min(Math.max(left, minLeft), maxLeft) + "px";
+	leg.style.top   = Math.min(Math.max(top,  minTop),  maxTop)  + "px";
+	leg.style.right = "auto";			// left and right together would stretch it
+}
+
+/*
+ * Drag it anywhere. Fixed in place was right - it should not scroll away from the colours it
+ * explains - but fixed in one place means it covers whatever happens to be under it, and where the
+ * workflow is wide there is nowhere that is always clear.
+ */
+function makeLegendDraggable(leg) {
+	leg.addEventListener("mousedown", function(e) {
+		if (e.button !== 0) return;
+		e.preventDefault();
+		const rect = leg.getBoundingClientRect();
+		const grabX = e.clientX - rect.left;
+		const grabY = e.clientY - rect.top;
+
+		function onMove(ev) {
+			const w = leg.offsetWidth, h = leg.offsetHeight;
+			const left = Math.min(Math.max(ev.clientX - grabX, 8),
+					Math.max(8, window.innerWidth - w - 8));
+			const top = Math.min(Math.max(ev.clientY - grabY, 60),
+					Math.max(60, window.innerHeight - h - 8));
+			leg.style.left = left + "px";
+			leg.style.top = top + "px";
+			leg.style.right = "auto";
+		}
+		function onUp() {
+			document.removeEventListener("mousemove", onMove);
+			document.removeEventListener("mouseup", onUp);
+			legendSavePos(parseInt(leg.style.left, 10), parseInt(leg.style.top, 10));
+		}
+		document.addEventListener("mousemove", onMove);
+		document.addEventListener("mouseup", onUp);
+	});
+
+	// A window narrowed after the legend was placed would otherwise strand it off the edge
+	window.addEventListener("resize", function() {
+		if (leg.style.display !== "none") placeLegend(leg);
+	});
 }
 
 function hideLegend() {
