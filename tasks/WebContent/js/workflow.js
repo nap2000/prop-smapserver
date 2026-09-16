@@ -490,9 +490,16 @@ function showLegend(colourMap) {
 	if (!leg) {
 		leg = document.createElement("div");
 		leg.id = "wf-legend";
-		leg.style.cssText = "position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.96);"
+		/*
+		 * Fixed to the window, not to the canvas.  Absolutely positioned it sat in the canvas's own
+		 * coordinate space, which is the thing that scrolls, so the legend for the colours you were
+		 * looking at scrolled off the top as soon as you moved down the page.  64px clears the 56px
+		 * navbar; the height cap and scroll are for a process list longer than the window.
+		 */
+		leg.style.cssText = "position:fixed;top:64px;right:16px;background:rgba(255,255,255,0.96);"
 			+ "border:1px solid #dee2e6;border-radius:6px;padding:10px 14px;z-index:10;"
 			+ "font-family:sans-serif;font-size:12px;min-width:130px;"
+			+ "max-height:calc(100vh - 80px);overflow-y:auto;"
 			+ "box-shadow:0 2px 8px rgba(0,0,0,0.12);pointer-events:none;";
 		canvas.appendChild(leg);
 	}
@@ -536,7 +543,17 @@ function applyView() {
 	if (hl && hl.parentElement) hl.parentElement.hidden = table;
 	const reset = document.getElementById("m_reset_layout");
 	if (reset && reset.parentElement) reset.parentElement.hidden = table;
-	if (table) renderPeople();
+	if (table) {
+		/*
+		 * The legend is fixed to the window rather than to the canvas, so hiding the canvas no
+		 * longer hides it with them.  Without this it floats over the table naming colours that
+		 * nothing on screen is wearing.
+		 */
+		hideLegend();
+		renderPeople();
+	} else if (gHighlight !== "none") {
+		applyHighlight();		// bring it back with the diagram
+	}
 }
 
 /*
