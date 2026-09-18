@@ -73,6 +73,21 @@ async function loadLocaleFile(locale) {
 	return data;
 }
 
+/*
+ * Resolve once the DOM is parsed.
+ * Page bundles are loaded in the head, so a caller that acts on the DOM in
+ * initLocale().then() can otherwise run against a half parsed body
+ */
+function domReady() {
+	return new Promise(function (resolve) {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", resolve, { once: true });
+		} else {
+			resolve();
+		}
+	});
+}
+
 async function initLocale(locale) {
 	const candidates = localeCandidates(locale);
 	const rootLocale = await loadLocaleFile("root");
@@ -95,6 +110,7 @@ async function initLocale(locale) {
 
 	currentLocale = resolvedLocale;
 	window.localise.set = merged;
+	await domReady();
 	return merged;
 }
 
