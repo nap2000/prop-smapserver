@@ -15,7 +15,6 @@
 - Module `fieldManagerClient`: admin/field manager UI assets.
 - Module `fieldAnalysis`: internal dashboard UI assets.
 - Module `myWork`: webforms manager UI assets.
-- Module `dashboard`: legacy quicksight dashboard (deprecated).
 - Each module has `tools/r_2_3_6.js` and `Gruntfile.js` for minify.
 
 ## Prerequisites
@@ -32,7 +31,6 @@
 - `cd fieldManagerClient && npm install`
 - `cd fieldAnalysis && npm install`
 - `cd myWork && npm install`
-- `cd dashboard && npm install` (rarely needed)
 - For global grunt CLI if missing: `npm install -g grunt-cli` (avoid unless necessary).
 
 ## Build / Minify / Deploy
@@ -43,7 +41,6 @@
 - fieldManagerClient: `cd fieldManagerClient && ./dep.sh [develop]`
 - fieldAnalysis: `cd fieldAnalysis && ./dep.sh [develop]`
 - myWork: `cd myWork && ./dep.sh [develop]`
-- dashboard: `cd dashboard && ./dep.sh`
 - Grunt default task per module minifies JS per `Gruntfile.js`.
 - RequireJS build: `node tools/r_2_3_6.js -o tools/build.js` (module-specific).
 - myWork webpack build: `cd myWork && npm run build` (prod) or `npm run build:dev`.

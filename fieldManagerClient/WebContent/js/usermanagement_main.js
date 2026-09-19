@@ -30,7 +30,6 @@ import {
 	getFromLocalStorage,
 	getLoggedInUser,
 	getRoles,
-	getCustomMenuClass,
 	handleLogout,
 	htmlEncode,
 	isBusinessServer,
@@ -1260,14 +1259,11 @@ const moment = window.moment;
 			filter_org;
 
 		gCurrentUserIndex = userIndex;
-		let hasDashboard = getCustomMenuClass() === '.xxxx1';
-
 		filter_group = $('#group_name').val();
 		h = [];
 		idx = -1;
 		for(i = 0; i < gGroups.length; i++) {
 			if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) &&
-				(gGroups[i].id !== globals.GROUP_DASHBOARD || hasDashboard || globals.gIsServerOwner) &&
 				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator  || globals.gIsServerOwner) &&
 				(gGroups[i].id !== globals.GROUP_DPO || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator || globals.gIsServerOwner) &&
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator  || globals.gIsServerOwner) &&

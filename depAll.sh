@@ -36,10 +36,3 @@ cd ..
 cd myWork
 ./dep.sh $1
 cd ..
-
-#
-# Dashboard (deprecate)
-#
-cd dashboard
-./dep.sh $1
-cd ..

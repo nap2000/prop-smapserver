@@ -11,9 +11,6 @@ The client code is grouped into modules
 * myWork,  launch and manage webForms
 * smapServer, everything else
 
-##### Other Projects
-
-*  dashboard.  Integration of AWS quicksight. No longer maintained.
 
 ## Development
 

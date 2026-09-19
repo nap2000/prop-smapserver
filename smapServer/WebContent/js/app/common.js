@@ -585,9 +585,6 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			} else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
 
-			} else if(groups[i].id === globals.GROUP_DASHBOARD) {
-				globals.gIsDashboard = true;
-
 			} else if(groups[i].id === globals.GROUP_MANAGE) {
 				globals.gIsManage = true;
 
@@ -620,9 +617,6 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	}
 	if(globals.gIsAnalyst) {
 		$('.analyst_role').removeClass('d-none').show();
-	}
-	if(globals.gIsDashboard) {
-		$('.dashboard_role').removeClass('d-none').show();
 	}
 	if(globals.gViewData) {
 		$('.data_role').removeClass('d-none').show();
