@@ -89,7 +89,7 @@ $(document).ready(function() {
 		
 		$('#filter_value').empty(); 
 		$('#filter_button').removeClass('hasfilter');
-		 $('#filter_controls').hide();
+		gFilterRequest++;		// Discard any response still in flight for the previous question
 		if(qId != -1 && qInfo) {
 			getFilterValues(sId, qId, undefined, qInfo.type, language);
 		}
@@ -97,6 +97,7 @@ $(document).ready(function() {
 	 
 	  // Filter clear
 	 $('#filter_clear').click(function() {	
+		 gFilterRequest++;
 		 $('#filter_question').val(-1);
 		 $('#filter_value').empty(); 
 		 $('#filter_button').removeClass('hasfilter');
@@ -888,12 +889,14 @@ function setFilterFromView(view) {
 			$('#filter_question').val(filterObj.qId);
 			getFilterValues(view.sId, filterObj.qId, filterObj.value, filterObj.qType, view.lang);
 		} else {
+			gFilterRequest++;
 			$('#filter_value').empty(); 
 			$('#filter_button').removeClass('hasfilter');
 			$('#filter_controls').hide();
 			$('#filter_question').val(-1);
 		}
 	} else {
+		gFilterRequest++;
 		$('#filter_value').empty(); 
 		$('#filter_button').removeClass('hasfilter');
 		$('#filter_controls').hide();
@@ -904,13 +907,16 @@ function setFilterFromView(view) {
 /*
  * Get unique values for the filter
  */
+var gFilterRequest = 0;		// Only the latest filter value request may update the controls
+
 function getFilterValues(sId, qId, value, qType, language) {
 
 	if(typeof qType !== "undefined") {
+		var requestId = ++gFilterRequest;
 		if(qType === "select" || qType === "select1") {
-			getSelectOptions(sId, qId, value, language);
+			getSelectOptions(sId, qId, value, language, requestId);
 		} else {
-			getTextValues(sId, qId, value);
+			getTextValues(sId, qId, value, requestId);
 		}
 	}
 }
@@ -919,7 +925,7 @@ function getFilterValues(sId, qId, value, qType, language) {
 /*
  * Retrieve the text values for filter from the server
  */
-function getTextValues(sId, qId, value) {
+function getTextValues(sId, qId, value, requestId) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/review/" + sId+ "/results/distinct/" + qId + "?sort=asc",
@@ -928,21 +934,21 @@ function getTextValues(sId, qId, value) {
 		success: function(data) {
 			
 			removeHourglass();
-			console.log("Values");
-			console.log(data);
-			
-			$('#filter_button').addClass('hasfilter');
-			$('#filter_controls').show();
-			updateFilterOptions(data, value, false);
-	
+			if(handleLogout(data) && requestId === gFilterRequest) {
+				$('#filter_button').addClass('hasfilter');
+				$('#filter_controls').show();
+				updateFilterOptions(data, value, false);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
-			} else {
-				console.log("Error: Failed to get values for question filter: " + err);
-				alert(xhr.responseText);  // Alerts htmlencode text already
+			if(handleLogout(xhr.responseText)) {
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get values for question filter: " + err);
+					alert(xhr.responseText);  // Alerts htmlencode text already
+				}
 			}
 		}
 	});	
@@ -951,7 +957,7 @@ function getTextValues(sId, qId, value) {
 /*
  * Retrieve the select options for filter from the server
  */
-function getSelectOptions(sId, qId, value, language) {
+function getSelectOptions(sId, qId, value, language, requestId) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/optionList/" + sId+ "/" + language + "/" + qId,
@@ -960,20 +966,20 @@ function getSelectOptions(sId, qId, value, language) {
 		success: function(data) {
 			
 			removeHourglass();
-			console.log("Values");
-			console.log(data);
-			
-			$('#filter_button').addClass('hasfilter');
-			$('#filter_controls').show();
-			updateFilterOptions(data, value, true);
-	
+			if(handleLogout(data) && requestId === gFilterRequest) {
+				$('#filter_button').addClass('hasfilter');
+				$('#filter_controls').show();
+				updateFilterOptions(data, value, true);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
-			} else {
-				console.log("Error: Failed to get values for question filter: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get values for question filter: " + err);
+				}
 			}
 		}
 	});	
