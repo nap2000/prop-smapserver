@@ -38,8 +38,7 @@ import {
 	updateProjectList,
 	setupUserProfile,
 	validGeneralName,
-	validateEmails,
-	addLanguageOptions
+	validateEmails
 } from "common";
 
 const $ = window.$;
@@ -60,49 +59,9 @@ const moment = window.moment;
 		gCurrentUserIndex,		// Set while editing a users details
 		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gOrgId,
-		gSmsType,
 		gNumberIdx,
 		gPanel,
 		gNumbers = [];
-
-	var limitTypes = [
-		{
-			id: 'o_translate_limit',
-			name: 'translate',
-			label: 'translate',
-			default: 5000
-		},
-		{
-			id: 'o_transcribe_limit',
-			name: 'transcribe',
-			label: 'transcribe',
-			default: 250
-		},
-		{
-			id: 'o_transcribe_medical_limit',
-			name: 'transcribe_medical',
-			label: 'transcribe_medical',
-			default: 80
-		},
-		{
-			id: 'o_rekognition_limit',
-			name: 'rekognition',
-			label: 'rekognition',
-			default: 100
-		},
-		{
-			id: 'o_sentiment_limit',
-			name: 'sentiment',
-			label: 'sentiment',
-			default: 100
-		},
-		{
-			id: 'o_submission_limit',
-			name: 'submissions',
-			label: 'submissions',
-			default: 0
-		}
-		];
 
 	$(document).ready(function() {
 
@@ -114,7 +73,6 @@ const moment = window.moment;
 		window.moment = moment;		// Make moment global for use by common.js
 		enableDebugging();
 
-		getSmsType();
 		getProjects();
 		getLoggedInUser(userKnown, false, false, getOrganisations, false,
 			false, getEnterprises, undefined, getSMSNumbers);
@@ -484,10 +442,7 @@ const moment = window.moment;
 			var organisationList = [],
 				organisation = {
 					appearance: {}
-				},
-				error = false,
-				options=[],
-				i;
+				};
 
 			if(!gCurrentOrganisationIndex || gCurrentOrganisationIndex === -1) {
 				organisation.id = -1;
@@ -502,106 +457,29 @@ const moment = window.moment;
 			organisation.company_phone = $('#o_company_phone').val();
 			organisation.company_email = $('#o_company_email').val();
 
-			organisation.admin_email = $('#o_admin_email').val();
-			organisation.smtp_host = $('#o_smtp_host').val();
-			organisation.email_domain = $('#o_email_domain').val();
-
-			var eu = $('#o_email_user').val();      // avoid autofill
-			if(eu === '-') {
-				eu = undefined;
-			}
-			organisation.email_user = eu;
-
-			organisation.email_password = $('#o_email_password').val();
-			organisation.email_port = parseInt($('#o_email_port').val());
-			organisation.default_email_content = $('#o_default_email_content').val();
-			organisation.locale = $('#o_language').val();
-			organisation.refresh_rate = parseInt($('#o_refresh_rate').val());
-			organisation.timeZone = $('#o_tz').val();
-			organisation.server_description = $('#o_server_description').val();
-			organisation.password_strength = $('#o_password_strength').val();
-			organisation.password_strength = organisation.password_strength || "0";
-			organisation.map_source = $('#o_map_source').val();
-
-			if(typeof organisation.email_port !== "number") {
-				organisation.email_port = 0;
-			}
 			// Validate
 			if(!organisation.name || organisation.name.length === 0) {
 				alert(localise.set["msg_val_nm"]);
 				$('#o_name').focus();
 				return false;
 			}
-			if(organisation.admin_email && organisation.admin_email.length > 0) {
-				if(!validateEmails(organisation.admin_email)) {
-					error = true;
-					alert(localise.set["msg_inv_email"]);
-					$('#o_admin_email').focus();
-					return false;
-				}
-			}
-			if(organisation.email_user && organisation.email_user.indexOf('@') > 0) {
-				error = true;
-				alert(localise.set["msg_email_dom"]);
-				$('#o_email_user').focus();
-				return false;
-			}
 
-			options = $(".puboption:checked").map(function(){
-				return $(this).val();
-			}).toArray();
-
-			organisation.allow_email = false;
-			organisation.allow_facebook = false;
-			organisation.allow_twitter = false;
-			organisation.can_edit = false;
-			organisation.email_task = false;
-			organisation.notification_webform = false;
-			organisation.can_notify = false;
-			organisation.can_use_api = false;
-			organisation.can_submit = false;
-			organisation.can_sms = false;
-			organisation.send_optin = false;
-			organisation.enable_redact = false;
-			organisation.appearance.set_as_theme = false;
-			for(i = 0; i < options.length; i++) {
-				if(options[i] === "email") {
-					organisation.allow_email = true;
-				} else if(options[i] === "facebook") {
-					organisation.allow_facebook = true;
-				} else if(options[i] === "twitter") {
-					organisation.allow_twitter = true;
-				} else if(options[i] === "can_edit") {
-					organisation.can_edit = true;
-				} else if(options[i] === "email_task") {
-					organisation.email_task = true;
-				} else if(options[i] === "notification_webform") {
-					organisation.notification_webform = true;
-				} else if(options[i] === "ft_sync_incomplete") {
-					organisation.ft_sync_incomplete = true;
-				} else if(options[i] === "can_notify") {
-					organisation.can_notify = true;
-				} else if(options[i] === "can_use_api") {
-					organisation.can_use_api = true;
-				} else if(options[i] === "can_submit") {
-					organisation.can_submit = true;
-				} else if(options[i] === "set_as_theme") {
-					organisation.appearance.set_as_theme = true;
-				} else if(options[i] === "can_sms") {
-					organisation.can_sms = true;
-				} else if(options[i] === "send_optin") {
-					organisation.send_optin = true;
-				} else if(options[i] === "enable_redact") {
-					organisation.enable_redact = true;
-				}
-			}
-
-			// Add usage limits
-			organisation.limits = {};
-			for(i = 0; i < limitTypes.length; i++) {
-				var limit = $('#' + limitTypes[i].id).val();
-				limit = limit || 0;
-				organisation.limits[limitTypes[i].name] = limit;
+			/*
+			 * Only the descriptive details are edited here, other settings are in the settings page
+			 * A new organisation starts with everything allowed
+			 */
+			if(organisation.id === -1) {
+				organisation.can_edit = true;
+				organisation.email_task = true;
+				organisation.can_notify = true;
+				organisation.can_use_api = true;
+				organisation.can_submit = true;
+				organisation.can_sms = true;
+				organisation.send_optin = true;
+				organisation.enable_redact = true;
+				organisation.timeZone = 'UTC';
+				organisation.locale = 'en';
+				organisation.password_strength = "0";
 			}
 
 			organisationList[0] = organisation;
@@ -623,14 +501,16 @@ const moment = window.moment;
 					}
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						var msg = (xhr.responseText) ? xhr.responseText : err;
-						if(msg.indexOf("Conflict") >= 0) {
-							msg = localise.set["msg_dup_name"];
+					if(handleLogout(xhr.responseText)) {
+						if(xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							var msg = (xhr.responseText) ? xhr.responseText : err;
+							if(msg.indexOf("Conflict") >= 0) {
+								msg = localise.set["msg_dup_name"];
+							}
+							alert(localise.set["msg_err_upd"] + ' ' + msg);
 						}
-						alert(localise.set["msg_err_upd"] + ' ' + msg);
 					}
 				}
 			});
@@ -1220,27 +1100,6 @@ const moment = window.moment;
 		});
 	}
 
-	function getSmsType() {
-		// Get the server details
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/server/sms",
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				gSmsType = data;
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
-	}
-
 	/*
 	 * Show the user dialog
 	 */
@@ -1540,16 +1399,7 @@ const moment = window.moment;
 	 * Show the organisation dialog
 	 */
 	function openOrganisationDialog(existing, organisationIndex) {
-		var i,
-			h = [],
-			idx = -1,
-			org;
-
-		if(gSmsType && gSmsType === "aws") {
-			$('.awsSmsOnly').show();
-		} else {
-			$('.awsSmsOnly').hide();
-		}
+		var org;
 
 		$('#organisation_create_form')[0].reset();
 		$('#o_banner_logo').attr("src", "/images/smap_logo.png");
@@ -1559,133 +1409,16 @@ const moment = window.moment;
 			org = gOrganisationList[organisationIndex];
 			gCurrentOrganisationIndex = organisationIndex;
 
-			if(globals.gIsOrgAdministrator) {
-				getCurrentResourceUsage(org.id);
-			}
-
 			$('#o_name').val(org.name);
 			$('#o_company_name').val(org.company_name);
 			$('#o_company_address').val(org.company_address);
 			$('#o_company_phone').val(org.company_phone);
 			$('#o_company_email').val(org.company_email);
-			$('#o_admin_email').val(org.admin_email);
-			$('#o_smtp_host').val(org.smtp_host);
-			$('#o_email_domain').val(org.email_domain);
-
-			if(typeof org.email_user === "undefined" || org.email_user.trim() === '') {
-				$('#o_email_user').val('-');
-			} else {
-				$('#o_email_user').val(org.email_user);
-			}
-			$('#o_email_password').val(org.email_password);
-			$('#o_email_port').val(org.email_port);
-			$('#o_default_email_content').val(org.default_email_content);
-			$('#o_server_description').val(org.server_description);
-			$('#o_password_strength').val(org.password_strength);
-			$('#o_map_source').val(org.map_source);
-			$('.puboption').each(function() {
-				console.log("option: " + $(this).val() );
-				if($(this).val() === "email") {
-					this.checked = org.allow_email;
-				} else if($(this).val() === "facebook") {
-					this.checked = org.allow_facebook;
-				} else if($(this).val() === "twitter") {
-					this.checked = org.allow_twitter;
-				} else if($(this).val() === "can_edit") {
-					this.checked = org.can_edit;
-				} else if($(this).val() === "email_task") {
-					this.checked = org.email_task;
-				} else if($(this).val() === "notification_webform") {
-					this.checked = org.notification_webform;
-				} else if($(this).val() === "ft_sync_incomplete") {
-					this.checked = org.ft_sync_incomplete;
-				} else if($(this).val() === "can_notify") {
-					this.checked = org.can_notify;
-				} else if($(this).val() === "can_use_api") {
-					this.checked = org.can_use_api;
-				} else if($(this).val() === "can_submit") {
-					this.checked = org.can_submit;
-				} else if($(this).val() === "can_sms") {
-					this.checked = org.can_sms;
-				} else if($(this).val() === "send_optin") {
-					this.checked = org.send_optin;
-				} else if($(this).val() === "enable_redact") {
-					this.checked = org.enable_redact;
-				} else if($(this).val() === "ft_odk_style_menus") {
-					this.checked = org.ft_odk_style_menus;
-				} else if($(this).val() === "ft_odk_style_menus") {
-					this.checked = org.ft_odk_style_menus;
-				} else if($(this).val() === "ft_specify_instancename") {
-					this.checked = org.ft_specify_instancename;
-				} else if($(this).val() === "ft_prevent_disable_track") {
-					this.checked = org.ft_prevent_disable_track;
-				} else if($(this).val() === "ft_enable_geofence") {
-					this.checked = org.ft_enable_geofence;
-				} else if($(this).val() === "ft_admin_menu") {
-					this.checked = org.ft_admin_menu;
-				} else if($(this).val() === "ft_server_menu") {
-					this.checked = org.ft_server_menu;
-				} else if($(this).val() === "ft_meta_menu") {
-					this.checked = org.ft_meta_menu;
-				} else if($(this).val() === "ft_exit_track_menu") {
-					this.checked = org.ft_exit_track_menu;
-				} else if($(this).val() === "ft_bg_stop_menu") {
-					this.checked = org.ft_bg_stop_menu;
-				} else if($(this).val() === "ft_review_final") {
-					this.checked = org.ft_review_final;
-				} else if($(this).val() === "ft_force_token") {
-					this.checked = org.ft_force_token;
-				} else if($(this).val() === "set_as_theme") {
-					this.checked = org.appearance.set_as_theme;
-				}
-			});
-			addLanguageOptions($('#o_language'), org.locale);
-			$('#o_tz').val(org.timeZone);
-			$('#o_refresh_rate').val(org.refresh_rate);
-
 			gOrgId = org.id;
 			setLogos(org.id);
 
 		} else {
 			gCurrentOrganisationIndex = -1;
-			$('#o_tz').val('UTC');
-			$('#o_email_user').val('-');
-			addLanguageOptions($('#o_language'), undefined);
-		}
-
-		if(globals.gIsOrgAdministrator) {
-			// Add usage limits
-			h[++idx] = '<fieldset>';
-			for (i = 0; i < limitTypes.length; i++) {
-				h[++idx] = '<div class="form-group row">';
-				h[++idx] = '<label for="';
-				h[++idx] = limitTypes[i].id;
-				h[++idx] = '" class="col-sm-2 control-label">';
-				h[++idx] = localise.set[limitTypes[i].label];
-				h[++idx] = '</label>';
-				h[++idx] = '<div class="col-sm-5">';
-				h[++idx] = '<input type="integer" id="'
-				h[++idx] = limitTypes[i].id;
-				h[++idx] = '" class="form-control"><br/>';
-				h[++idx] = '</div>';
-				h[++idx] = '<div class="col-sm-5">';
-				h[++idx] = '<p id="';
-				h[++idx] = limitTypes[i].id + "_i";
-				h[++idx] = '"></p>';
-				h[++idx] = '</div>';
-				h[++idx] = '</div>';
-			}
-			h[++idx] = '</fieldset>';
-			$('#usageLimitsHere').empty().html(h.join(''));
-			if (org && org.limits) {
-				for (i = 0; i < limitTypes.length; i++) {
-					$('#' + limitTypes[i].id).val((org.limits) ? org.limits[limitTypes[i].name] : 0);
-				}
-			} else {
-				for (i = 0; i < limitTypes.length; i++) {
-					$('#' + limitTypes[i].id).val(limitTypes[i].default);
-				}
-			}
 		}
 
 		window.bsModalShow('#create_organisation_popup');
@@ -2696,40 +2429,6 @@ const moment = window.moment;
 					return;  // Not an error
 				} else {
 					alert("Error: Failed to get list of users: " + err);
-				}
-			}
-		});
-	}
-
-	/*
-     * Get the usage of protected resources
-     */
-	function getCurrentResourceUsage(oId) {
-
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/organisationList/usage/" + oId,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				var i;
-				for(i = 0; i < limitTypes.length; i++ ) {
-					var val = localise.set["c_current"] + ": ";
-					val += data[limitTypes[i].name];
-					val += " (";
-					val += localise.set[limitTypes[i].name + "_i"];
-					val += ")";
-					$("#" + limitTypes[i].id + "_i").text(val);
-				}
-
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert("Error: " + err);
 				}
 			}
 		});

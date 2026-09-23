@@ -1286,6 +1286,8 @@ define({
     "u_mcp_token_ttl": "MCP access token lifetime (seconds)",
     "u_mcp_allow_access": "Allow AI clients to manage users and their permissions",
     "u_other_msg": "These settings apply to the current organisation",
+    "u_org_msg": "These settings apply to the current organisation and can only be changed by an organisation administrator",
+    "u_mps_sec": "Only a security administrator can change the password strength",
     "u_show_u": "Show users with security group",
     "u_show_p": "Show users in project",
     "u_show_r": "Show users with role",

@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, displayAsImage, enableDebugging, getFromLocalStorage, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, setInLocalStorage, setupUserProfile, validateEmails } from "common";
+import { addHourglass, addLanguageOptions, displayAsImage, getAvailableTimeZones, enableDebugging, getFromLocalStorage, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, setInLocalStorage, setupUserProfile, validateEmails } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -40,6 +40,45 @@ const moment = window.moment;
 		gResetWebformPressed = false,
 		page = 'settings',
 		gNumbers;
+
+	var limitTypes = [
+		{
+			id: 'o_translate_limit',
+			name: 'translate',
+			label: 'translate',
+			default: 5000
+		},
+		{
+			id: 'o_transcribe_limit',
+			name: 'transcribe',
+			label: 'transcribe',
+			default: 250
+		},
+		{
+			id: 'o_transcribe_medical_limit',
+			name: 'transcribe_medical',
+			label: 'transcribe_medical',
+			default: 80
+		},
+		{
+			id: 'o_rekognition_limit',
+			name: 'rekognition',
+			label: 'rekognition',
+			default: 100
+		},
+		{
+			id: 'o_sentiment_limit',
+			name: 'sentiment',
+			label: 'sentiment',
+			default: 100
+		},
+		{
+			id: 'o_submission_limit',
+			name: 'submissions',
+			label: 'submissions',
+			default: 0
+		}
+		];
 
 	$(document).ready(function() {
 
@@ -59,7 +98,10 @@ const moment = window.moment;
 		getWebformSettings();
 		getAppearanceSettings();
 		getSensitiveSettings();
-		getOtherSettings();		// miscellaneous settings
+		getAvailableTimeZones(function(timeZones) {
+			showOtherTimeZones(timeZones);
+			getOtherSettings();		// miscellaneous settings, needs the time zones loaded first
+		});
 		getOperationsSettings();	// operations monitor thresholds
 
 		// Set up the tabs
@@ -70,6 +112,10 @@ const moment = window.moment;
 		$('#serverTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'server');
+		});
+		$('#organisationTab a').on('click',function (e) {
+			e.preventDefault();
+			panelChange($(this), 'organisation');
 		});
 		$('#deviceTab a').on('click',function (e) {
 			e.preventDefault();
@@ -203,8 +249,14 @@ const moment = window.moment;
 		$('#saveOtherSettings').click(function() {
 
 			var otherObj = {
-				password_strength: $('#o_p_strength').val()
+				password_strength: $('#o_p_strength').val() || 0,
+				timeZone: $('#o_tz').val(),
+				locale: $('#o_language').val(),
+				map_source: $('#o_map_source').val()
 			};
+			$('.otheroption').each(function() {
+				otherObj[$(this).val()] = this.checked;
+			});
 
 			var otherString = JSON.stringify(otherObj);
 			addHourglass();
@@ -216,18 +268,64 @@ const moment = window.moment;
 				data: { other: otherString },
 				success: function(data, status) {
 					removeHourglass();
-					getOtherSettings();
-					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+					if(handleLogout(data)) {
+						getOtherSettings();
+						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
+					if(handleLogout(xhr.responseText)) {
+						if(xhr.readyState == 0 || xhr.status == 0) {
+							$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+							return;  // Not an error
+						} else {
+							var msg = xhr.responseText;
+							alert(localise.set["msg_err_upd"] + msg);    // Alerts htmlencode text already
+						}
+					}
+				}
+			});
+		});
 
-					if(xhr.readyState == 0 || xhr.status == 0) {
+		/*
+		 * Save the settings that only an organisation administrator can change
+		 */
+		$('#saveOrganisationSettings').click(function() {
+
+			var accessObj = {
+				refresh_rate: parseInt($('#o_refresh_rate').val()) || 0,
+				limits: {}
+			};
+			$('.accessoption').each(function() {
+				accessObj[$(this).val()] = this.checked;
+			});
+			for(var i = 0; i < limitTypes.length; i++) {
+				accessObj.limits[limitTypes[i].name] = parseInt($('#' + limitTypes[i].id).val()) || 0;
+			}
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				contentType: "application/x-www-form-urlencoded",
+				cache: false,
+				url: "/surveyKPI/organisationList/access",
+				data: { access: JSON.stringify(accessObj) },
+				success: function(data) {
+					removeHourglass();
+					if(handleLogout(data)) {
+						getAccessSettings();
 						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
-						return;  // Not an error
-					} else {
-						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);    // Alerts htmlencode text already
+					}
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(handleLogout(xhr.responseText)) {
+						if(xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert(localise.set["msg_err_upd"] + xhr.responseText);    // Alerts htmlencode text already
+						}
 					}
 				}
 			});
@@ -729,6 +827,12 @@ const moment = window.moment;
 
 	function userKnown() {
 		getGroups();
+		if(globals.gIsOrgAdministrator) {
+			getAccessSettings();
+		}
+		// Password strength is a security setting
+		$('#o_p_strength').prop('disabled', !globals.gIsSecurityAdministrator);
+		$('#o_p_strength_msg').toggleClass('d-none', !!globals.gIsSecurityAdministrator);
 		if(globals.gIsServerOwner) {
 			getCustomCss();
 		}
@@ -787,6 +891,11 @@ const moment = window.moment;
 			success: function(data) {
 				removeHourglass();
 				gSmsType = data;
+				if(gSmsType === "aws") {
+					$('.awsSmsOnly').show();
+				} else {
+					$('.awsSmsOnly').hide();
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -1191,15 +1300,141 @@ const moment = window.moment;
 			cache: false,
 			success: function(other) {
 				removeHourglass();
-				$('#o_p_strength').val(other.password_strength);
-
+				if(handleLogout(other)) {
+					$('#o_p_strength').val(other.password_strength);
+					$('#o_tz').val(other.timeZone || 'UTC');
+					addLanguageOptions($('#o_language'), other.locale);
+					$('#o_map_source').val(other.map_source);
+					$('.otheroption').each(function() {
+						this.checked = !!other[$(this).val()];
+					});
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
+				}
+			}
+		});
+	}
+
+	function showOtherTimeZones(timeZones) {
+		var h = [],
+			idx = -1,
+			i;
+
+		for (i = 0; i < timeZones.length; i++) {
+			h[++idx] = '<option value="';
+			h[++idx] = htmlEncode(timeZones[i].id);
+			h[++idx] = '">';
+			h[++idx] = htmlEncode(timeZones[i].name);
+			h[++idx] = '</option>';
+		}
+		$('#o_tz').empty().html(h.join(''));
+	}
+
+	/*
+	 * Get the settings that only an organisation administrator can change
+	 */
+	function getAccessSettings() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/organisationList/access",
+			dataType: 'json',
+			cache: false,
+			success: function(access) {
+				removeHourglass();
+				if(handleLogout(access)) {
+					$('.accessoption').each(function() {
+						this.checked = !!access[$(this).val()];
+					});
+					$('#o_refresh_rate').val(access.refresh_rate);
+					showUsageLimits(access.limits);
+					getCurrentResourceUsage(globals.gOrgId);
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
+				}
+			}
+		});
+	}
+
+	function showUsageLimits(limits) {
+		var h = [],
+			idx = -1,
+			i;
+
+		for (i = 0; i < limitTypes.length; i++) {
+			h[++idx] = '<div class="form-group row">';
+			h[++idx] = '<label for="';
+			h[++idx] = limitTypes[i].id;
+			h[++idx] = '" class="col-sm-4 control-label">';
+			h[++idx] = localise.set[limitTypes[i].label];
+			h[++idx] = '</label>';
+			h[++idx] = '<div class="col-sm-4">';
+			h[++idx] = '<input type="number" min="0" id="';
+			h[++idx] = limitTypes[i].id;
+			h[++idx] = '" class="form-control">';
+			h[++idx] = '</div>';
+			h[++idx] = '<div class="col-sm-4">';
+			h[++idx] = '<p id="';
+			h[++idx] = limitTypes[i].id + "_i";
+			h[++idx] = '"></p>';
+			h[++idx] = '</div>';
+			h[++idx] = '</div>';
+		}
+		$('#usageLimitsHere').empty().html(h.join(''));
+
+		for (i = 0; i < limitTypes.length; i++) {
+			var val = (limits && typeof limits[limitTypes[i].name] !== "undefined") ? limits[limitTypes[i].name] : limitTypes[i].default;
+			$('#' + limitTypes[i].id).val(val);
+		}
+	}
+
+	/*
+	 * Get the usage of protected resources
+	 */
+	function getCurrentResourceUsage(oId) {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/organisationList/usage/" + oId,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					for(var i = 0; i < limitTypes.length; i++ ) {
+						var val = localise.set["c_current"] + ": ";
+						val += data[limitTypes[i].name] || 0;
+						val += " (";
+						val += localise.set[limitTypes[i].name + "_i"];
+						val += ")";
+						$("#" + limitTypes[i].id + "_i").text(val);
+					}
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
 				}
 			}
 		});

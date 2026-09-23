@@ -7858,6 +7858,7 @@ export {
 	taskReport,
 	getTableData,
 	addLanguageOptions,
+	getAvailableTimeZones,
 	getQuestionsInCsvFile,
 	getQuestionsInSpList,
 	getColumnsInDhis2Resource,

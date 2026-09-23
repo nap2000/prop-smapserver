@@ -102,6 +102,7 @@
 			<ul class="nav nav-tabs card-header-tabs" role="tablist">
 				<li id="appearanceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="ed_appearance"></a></li>
 				<li id="serverTab" class="nav-item restrict_role owner_role"><a href="#" class="nav-link lang" data-lang="c_server"></a></li>
+				<li id="organisationTab" class="nav-item restrict_role org_role"><a href="#" class="nav-link lang" data-lang="c_org"></a></li>
 				<li id="deviceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_ft"></a></li>
 				<li id="webformTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_wf"></a></li>
 				<li id="emailTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_email"></a></li>
@@ -895,6 +896,81 @@
 
 				</div>
 
+				<!-- Settings that only an organisation administrator can change -->
+				<div id="organisationPanel" style="display:none;" class="usertab mt-4">
+
+					<p class="lang" data-lang="u_org_msg"></p>
+					<div class="container">
+						<form id="organisation_form">
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="c_access"></div>
+								<div class="card-body">
+								<div class="form-group row">
+									<label for="can_submit" data-lang="u_submissions" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="can_submit" class="accessoption" value="can_submit">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="can_use_api" data-lang="u_use_api" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="can_use_api" class="accessoption" value="can_use_api">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="can_notify" data-lang="u_notifications" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="can_notify" class="accessoption" value="can_notify">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="email_task" data-lang="u_email_tasks" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="email_task" class="accessoption" value="email_task">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row awsSmsOnly">
+									<label for="can_sms" data-lang="u_sms" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="can_sms" class="accessoption" value="can_sms">
+										</div>
+									</div>
+								</div>
+									<div class="form-group row">
+										<label for="o_refresh_rate" data-lang="a_ref_rate" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-4">
+											<input type="number" min="0" class="form-control" id="o_refresh_rate">
+										</div>
+										<p class="col-sm-2 lang" data-lang="i_m"></p>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_det_o_limits"></div>
+								<div class="card-body">
+									<div id="usageLimitsHere"></div>
+								</div>
+							</div>
+						</form>
+
+						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+						<button id="saveOrganisationSettings" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
+
+					</div>
+
+				</div>
+
 				<!-- The panel for setting organisation email settings -->
 				<div id="emailPanel" style="display:none;" class="usertab mt-4">
 
@@ -1037,6 +1113,64 @@
 						<form id="other_form">
 
 							<div class="form-group row">
+								<label for="o_tz" data-lang="c_tz" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<select class="form-select" id="o_tz"></select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_language" data-lang="c_lang" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<select class="form-select" id="o_language"></select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_map_source" data-lang="ed_map_source" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<select id="o_map_source" class="form-select">
+										<option value="mapbox">Mapbox</option>
+										<option value="google">Google</option>
+										<option value="maptiler">MapTiler</option>
+									</select>
+								</div>
+							</div>
+
+								<div class="form-group row">
+									<label for="can_edit" data-lang="u_other_edit" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="can_edit" class="otheroption" value="can_edit">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="notification_webform" data-lang="u_notification_webform" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="notification_webform" class="otheroption" value="notification_webform">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="send_optin" data-lang="u_eoi" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="send_optin" class="otheroption" value="send_optin">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="enable_redact" data-lang="u_enable_redact" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" id="enable_redact" class="otheroption" value="enable_redact">
+										</div>
+									</div>
+								</div>
+
+							<div class="form-group row">
 								<label for="o_p_strength" data-lang="u_mps" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-6">
 									<div class="input-group">
@@ -1046,6 +1180,7 @@
 												<a href="https://www.smap.com.au/docs/admin-security.html#password-strength" target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a></span>
 										</div>
 									</div>
+									<small id="o_p_strength_msg" class="form-text text-muted lang d-none" data-lang="u_mps_sec"></small>
 								</div>
 							</div>
 
