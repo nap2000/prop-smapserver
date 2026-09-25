@@ -927,6 +927,10 @@ const moment = window.moment;
 		$('#s_email_password').val(data.email_password);
 		$('#s_email_port').val(data.email_port);
 		$('#s_sms_url').val(data.sms_url);
+		$('#s_wa_access_token').val(data.wa_access_token);
+		$('#s_wa_app_secret').val(data.wa_app_secret);
+		$('#s_wa_verify_token').val(data.wa_verify_token);
+		$('#s_wa_api_version').val(data.wa_api_version);
 		$('#s_ratelimit').val(data.ratelimit);
 		$('#s_api_max_records').val(data.api_max_records);
 		$('#s_p_strength').val(data.password_strength);
@@ -974,6 +978,10 @@ const moment = window.moment;
 				email_password: $('#s_email_password').val(),
 				email_port: $('#s_email_port').val(),
 				sms_url: $('#s_sms_url').val(),
+				wa_access_token: $('#s_wa_access_token').val(),
+				wa_app_secret: $('#s_wa_app_secret').val(),
+				wa_verify_token: $('#s_wa_verify_token').val(),
+				wa_api_version: $('#s_wa_api_version').val(),
 				ratelimit: $('#s_ratelimit').val(),
 				api_max_records: $('#s_api_max_records').val(),
 				password_strength: $('#s_p_strength').val(),

@@ -847,6 +847,14 @@
 						</div>
 					</div>
 
+					<div class="form-group row addWaOnly" style="display:none;">
+						<label for="addSmsWaId" data-lang="sms_wa_id" class="lang col-sm-3 control-label"></label>
+						<div class="col-sm-4">
+							<input class="form-control" type="text" id="addSmsWaId">
+						</div>
+						<p class="col-sm-5 lang" data-lang="sms_wa_id_h"></p>
+					</div>
+
 					<div class="form-group row">
 						<label for="addSmsOrganisation" data-lang="c_org" class="lang col-sm-3 control-label"></label>
 						<div class="col-sm-4">
@@ -876,13 +884,48 @@
 			<div class="modal-body">
 
 				<form class="form" id="edit_sms_form"  enctype="multipart/form-data" name="edit_sms_form">
-					<div class="form-group row ownerOnly d-none">
-						<label for="smsOrganisation" class="lang col-sm-2 control-label" data-lang="c_org"></label>
-						<div class="col-sm-10">
-							<select id="smsOrganisation" class="organisation_select form-select"></select>
+
+					<!-- Set up of the number itself, done by the server owner -->
+					<div class="ownerOnly d-none">
+						<h5 class="lang" data-lang="c_phone"></h5>
+						<div class="form-group row">
+							<label for="smsNumber" class="lang col-sm-2 control-label" data-lang="c_phone"></label>
+							<div class="col-sm-4">
+								<input class="form-control" type="text" id="smsNumber">
+							</div>
+							<p class="col-sm-6 lang" data-lang="n_spec_nbr_h"></p>
 						</div>
+
+						<div class="form-group row">
+							<label for="smsChannel" class="lang col-sm-2 control-label" data-lang="c_channel"></label>
+							<div class="col-sm-4">
+								<select id="smsChannel" class="form-select">
+									<option value="sms">SMS</option>
+									<option value="whatsapp">WhatsApp</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row editWaOnly">
+							<label for="smsWaId" class="lang col-sm-2 control-label" data-lang="sms_wa_id"></label>
+							<div class="col-sm-4">
+								<input class="form-control" type="text" id="smsWaId">
+							</div>
+							<p class="col-sm-6 lang" data-lang="sms_wa_id_h"></p>
+						</div>
+
+						<div class="form-group row">
+							<label for="smsOrganisation" class="lang col-sm-2 control-label" data-lang="c_org"></label>
+							<div class="col-sm-10">
+								<select id="smsOrganisation" class="organisation_select form-select"></select>
+							</div>
+						</div>
+						<div class="sms_org_changed alert alert-warning lang" data-lang="sms_org_ch" style="display:none;"></div>
+						<hr>
 					</div>
 
+					<!-- Which survey the number updates, done by the organisation administrator -->
+					<h5 class="lang sameOrg" data-lang="c_survey"></h5>
 					<div class="sameOrg">
 						<div class="form-group row">
 							<label for="smsProject" class="lang col-sm-2 control-label" data-lang="c_project"></label>

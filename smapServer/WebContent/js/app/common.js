@@ -7780,6 +7780,7 @@ export {
 	htmlEncode,
 	isBusinessServer,
 	loadSurveys,
+	loadSurveyIdentList,
 	makeSearchableSelect,
 	refreshSearchableSelect,
 	localTime,

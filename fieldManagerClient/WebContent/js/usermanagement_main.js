@@ -29,10 +29,12 @@ import {
 	enableDebugging,
 	getFromLocalStorage,
 	getLoggedInUser,
+	getQuestionsInSurvey,
 	getRoles,
 	handleLogout,
 	htmlEncode,
 	isBusinessServer,
+	loadSurveyIdentList,
 	removeHourglass,
 	setInLocalStorage,
 	updateProjectList,
@@ -805,10 +807,33 @@ const moment = window.moment;
 		 */
 		$('#addNumber').click(function() {
 			$('#addSmsNumber').val('');
+			$('#addSmsWaId').val('');
+			$('.addWaOnly').toggle($('#addSmsChannel').val() === 'whatsapp');
 			$('#addSmsOrganisation').val(globals.gOrgId);
 
 			$('.add_sms_alert').hide();
 			window.bsModalShow('#add_sms_popup');
+		});
+
+		$('#addSmsChannel').change(function() {
+			$('.addWaOnly').toggle($(this).val() === 'whatsapp');
+		});
+
+		$('#smsChannel').change(function() {
+			$('.editWaOnly').toggle($(this).val() === 'whatsapp');
+		});
+
+		/*
+		 * Moving the number to another organisation drops its survey link, so hide the survey settings
+		 */
+		$('#smsOrganisation').change(function() {
+			var moved = $(this).val() != gNumbers[gNumberIdx].oId;		// string compared with integer
+			$('.sms_org_changed').toggle(moved);
+			if(moved) {
+				$('.sameOrg, .diffOrg').hide();
+			} else {
+				showNumberSurvey(gNumberIdx);
+			}
 		});
 
 		$('#smsProject').change(function() {
@@ -831,6 +856,7 @@ const moment = window.moment;
 			var sms = {
 				ourNumber: number,
 				channel:channel,
+				waPhoneNumberId: channel === 'whatsapp' ? $('#addSmsWaId').val() : '',
 				oId: org
 			}
 
@@ -879,7 +905,6 @@ const moment = window.moment;
 			if(sIdent === "_none") {
 				sIdent = undefined;
 			}
-			// TODO validate number
 			var sms = {
 				ourNumber: number,
 				oId: org,
@@ -887,6 +912,23 @@ const moment = window.moment;
 				theirNumberQuestion: theirNumberQuestion,
 				messageQuestion: messageQuestion,
 				mcMsg: $('#mcMsg').val()
+			}
+
+			/*
+			 * Only the server owner can change the number itself
+			 */
+			if(globals.gIsServerOwner) {
+				var newNumber = $('#smsNumber').val().replace(/[^0-9]/g, '');
+				if(newNumber.length === 0) {
+					$('.edit_sms_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["n_spec_nbr_h"]);
+					return;
+				}
+				if(newNumber !== number && !confirm(localise.set["sms_rename_w"])) {
+					return;
+				}
+				sms.newNumber = newNumber;
+				sms.channel = $('#smsChannel').val();
+				sms.waPhoneNumberId = sms.channel === 'whatsapp' ? $('#smsWaId').val() : '';
 			}
 
 			addHourglass();
@@ -3056,7 +3098,20 @@ const moment = window.moment;
 	function editNumber(idx) {
 		gNumberIdx = idx;
 		$('.edit_number').text(gNumbers[idx].ourNumber);
+		$('.edit_sms_alert, .sms_org_changed').hide();
+		$('#smsNumber').val(gNumbers[idx].ourNumber);
+		$('#smsChannel').val(gNumbers[idx].channel || 'sms');
 		$('#smsOrganisation').val(gNumbers[idx].oId);
+		$('#smsWaId').val(gNumbers[idx].waPhoneNumberId);
+		$('.editWaOnly').toggle(gNumbers[idx].channel === 'whatsapp');
+		showNumberSurvey(idx);
+		window.bsModalShow('#edit_sms_popup');
+	}
+
+	/*
+	 * Show the survey settings, these can only be edited from the organisation the number is in
+	 */
+	function showNumberSurvey(idx) {
 		if(gNumbers[idx].oId === globals.gOrgId) {
 			$('.sameOrg').show();
 			$('.diffOrg').hide();
@@ -3076,7 +3131,6 @@ const moment = window.moment;
 			$('.sameOrg').hide();
 			$('.diffOrg').show();
 		}
-		window.bsModalShow('#edit_sms_popup');
 	}
 
 	function deleteNumber(idx) {
