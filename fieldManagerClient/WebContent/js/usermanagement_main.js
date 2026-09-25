@@ -40,7 +40,9 @@ import {
 	updateProjectList,
 	setupUserProfile,
 	validGeneralName,
-	validateEmails
+	validateEmails,
+	displayAsImage,
+	executeUsageReport
 } from "common";
 
 const $ = window.$;

@@ -70,7 +70,8 @@ import {
 	getTableData,
 	updateConversationalSMS,
 	generateFile,
-	downloadPdf
+	downloadPdf,
+	saveConversation
 } from "common";
 import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 import "../../../smapServer/WebContent/js/libs/saveSvgAsPng";

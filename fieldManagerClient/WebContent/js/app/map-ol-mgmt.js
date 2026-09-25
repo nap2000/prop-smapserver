@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addGoogleMapLayers, addHourglass, getGoogleMapApi, removeHourglass } from "common";
+import { addGoogleMapLayers, addHourglass, addPendingTask, getGoogleMapApi, removeHourglass, removePendingTask } from "common";
 
 
 var selectResultsControl = null, // OpenLayers select control for vector feature layer

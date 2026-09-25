@@ -7871,7 +7871,12 @@ export {
 	generateFile,
 	displayAsImage,
 	getUtcDate,
-	debounceClick
+	debounceClick,
+	saveConversation,
+	utcTime,
+	addPendingTask,
+	removePendingTask,
+	getReports
 };
 
 function debounceClick(selector, handler) {
