@@ -632,7 +632,7 @@ export {
                             css += ' sms';  // Default style
                         }
                         h[++idx] = '<div class="d-flex flex-row ' + justify + ' ' + respond + ' mb-1 message"' + (inEdit ? 'data-idx="' + j + '"' : '') + '>';
-                        h[++idx] = '<div class="p-1 border bg-body-tertiary ' + css + '" style="border-radius: 10px;">';
+                        h[++idx] = '<div class="p-1 border ' + css + '" style="border-radius: 10px;">';
 
                         if (conv[j].ts) {
                             h[++idx] = '<time datetime="';
