@@ -3880,8 +3880,12 @@ localise.initLocale(gUserLocale).then(function () {
                 gDeleteReasonColumn = i;
             } else if(headItem.type === 'conversation') {
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
-                    var $this = $(this);
-                    if($this[0] && $this[0].innerHTML && $this[0].innerHTML.startsWith("[")) {  // Only format if this is a json array
+                    // Format inside the scroll wrapper added by the column renderer, if there is one
+                    var $this = $(this).children('.td-scroll');
+                    if($this.length === 0) {
+                        $this = $(this);
+                    }
+                    if($this.text().startsWith("[")) {  // Only format if this is a json array
                         $this.html(actioncommon.formatConversation(htmlEncode($this.text()),false));
                     }
                 });
