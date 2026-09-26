@@ -632,36 +632,38 @@
 							</div>
 
 							<div class="card mb-3">
-								<div class="card-header lang" data-lang="u_server_messaging"></div>
+								<div class="card-header lang" data-lang="u_msg_vonage"></div>
 								<div class="card-body">
+									<p class="lang small text-muted" data-lang="u_msg_vonage_h"></p>
 									<div class="form-group row">
 										<label for="vonage_application_id" data-lang="u_v_k" class="lang control-label col-sm-4"></label>
 										<div class="col-sm-6">
-											<input type="text" id="vonage_application_id" required class="form-control">
+											<input type="text" id="vonage_application_id" class="form-control" autocomplete="off">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label for="vonage_webhook_secret" data-lang="u_v_whs" class="lang control-label col-sm-4"></label>
 										<div class="col-sm-6">
-											<input type="text" id="vonage_webhook_secret" required class="form-control">
+											<input type="password" id="vonage_webhook_secret" class="form-control" autocomplete="new-password">
 										</div>
 									</div>
-									<div class="form-group row">
-										<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
-										<div class="col-sm-6">
-											<input class="form-control" type="text" id="s_sms_url" tabindex="15">
-										</div>
-									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_msg_wa"></div>
+								<div class="card-body">
+									<p class="lang small text-muted" data-lang="u_msg_wa_h"></p>
 									<div class="form-group row">
 										<label for="s_wa_access_token" data-lang="u_wa_at" class="lang control-label col-sm-4"></label>
 										<div class="col-sm-6">
-											<input type="text" id="s_wa_access_token" class="form-control" autocomplete="off">
+											<input type="password" id="s_wa_access_token" class="form-control" autocomplete="new-password">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label for="s_wa_app_secret" data-lang="u_wa_as" class="lang control-label col-sm-4"></label>
 										<div class="col-sm-6">
-											<input type="text" id="s_wa_app_secret" class="form-control" autocomplete="off">
+											<input type="password" id="s_wa_app_secret" class="form-control" autocomplete="new-password">
 										</div>
 									</div>
 									<div class="form-group row">
@@ -676,6 +678,19 @@
 											<input type="text" id="s_wa_api_version" class="form-control" autocomplete="off">
 										</div>
 										<p class="lang col-sm-2 small text-muted" data-lang="u_dh_version_help"></p>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_sms_url"></div>
+								<div class="card-body">
+									<p class="lang small text-muted" data-lang="u_msg_sms_url_h"></p>
+									<div class="form-group row">
+										<label for="s_sms_url" data-lang="u_sms_url" class="lang control-label col-sm-4"></label>
+										<div class="col-sm-6">
+											<input type="text" id="s_sms_url" class="form-control" autocomplete="off">
+										</div>
 									</div>
 								</div>
 							</div>
@@ -825,7 +840,7 @@
 									<div class="form-group row">
 										<label for="turnstile_secret_key" data-lang="u_turnstile_secret_key" class="lang col-sm-4 control-label"></label>
 										<div class="col-sm-6">
-											<input type="text" id="turnstile_secret_key" class="form-control">
+											<input type="password" id="turnstile_secret_key" class="form-control" autocomplete="new-password">
 										</div>
 									</div>
 								</div>

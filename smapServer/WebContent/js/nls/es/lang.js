@@ -1328,7 +1328,6 @@ define(
     "u_load_mgmt": "Gestión de carga",
     "u_api_max_records": "Número de registros máx por consulta de api",
     "u_server_map_services": "Servicio de mapas",
-    "u_server_messaging": "Mensajería",
     "u_server_email": "Servidor de email",
     "u_mb_k": "Clave MapBox",
     "u_mb_a": "Cuenta Mapbox",
