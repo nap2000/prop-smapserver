@@ -176,7 +176,7 @@ td.cell-is-referenced {
 }
 
 .conv-from.whatsapp {
-    background-color: #25d366;
+    background-color: #0b7a3e;     /* WhatsApp green darkened so white text passes WCAG AA */
     color: white;
 }
 
@@ -186,7 +186,7 @@ td.cell-is-referenced {
 }
 
 .conv-from.email {
-    background-color: #987554;
+    background-color: #7a5a3c;
     color: white;
 }
 
@@ -197,8 +197,50 @@ td.cell-is-referenced {
 
 .message time, .message dest {
     font-size: 11px;
-    color: #333;
     line-height: 1;
+}
+
+/* Conversations - see formatConversation in common.js */
+.conv {
+    display: flex;
+    flex-direction: column-reverse;     /* Opens scrolled to the bottom, where the newest message is */
+    overflow-y: auto;
+}
+.conv-compact { max-height: 120px; }
+.conv-full { max-height: 400px; }
+.conv-bubble {
+    border-radius: 10px;
+    max-width: 75%;
+    overflow-wrap: anywhere;
+}
+.conv-compact .conv-bubble {
+    max-width: 90%;
+    font-size: 0.85em;
+}
+.conv-meta {
+    font-size: 11px;
+    opacity: 0.9;
+}
+.conv-earlier {
+    font-size: 11px;
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+.conv-summary {
+    white-space: nowrap;
+}
+.conv-open {
+    cursor: pointer;
+}
+.conv-open:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 2px;
+}
+/* The console wraps every cell in a scrolling div, a conversation scrolls itself */
+.td-scroll.conv-cell {
+    max-height: none;
+    overflow: visible;
 }
 
 /* WCAG 2.2 AA focus indicators — Bootstrap suppresses outline on .btn and uses box-shadow,

@@ -20,7 +20,7 @@
 import $ from "jquery";
 import localise from "localise";
 import globals from "globals";
-import { htmlEncode, getAppearanceParams, getQuestionType } from "common";
+import { htmlEncode, getAppearanceParams, getQuestionType, formatConversation } from "common";
 import map from "app/mapOL3";
 import { addAnchors } from "../../../../smapServer/WebContent/js/libs/commonReportFunctions.js";
 
@@ -593,81 +593,6 @@ export {
             }
             return col;
 
-        }
-
-        function formatConversation(val, inEdit) {
-            window.gEditRecord.contacts = {};
-            var conv;
-            if(val && val.length > 0 && val !== 'undefined' && val[0] === '[') {    // Only convert if the data is a json array, otherwise has already been converted
-                try {
-                    conv = JSON.parse(val);
-                } catch (e) {
-                    console.log("Error converting: " + val);
-                    console.log(e);
-                    // Ignore malformed json
-                }
-
-                if (conv && conv.length > 0) {
-                    var h = [],
-                        idx = -1,
-                        j;
-                    for (j = conv.length - 1; j >= 0; j--) {
-                        var css,
-                            justify,
-                            respond = "";
-
-                        if(inEdit && conv[j].inbound) {
-                            respond = 'respond';
-                        }
-                        if (conv[j].inbound) {
-                            css = 'conv-from';
-                            justify = 'justify-content-start';
-                        } else {
-                            css = 'conv-to';
-                            justify = 'justify-content-end';
-                        }
-                        if(conv[j].channel) {
-                            css += ' ' + conv[j].channel;
-                        } else {
-                            css += ' sms';  // Default style
-                        }
-                        h[++idx] = '<div class="d-flex flex-row ' + justify + ' ' + respond + ' mb-1 message"' + (inEdit ? 'data-idx="' + j + '"' : '') + '>';
-                        h[++idx] = '<div class="p-1 border ' + css + '" style="border-radius: 10px;">';
-
-                        if (conv[j].ts) {
-                            h[++idx] = '<time datetime="';
-                            h[++idx] = conv[j].ts;
-                            h[++idx] = '">';
-                            h[++idx] = conv[j].ts;
-                            h[++idx] = '</time>';
-                        }
-                        if (conv[j].theirNumber) {
-                            h[++idx] = ' <dest>';
-                            h[++idx] = conv[j].theirNumber;
-                            h[++idx] = '</dest>';
-                        }
-
-                        h[++idx] = '<br/>';
-                        h[++idx] = htmlEncode(conv[j].msg);
-
-                        h[++idx] = '</div>';
-                        h[++idx] = '</div>';
-
-                        if(inEdit) {
-                            window.gEditRecord.contacts[conv[j].theirNumber] = {
-                                channel: conv[j].channel
-                            }
-                        } //else {
-                          //  break;  // Only do the first entry if not in edit
-                        //}
-                    }
-                    return h.join('');
-                } else {
-                    return "";
-                }
-            } else {
-                return val;
-            }
         }
 
         function addSourceQuestion(column, record, ref_rows) {

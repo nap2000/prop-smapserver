@@ -157,6 +157,8 @@ define({
     "c_reference": "Reference",
     "c_emails": "Emails",
     "c_sms": "SMS",
+    "c_received": "Received",
+    "conv_earlier": "%s earlier messages",
     "c_document": "Document",
     "c_twitter": "Twitter",
     "c_lang": "Language",

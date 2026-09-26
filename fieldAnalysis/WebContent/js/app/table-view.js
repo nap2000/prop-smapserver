@@ -23,7 +23,7 @@ import "tablesorter";
 import { getDisplayDescription, addAnchors } from "commonReportFunctions";
 import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
-import { addCacheBuster, addHourglass, cleanFileName, downloadFile, downloadPdf, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
+import { addCacheBuster, addHourglass, cleanFileName, downloadFile, downloadPdf, formatConversation, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
 import { toggleBadURL, openModal, closeModal, deleteSurveyDataURL } from "./script";
 import { refreshAnalysisData, setSurveyViewSurveys } from "./survey_control";
 import { getUserData, processSurveyData } from "data";
@@ -871,6 +871,19 @@ function addRightClickToTable($elem, sId, view) {
 		
 	}
 	
+	/*
+	 * Clicking a conversation expands its record
+	 */
+	$elem.find('.conv-open').off().on('click keydown', function (e) {
+		if(e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') {
+			return;
+		}
+		e.preventDefault();
+		gExpandPkey = $(this).data("pkey");
+		gExpandView = view;
+		showExpandedRecord();
+	});
+
 	toggleBadFn(sId, view);
 	tableEditFn(sId, view);
 }
@@ -938,7 +951,11 @@ function renderExpandedRecord() {
 		} else if (key === "_bad_reason" && rawVal && String(rawVal).indexOf("Replaced by") === 0) {
 			rowClass = ' class="expand-replaced"';
 		}
-		val = addAnchors(val, true).join(',');
+		if (type === "conversation") {
+			val = formatConversation(rawVal, false, 'full');
+		} else {
+			val = addAnchors(val, true).join(',');
+		}
 
 		h.push('<tr' + rowClass + '><td class="dt-expand-label">' + htmlEncode(label) + '</td><td class="dt-expand-value">' + val + '</td></tr>');
 	}

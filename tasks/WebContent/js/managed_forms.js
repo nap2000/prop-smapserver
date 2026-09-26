@@ -3887,9 +3887,26 @@ localise.initLocale(gUserLocale).then(function () {
                         $this = $(this);
                     }
                     if($this.text().startsWith("[")) {  // Only format if this is a json array
-                        $this.html(actioncommon.formatConversation(htmlEncode($this.text()),false));
+                        $this.addClass('conv-cell').html('<div class="conv-open" role="button" tabindex="0" title="'
+                            + htmlEncode(localise.set["c_view"] || "View") + '">'
+                            + actioncommon.formatConversation($this.text(), false, 'compact') + '</div>');
                     }
                 });
+
+                /*
+                 * Clicking a conversation opens its record
+                 */
+                $('#trackingTable').off('click.conv keydown.conv')
+                    .on('click.conv keydown.conv', '.conv-open', function (e) {
+                        if(e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') {
+                            return;
+                        }
+                        e.preventDefault();
+                        e.stopPropagation();    // Stop the table toggling the selection back off
+                        globals.gMainTable.rows().deselect();
+                        globals.gMainTable.row($(this).closest('tr')).select();
+                        showRecord();
+                    });
             }
         }
 
@@ -4058,7 +4075,7 @@ localise.initLocale(gUserLocale).then(function () {
                     h[++idx] = actioncommon.addCellMap(true, sfMapBase, sfMaps, col, val, undefined, colIdx);
                 } else if (isConv) {
                     h[++idx] = '<div class="border border-primary rounded p-1">'
-                        + actioncommon.formatConversation(val, false) + '</div>';
+                        + actioncommon.formatConversation(val, false, 'full') + '</div>';
                 } else {
                     h[++idx] = '<div class="sf-value">' + htmlEncode(String(val)) + '</div>';
                 }

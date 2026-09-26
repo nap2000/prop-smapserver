@@ -7183,6 +7183,110 @@ function htmlDecode(input) {
 	return doc.documentElement.textContent;
 }
 
+/*
+ * Format a conversation, held as a json array of messages
+ * mode
+ *   summary - one line: direction, channel, message count and the latest message, for a table that does not wrap text
+ *   compact - the latest few messages as a chat, for a table cell
+ *   full    - the whole conversation as a chat (default)
+ * Messages are shown oldest first, the chat opens scrolled to the newest
+ * Used by the console and the analysis page
+ */
+var CONV_COMPACT_COUNT = 3;
+function formatConversation(val, inEdit, mode) {
+	if(window.gEditRecord) {
+		window.gEditRecord.contacts = {};
+	}
+	if(!(val && val.length > 0 && val !== 'undefined' && val[0] === '[')) {	// Only convert if the data is a json array, otherwise has already been converted
+		return val;
+	}
+
+	var conv;
+	try {
+		conv = JSON.parse(val);
+	} catch (e) {
+		console.log("Error converting: " + val);
+		console.log(e);
+		// Ignore malformed json
+	}
+	if (!conv || conv.length === 0) {
+		return "";
+	}
+
+	mode = mode || 'full';
+	var h = [],
+		idx = -1,
+		j;
+
+	if(inEdit) {
+		for (j = 0; j < conv.length; j++) {
+			window.gEditRecord.contacts[conv[j].theirNumber] = {
+				channel: conv[j].channel
+			};
+		}
+	}
+
+	if(mode === 'summary') {
+		var last = conv[conv.length - 1];
+		h[++idx] = '<span class="conv-summary" title="' + htmlEncode(last.msg) + '">';
+		h[++idx] = conversationIcons(last);
+		h[++idx] = ' <i class="fas fa-comments" aria-hidden="true"></i> ' + conv.length;
+		if(last.ts) {
+			h[++idx] = ' &middot; <time datetime="' + htmlEncode(last.ts) + '">' + htmlEncode(last.ts) + '</time>';
+		}
+		h[++idx] = ' &middot; ' + htmlEncode(last.msg);
+		h[++idx] = '</span>';
+		return h.join('');
+	}
+
+	var first = 0;
+	if(mode === 'compact' && conv.length > CONV_COMPACT_COUNT) {
+		first = conv.length - CONV_COMPACT_COUNT;
+	}
+
+	// column-reverse on the outer div opens the chat scrolled to the bottom, where the newest message is
+	h[++idx] = '<div class="conv conv-' + mode + '"><div>';
+	if(first > 0) {
+		h[++idx] = '<div class="conv-earlier">' + htmlEncode((localise.set["conv_earlier"] || "%s earlier messages").replace("%s", first)) + '</div>';
+	}
+	for (j = first; j < conv.length; j++) {
+		var css = conv[j].inbound ? 'conv-from' : 'conv-to',
+			justify = conv[j].inbound ? 'justify-content-start' : 'justify-content-end',
+			respond = (inEdit && conv[j].inbound) ? 'respond' : '';
+
+		css += ' ' + (conv[j].channel || 'sms');	// Default style
+		h[++idx] = '<div class="d-flex flex-row ' + justify + ' ' + respond + ' mb-1 message"' + (inEdit ? ' data-idx="' + j + '"' : '') + '>';
+		h[++idx] = '<div class="conv-bubble p-1 border ' + css + '">';
+		h[++idx] = '<div class="conv-meta">' + conversationIcons(conv[j]);
+		if (conv[j].ts) {
+			h[++idx] = ' <time datetime="' + htmlEncode(conv[j].ts) + '">' + htmlEncode(conv[j].ts) + '</time>';
+		}
+		if (conv[j].theirNumber) {
+			h[++idx] = ' <dest>' + htmlEncode(conv[j].theirNumber) + '</dest>';
+		}
+		h[++idx] = '</div>';
+		h[++idx] = htmlEncode(conv[j].msg);
+		h[++idx] = '</div>';
+		h[++idx] = '</div>';
+	}
+	h[++idx] = '</div></div>';
+	return h.join('');
+}
+
+/*
+ * Direction and channel of a message as icons, with text for screen readers, so colour is not the only cue
+ */
+function conversationIcons(msg) {
+	var dir = msg.inbound ? (localise.set["c_received"] || "Received") : (localise.set["mo_sent"] || "Sent"),
+		channel = msg.channel || 'sms',
+		channelIcon = channel === 'whatsapp' ? 'fab fa-whatsapp' : (channel === 'email' ? 'fas fa-envelope' : 'fas fa-sms');
+
+	return '<i class="fas ' + (msg.inbound ? 'fa-arrow-left' : 'fa-arrow-right') + '" title="' + htmlEncode(dir) + '" aria-hidden="true"></i>'
+		+ '<span class="visually-hidden">' + htmlEncode(dir) + '</span> '
+		+ '<i class="' + channelIcon + '" title="' + htmlEncode(channel) + '" aria-hidden="true"></i>'
+		+ '<span class="visually-hidden">' + htmlEncode(channel) + '</span>';
+}
+
 function htmlEncode(input) {
 	if(input) {
 		return $('<div>').text(input).html();
@@ -7876,7 +7980,8 @@ export {
 	utcTime,
 	addPendingTask,
 	removePendingTask,
-	getReports
+	getReports,
+	formatConversation
 };
 
 function debounceClick(selector, handler) {

@@ -18,13 +18,34 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import "tablesorter";
 import { addAnchors } from "commonReportFunctions";
-import { htmlEncode } from "common";
+import { formatConversation, htmlEncode } from "common";
 import globals from "globals";
 import localise from "localise";
 
 var gTab = [],
 	gIdx = -1;
 
+
+/*
+ * A conversation cell holds a one line summary, shown when text is not wrapped, and the latest messages, shown when it is
+ * Sorting uses the time of the latest message.  Clicking it expands the record
+ */
+function conversationCell(raw, pkey, params, metaAttr) {
+	var sortKey = "";
+	try {
+		var conv = JSON.parse(raw);
+		if(conv && conv.length > 0 && conv[conv.length - 1].ts) {
+			sortKey = conv[conv.length - 1].ts;
+		}
+	} catch (e) {
+		// Not a conversation, shown as it is
+	}
+	return '<td ' + params + metaAttr + ' data-text="' + htmlEncode(sortKey) + '">'
+		+ '<div class="conv-open" role="button" tabindex="0" data-pkey="' + htmlEncode(String(pkey)) + '" title="' + htmlEncode(localise.set["c_view"] || "View") + '">'
+		+ '<span class="conv-when-nowrap">' + formatConversation(raw, false, 'summary') + '</span>'
+		+ '<div class="conv-when-wrap">' + formatConversation(raw, false, 'compact') + '</div>'
+		+ '</div></td>';
+}
 
 function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	var i,j,k,
@@ -288,9 +309,13 @@ if(globals.gCanEdit) {
 						} else if(type === "dateTime") {
 							//val = formatLocalTime(val);  all good
 						}
-						gTab[++gIdx] = '<td ' + params + metaAttr + '>';
-						gTab[++gIdx] = addAnchors(val, true).join(',');
-						gTab[++gIdx] = '</td>';
+						if(type === "conversation") {
+							gTab[++gIdx] = conversationCell(groups[i].properties[key], groups[i].properties.prikeys[0], params, metaAttr);
+						} else {
+							gTab[++gIdx] = '<td ' + params + metaAttr + '>';
+							gTab[++gIdx] = addAnchors(val, true).join(',');
+							gTab[++gIdx] = '</td>';
+						}
 					}
 				}
 				

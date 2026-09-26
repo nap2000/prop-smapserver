@@ -806,6 +806,13 @@ div.olControlZoom a:link {
 /* Disable text wrap when Wrap Text is unchecked */
 .dt-table.no-wrap-text tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* Conversations: latest messages when text wraps, a one line summary when it does not */
+.dt-table .conv-when-nowrap { display: none; }
+.dt-table.no-wrap-text .conv-when-nowrap { display: inline; }
+.dt-table.no-wrap-text .conv-when-wrap { display: none; }
+.dt-table.no-wrap-text .conv-open { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-table td:has(.conv-open) { min-width: 260px; }
+
 /* Kebab / context menu trigger button */
 .menu_button {
 	display: inline-flex;
