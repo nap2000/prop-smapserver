@@ -25,7 +25,6 @@ var gEligibleUser;
 var gSelectedOversightQuestion;
 var gSelectedOversightSurvey;
 var gConversationalSMS;	// Set true if a conversational SMS choice has been added to notification types
-var gNumbers;
 
 import globals from "./globals.js";
 import localise from "./localise.js";
@@ -5740,65 +5739,80 @@ function setPeriodDependencies(period) {
  */
 function initMsgNotPopup(target) {
 	if(window.gEditRecord) {
-		var $msg = $('#msg_cur_nbr');
 		var $email = $('#email_cur');
 		var other = localise.set["c_other"];
 
-		$('.other_msg').hide();
 		$('.recvd_emails').hide();
 
-		$msg.empty();
-		var hasSelect = false;
+		$email.empty();
 		var hasEmailSelect = false;
 		if (window.gEditRecord.contacts) {
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
-				// Hack fix up channel for old entries, its either sms or email
-				if (!value.channel) {
-					value.channel = (key.indexOf("@") > 0) ? 'email' : 'sms';
-				}
-
-				if (!value.channel || value.channel === 'sms' || value.channel === 'whatsapp') {
-					hasSelect = true;
-					$msg.append(`<option data-channel="${value.channel}" value="${key}">${key} - ${value.channel} </option>`);
-				} else {
+				if (value.channel === 'email' || (!value.channel && key.indexOf("@") > 0)) {
 					hasEmailSelect = true;
 					$email.append(`<option value="${key}">${key}</option>`);
 				}
-				setOurNumbersList();
 			}
 		}
-		$msg.append(`<option value="other">${other}</option>`);
 		$email.append(`<option value="other">${other}</option>`);
-		if(target === "conversation") {
-			msgCurNbrChanged();
-		}
 
 		if(hasEmailSelect) {
 			$('.recvd_emails').show();
 		}
 
-		$('#msg_cur_nbr').change(function () {
-			msgCurNbrChanged();
-		});
-
-		$('#msg_channel').change(function () {
-			setOurNumbersList();
-		});
-
+		if(target === "conversation") {
+			getCaseConversation();
+		}
 	}
 }
 
 /*
- * Change attribute visibility if the user select an existing number to message or selects other
+ * Get the conversation that established the case
+ * Messages can only be sent to this conversation
  */
-function msgCurNbrChanged($choice) {
-	if ($('#msg_cur_nbr').val() === 'other') {
-		$('.other_msg').show();
-		$('#msg_channel').prop( "disabled", false);
-	} else {
-		$('.other_msg').hide();
-		$('#msg_channel').val($('#msg_cur_nbr option:selected').attr('data-channel')).prop( "disabled", true).trigger("change");
+var gCaseConversation;
+function getCaseConversation() {
+
+	gCaseConversation = undefined;
+	$('#msg_their_nbr').val('');
+	$('.no_conv').hide();
+
+	var sIdent = $('#not_form_name').val();
+	var record = window.gTasks && window.gTasks.gSelectedRecord;
+	if(!sIdent || !record || !record.instanceid) {
+		$('.no_conv').show();
+		return;
 	}
+
+	var url = "/surveyKPI/notifications/conversation/" + encodeURIComponent(sIdent) + "/" + encodeURIComponent(record.instanceid);
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				if(data && data.theirNumber) {
+					gCaseConversation = data;
+					$('#msg_their_nbr').val(data.theirNumber + ' - ' + data.channel);
+				} else {
+					$('.no_conv').show();
+				}
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					$('.no_conv').show();
+					console.log("Error: Failed to get the case conversation: " + err);
+				}
+			}
+		}
+	});
 }
 
 /*
@@ -6070,20 +6084,22 @@ function saveDocument() {
 /*
  * Process a save notification when the target is "conversation"
  */
-function saveConversation(columns, theirNumber, ourNumber, msgChannel, record) {
+function saveConversation() {
 
 	var notification = {};
 
 	notification.target = "conversation";
 	notification.notifyDetails = {};
 	notification.notifyDetails.content = $('#conversation_text').val();
-	notification.notifyDetails.emails = [theirNumber];		// Must be sent as an array
-	notification.notifyDetails.ourNumber = ourNumber;
-	notification.notifyDetails.msgChannel = msgChannel;
 
-	if(!theirNumber || theirNumber.length === 0) {
+	// The server sends to the case's conversation, these are only a record of what the user saw
+	if(gCaseConversation) {
+		notification.notifyDetails.emails = [gCaseConversation.theirNumber];		// Must be sent as an array
+		notification.notifyDetails.ourNumber = gCaseConversation.ourNumber;
+		notification.notifyDetails.msgChannel = gCaseConversation.channel;
+	} else {
 		notification.error = true;
-		notification.errorMsg = localise.set["msg_no_nbr"];
+		notification.errorMsg = localise.set["msg_no_conv"];
 	}
 	return notification;
 }
@@ -7796,52 +7812,6 @@ function handleLogout(data) {
 	return true;
 }
 
-/*
- * Load the sms numbers from the server
- */
-function getOurNumbers() {
-
-	var url="/surveyKPI/smsnumbers?org=true";
-	addHourglass();
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			removeHourglass();
-			if(handleLogout(data)) {
-				gNumbers = data;
-				setOurNumbersList();
-			}
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			if(handleLogout(xhr.responseText)) {
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					console.log("Error: Failed to get list of sms numbers: " + err);
-				}
-			}
-		}
-	});
-}
-
-function setOurNumbersList() {
-	var i = 0;
-	if(gNumbers && gNumbers.length > 0) {
-		var $elem = $('#msg_our_nbr');
-		var channel = $('#msg_channel').val();
-		$elem.empty();
-		for(i = 0; i < gNumbers.length; i++) {
-			var n = gNumbers[i];
-			if(n.channel === channel) {
-				$elem.append(`<option value="${n.ourNumber}">${n.ourNumber} - ${n.channel} </option>`);
-			}
-		}
-	}
-}
-
 export {
 	addDatePickList,
 	addFormPickList,
@@ -7949,7 +7919,6 @@ export {
 	saveTask,
 	includeByStatus,
 	getSurveyRoles,
-	getOurNumbers,
 	isSelfRegistrationServer,
 	getViewLanguages,
 	translateKey,

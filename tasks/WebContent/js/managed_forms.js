@@ -38,7 +38,6 @@ import {
 	getLoggedInUser,
 	getGroupSurveys,
 	getSurveyRoles,
-	getOurNumbers,
 	getCustomMenuClass,
 	getServerSubDomainName,
 	getNotificationTypes,
@@ -3992,7 +3991,6 @@ localise.initLocale(gUserLocale).then(function () {
         checkLoggedIn(function(){
             getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
             getRecordChanges(gTasks.gSelectedRecord);
-            getOurNumbers();
         });
 
         $('.overviewSection').hide();
@@ -4263,14 +4261,7 @@ localise.initLocale(gUserLocale).then(function () {
         var url,
             notification,
             notificationString,
-            target = $('#target').val(),
-            theirNumber = $('#msg_cur_nbr').val(),
-            ourNumber = $('#msg_our_nbr').val(),
-            msgChannel = $('#msg_channel').val();
-
-        if(theirNumber === 'other') {
-            theirNumber = $('#msg_nbr_other').val();
-        }
+            target = $('#target').val();
 
         $('#saveNotification').prop("disabled", true);  // debounce
 
@@ -4281,11 +4272,7 @@ localise.initLocale(gUserLocale).then(function () {
         } else if(target === "document") {
             notification = saveDocument();
         } else if(target === "conversation") {
-            notification = saveConversation(gTasks.cache.currentData.schema.columns,
-                theirNumber,
-                ourNumber,
-                msgChannel,
-                gTasks.gSelectedRecord);
+            notification = saveConversation();
         }
 
         if(!notification.error) {
