@@ -2786,6 +2786,12 @@ localise.initLocale(gUserLocale).then(function () {
                             h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o"></i>';
                             h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
                             h[++idx] = '</span>';
+                        } else if (data[i].notification && data[i].notification.target === 'conversation') {
+                            if (data[i].notification.msgChannel === 'whatsapp') {
+                                h[++idx] = '<i class="fab fa-lg fa-whatsapp text-info"></i>';
+                            } else {
+                                h[++idx] = '<i class="fas fa-lg fa-sms text-info"></i>';
+                            }
                         } else {
                             h[++idx] = '<i class="fa fa-lg fa-envelope text-info"></i>';
                         }
@@ -3199,9 +3205,15 @@ localise.initLocale(gUserLocale).then(function () {
             idx = -1,
             baseUrl = window.location.protocol + '//' + window.location.host + '/';
 
-        var toLine = (localise.set["c_to"] || 'To') + ': ' + htmlEncode(n.emails ? n.emails.join(', ') : '');
-        var subjectLine = (localise.set["c_subject"] || 'Subject') + ': ' + htmlEncode(n.subject || '');
-        var summaryLabel = toLine + ' — ' + subjectLine;
+        var toLine = (localise.set["c_to"] || 'To') + ': ' + (htmlEncode(n.emails ? n.emails.join(', ') : '') || '');
+        var summaryLabel = toLine;
+        if (n.target === 'conversation' || n.target === 'sms') {
+            // Messages have no subject, show the channel instead
+            var channel = n.target === 'sms' ? 'sms' : (n.msgChannel || 'sms');
+            summaryLabel += ' — ' + (channel === 'whatsapp' ? 'WhatsApp' : 'SMS');
+        } else {
+            summaryLabel += ' — ' + (localise.set["c_subject"] || 'Subject') + ': ' + (htmlEncode(n.subject) || '');
+        }
 
         var attachLabel = null;
         if (n.attach === 'pdf' || n.attach === 'pdf_landscape') {
