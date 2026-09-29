@@ -84,17 +84,17 @@ $(function() {
 
 		setCustomResources();			// Apply custom javascript
 		setTheme();
-		setupUserProfile();
 		localise.initLocale(gUserLocale).then(function () {
+			setupUserProfile();		// After the locale is loaded, the dialogs are built with its text
 			localise.setlang();		// Localise HTML
 			$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
 			$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
 			$('#mapid').attr("placeholder", localise.set["sr_m_mb"]);
-		});
 
-		// Get the user details
-		globals.gCurrentSurvey = undefined;
-		getLoggedInUser(gotUser, false, false, undefined, false, false);
+			// Get the user details
+			globals.gCurrentSurvey = undefined;
+			getLoggedInUser(gotUser, false, false, undefined, false, false);
+		});
 		getLocations(loadedLocationData);
 
 		// Set up the tabs

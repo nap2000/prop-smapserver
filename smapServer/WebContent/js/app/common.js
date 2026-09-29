@@ -7330,10 +7330,16 @@ function conversationIcons(msg) {
 		+ '<span class="visually-hidden">' + htmlEncode(channel) + '</span>';
 }
 
+/*
+ * Encode text for inclusion in HTML
+ * Empty, false, null and undefined give an empty string, rather than undefined which reads as the word "undefined"
+ * once it is joined into markup.  A number, including 0, is encoded as its text
+ */
 function htmlEncode(input) {
-	if(input) {
-		return $('<div>').text(input).html();
+	if(input === undefined || input === null || input === '' || input === false) {
+		return '';
 	}
+	return $('<div>').text(String(input)).html();
 }
 
 /*

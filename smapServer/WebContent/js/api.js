@@ -90,17 +90,17 @@ $(document).ready(function() {
 	 * Set up the page after the user has been authorised to access it
 	 */
 	function setupPage() {
-		setupUserProfile();
 		if (typeof setTheme === "function") {
 			setTheme();
 		}
 		setCustomApi();
 		localise.initLocale(gUserLocale).then(function () {
+			setupUserProfile();		// After the locale is loaded, the dialogs are built with its text
 			localise.setlang();		// Localise HTML
-		});
 
-		// Get the user details
-		getLoggedInUser(projectChanged, true, true, undefined);
+			// Get the user details
+			getLoggedInUser(projectChanged, true, true, undefined);
+		});
 
 		$('#api').change(function () {
 			var api = $('$api').val(),
