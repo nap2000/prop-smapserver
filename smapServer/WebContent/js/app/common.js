@@ -5693,6 +5693,31 @@ function setTargetDependencies(target) {
 		 */
 		$('.dhis2_options').show();
 	}
+	applyPeriodicRestrictions();
+}
+
+/*
+ * A periodic notification sends a report, it is not about a record.  So it can only be an email
+ * and there is no assigned user to send it to
+ */
+function applyPeriodicRestrictions() {
+	var periodic = $('#trigger').val() === 'periodic';
+	$('#target option').each(function() {
+		if($(this).val() !== 'email') {
+			$(this).prop('disabled', periodic).prop('hidden', periodic);
+		}
+	});
+	if(periodic) {
+		$('#assigned_user').prop('checked', false);
+		$('#assigned_user_row').hide();
+		if($('#target').val() !== 'email') {
+			$('#target').val('email');
+			setTargetDependencies('email');
+		}
+	} else {
+		var target = $('#target').val();
+		$('#assigned_user_row').toggle(target === 'email' || target === 'escalate');
+	}
 }
 
 function setTriggerDependencies(trigger) {
@@ -5710,6 +5735,7 @@ function setTriggerDependencies(trigger) {
 	} else if(trigger === "server_calc") {
 		$('.sc_options').show();
 	}
+	applyPeriodicRestrictions();
 }
 
 function setAttachDependencies(attach) {
@@ -5836,6 +5862,7 @@ function updateNotificationTypes(data) {
 
 	$selector.empty().append(h.join(''));
 	gConversationalSMS = false;
+	applyPeriodicRestrictions();
 
 }
 
