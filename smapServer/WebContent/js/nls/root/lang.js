@@ -1601,7 +1601,7 @@ define({
     "n_sent": "Notification sent",
     "n_scc": "Server Calculation Question",
     "n_val": "A server calculation question and value that will cause the notification to be triggered must be specified",
-    "n_their_nbr": "Select their Number",
+    "n_their_nbr": "Their number",
     "n_our_nbr": "Our Number",
     "n_spec_nbr": "Enter their Number",
     "n_cur_emails": "Select Email",

@@ -1505,7 +1505,7 @@ define(
     "n_sent": "Notificación enviada",
     "n_scc": "Pregunta de cálculo del servidor",
     "n_val": "Se debe especificar una pregunta de cálculo del servidor y un valor que hará que se active la notificación.",
-    "n_their_nbr": "Seleccione su número",
+    "n_their_nbr": "Su número",
     "n_our_nbr": "Nuestro número",
     "n_spec_nbr": "Ingrese el número",
     "n_cur_emails": "Seleccione el correo",
