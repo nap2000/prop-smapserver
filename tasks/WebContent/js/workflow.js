@@ -47,6 +47,7 @@ let gSurveys    = null;   // cached survey list (null until first fetch)
 let gUsers      = null;   // cached user list (null until first fetch)
 let gSurveyUsers = {};    // cached users who can be assigned, by survey ident
 let gRoles      = null;   // cached role list (null until first fetch)
+let gNotifTypes = null;   // notification targets this server supports, as on the notifications page
 
 // Drawer create-mode state
 let gDrawerCreateMode = false;
@@ -1066,9 +1067,12 @@ function renderDrawerContent(type) {
 
 	// Create-mode header: type selector + trigger info
 	if (gDrawerCreateMode) {
-		const availTypes = gSelectedNode
+		const availTypes = (gSelectedNode
 			? ["task", "emailtask", "case", "reference", "email", "sms", "sharepoint_list"]
-			: ["form", "scheduled"];
+			: ["form", "scheduled"])
+			.filter(function(t) {	// SMS only where the server can send it, as on the notifications page
+				return t !== "sms" || (gNotifTypes && gNotifTypes.indexOf("sms") >= 0);
+			});
 		const TYPE_BTN_STYLE = {
 			form:            { cls: "btn-outline-primary",   icon: "fas fa-play-circle" },
 			scheduled:       { cls: "", icon: "fas fa-clock", xstyle: "color:#8e44ad;border:1px solid #8e44ad;background:transparent;" },
@@ -2139,6 +2143,17 @@ function executeCreate() {
 
 function esc(s) { return htmlEncode(s) || ""; }
 
+/*
+ * The notification targets this server supports.  SMS depends on the server settings, so the
+ * same list the notifications page uses decides whether an SMS step can be offered
+ */
+function loadNotificationTypes() {
+	fetch("/surveyKPI/notifications/types?page=notifications", { credentials: "include", cache: "no-store" })
+		.then(function(r) { return r.ok ? r.json() : []; })
+		.then(function(types) { gNotifTypes = Array.isArray(types) ? types : []; })
+		.catch(function() { gNotifTypes = []; });
+}
+
 // ============================================================
 // Bootstrap
 // ============================================================
@@ -2168,6 +2183,7 @@ localise.initLocale(gUserLocale).then(function() {
 		localise.setlang();		// Run after setCustomWorkflow so any lang elements it adds are translated
 		setupUserProfile();
 		getLoggedInUser(loadWorkflow, false, false, undefined);
+		loadNotificationTypes();
 
 		// Navbar actions
 		$("#m_refresh").on("click",      function(e) { e.preventDefault(); loadWorkflow(); });
