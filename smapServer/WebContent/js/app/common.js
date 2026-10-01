@@ -7334,12 +7334,18 @@ function conversationIcons(msg) {
  * Encode text for inclusion in HTML
  * Empty, false, null and undefined give an empty string, rather than undefined which reads as the word "undefined"
  * once it is joined into markup.  A number, including 0, is encoded as its text
+ * Quotes are encoded too, so the result is safe inside an attribute value, not just element content
  */
 function htmlEncode(input) {
 	if(input === undefined || input === null || input === '' || input === false) {
 		return '';
 	}
-	return $('<div>').text(String(input)).html();
+	return String(input)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
 }
 
 /*

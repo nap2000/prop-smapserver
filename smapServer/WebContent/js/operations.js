@@ -25,7 +25,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import $ from "jquery";
 import globals from "./app/globals.js";
 import localise from "./app/localise.js";
-import { getLoggedInUser, setupUserProfile } from "./app/common";
+import { getLoggedInUser, setupUserProfile, htmlEncode } from "./app/common";
 
 var gUserLocale = navigator.language;
 if (typeof localStorage !== "undefined") {
@@ -400,7 +400,7 @@ function ago(seconds) {
 }
 
 function esc(s) {
-	return $('<div>').text(s == null ? "" : s).html();
+	return htmlEncode(s);
 }
 
 function cssEsc(s) {
