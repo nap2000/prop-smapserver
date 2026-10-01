@@ -35,18 +35,26 @@ var DEFAULT_TARGET = '/app/';
  * Only follow "next" if it is a path on this site.  A value starting "//" or containing a
  * scheme would be an open redirect, sending the user somewhere else immediately after they
  * have authenticated.
+ * Resolve it the way the browser will, rather than checking characters, as the browser strips
+ * tabs and newlines so "/\t/evil.com" becomes "//evil.com"
  */
 function safeTarget(next) {
-    if (!next) {
+    if (!next || next.charAt(0) !== '/') {
         return DEFAULT_TARGET;
     }
-    if (next.charAt(0) !== '/' || next.charAt(1) === '/' || next.charAt(1) === '\\') {
+    var url;
+    try {
+        url = new URL(next, window.location.origin);
+    } catch (e) {
         return DEFAULT_TARGET;
     }
-    if (next.indexOf('/app/twoFactor.html') === 0) {
+    if (url.origin !== window.location.origin) {
+        return DEFAULT_TARGET;
+    }
+    if (url.pathname.indexOf('/app/twoFactor.html') === 0) {
         return DEFAULT_TARGET;      // Do not send the user back here
     }
-    return next;
+    return url.pathname + url.search + url.hash;
 }
 
 function getNext() {
