@@ -392,7 +392,7 @@ function addMediaPickList() {
     /*
      * Add the media question select list
      */
-    if(typeof questions !== "undefined") {
+    if(questions) {     // null if the questions for this survey have not been loaded yet
         for(i = 0; i < questions.length; i++) {
             if(questions[i].type === "image" || questions[i].type === "video" || questions[i].type === "audio") {
                 h[++idx] = '<option value="';
