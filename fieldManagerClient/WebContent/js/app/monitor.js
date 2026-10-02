@@ -301,7 +301,6 @@ import {
 
             var groupby =  $("input[name=groupsurvey]:checked").val();
             var showType = $("#showType").val();
-            var isForward = false;
             var ignoreOldIssue = $(ignoreOldIssues).is(':checked');
 
             function refreshDataExec(showTypeE, showSourceE) {
@@ -333,8 +332,7 @@ import {
                         "&hide_not_loaded=" + hide_not_loaded +
                         "&hide_duplicates=" + hide_duplicates +
                         "&hide_merged=" + hide_merged +
-                        "&hide_upload_errors=" + hide_upload_errors +
-                        "&is_forward=" + isForward;
+                        "&hide_upload_errors=" + hide_upload_errors;
 
 
                     if(showTypeE === "totals" && surveyId !== "_all") {
