@@ -935,6 +935,7 @@ const moment = window.moment;
 		$('#s_api_max_records').val(data.api_max_records);
 		$('#s_p_strength').val(data.password_strength);
 		$('#s_sec_mgr_del').prop('checked', data.sec_mgr_del);
+		$('#s_self_registration').prop('checked', data.self_registration);
 		$('#s_mcp_enabled').prop('checked', data.mcp_enabled);
 		$('#s_mcp_client_registration').val(data.mcp_client_registration || 'cimd+dcr');
 		$('#s_mcp_max_rows').val(data.mcp_max_rows);
@@ -986,6 +987,7 @@ const moment = window.moment;
 				api_max_records: $('#s_api_max_records').val(),
 				password_strength: $('#s_p_strength').val(),
 				sec_mgr_del: $('#s_sec_mgr_del').prop('checked'),
+				self_registration: $('#s_self_registration').prop('checked'),
 				mcp_enabled: $('#s_mcp_enabled').prop('checked'),
 				mcp_client_registration: $('#s_mcp_client_registration').val(),
 				mcp_max_rows: $('#s_mcp_max_rows').val() || 0,
