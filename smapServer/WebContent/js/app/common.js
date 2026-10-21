@@ -2674,23 +2674,24 @@ function getCustomMenuClass() {
 
 
 /*
- * Return true if this is a self registration server
+ * Resolve to true if anyone may register on this server
+ * Asks the server, which applies the same check as when a registration is submitted, so this
+ * follows the server administrator's setting.  False if the server cannot be asked.
  */
-function isSelfRegistrationServer() {
-	var hostname = location.hostname;
-	var sr = true;
-
-	// Must match GeneralUtilityMethods.assertSelfRegistrationServer() in smapserver2
-	if(hostname !== 'localhost' &&
-		hostname !== 'sg.smap.com.au' &&
-		!hostname.endsWith('reachnettechnologies.com') &&
-		!hostname.endsWith('datacollect.icanreach.com') &&
-		!hostname.endsWith('encontactone.com') &&
-		hostname !== 'app.kontrolid.com' &&
-		hostname !== 'kontrolid.smap.com.au') {
-		sr = false;
-	}
-	return sr;
+function isSelfRegistrationEnabled() {
+	return new Promise(function (resolve) {
+		$.ajax({
+			cache: false,
+			dataType: 'json',
+			url: "/surveyKPI/register/enabled",
+			success: function (data) {
+				resolve(!!(data && data.enabled));
+			},
+			error: function () {
+				resolve(false);
+			}
+		});
+	});
 }
 
 /*
@@ -7958,7 +7959,7 @@ export {
 	saveTask,
 	includeByStatus,
 	getSurveyRoles,
-	isSelfRegistrationServer,
+	isSelfRegistrationEnabled,
 	getViewLanguages,
 	translateKey,
 	translateKeyValue,

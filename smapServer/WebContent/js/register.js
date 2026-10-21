@@ -20,7 +20,7 @@
 
 import "./libs/bootbox-bootstrap-bridge.js";
 import localise from "./app/localise.js";
-import { addHourglass, removeHourglass, isSelfRegistrationServer } from "./app/common";
+import { addHourglass, removeHourglass, isSelfRegistrationEnabled } from "./app/common";
 
 const $ = window.$;
 
@@ -35,17 +35,18 @@ if (typeof localStorage !== "undefined") {
 window.gUserLocale = gUserLocale;
 
 /*
- * Self registration is only permitted on approved servers. The server rejects the
- * POST anyway, this stops a form being presented that can never be submitted
+ * Self registration is only permitted where the server administrator allows it. The server
+ * rejects the POST anyway, this stops a form being presented that can never be submitted
  */
-if(!isSelfRegistrationServer()) {
-    window.location.replace('/');
-}
-
-localise.initLocale(gUserLocale).then(function () {
-    if(!isSelfRegistrationServer()) {
+isSelfRegistrationEnabled().then(function (enabled) {
+    if(!enabled) {
+        window.location.replace('/');
         return;
     }
+    return localise.initLocale(gUserLocale).then(setupRegisterPage);
+});
+
+function setupRegisterPage() {
     setCustomRegister();			// Apply custom javascript
     localise.setlang();
 
@@ -93,7 +94,7 @@ localise.initLocale(gUserLocale).then(function () {
     });
 
 
-});
+}
 
 /*
  * Enable or disable the submit button based on the validity of the form
