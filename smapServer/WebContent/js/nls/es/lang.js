@@ -1217,6 +1217,7 @@ define(
     "lo_loa": "Debe cerrar su navegador para asegurarse de que se eliminen los detalles de inicio de sesión almacenados en caché",
     "u_sec_mgr_del": "Se requiere privilegio de Gestión de seguridad y roles para borrar datos",
     "u_self_registration": "Permitir que cualquiera registre una nueva organización",
+    "u_hostname": "Nombre de host usado en los enlaces enviados por correo",
     "u_other_msg": "Esta configuración se aplica a la organización actual",
     "u_show_u": "Mostrar usuarios con permisos de",
     "u_show_p": "Mostrar usuarios en proyecto",
