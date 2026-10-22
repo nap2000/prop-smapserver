@@ -1259,7 +1259,6 @@ define({
     // Users
     "u_sec_mgr_del": "Require security manager privilege to delete data",
     "u_self_registration": "Allow anyone to register a new organisation",
-    "u_hostname": "Host name used in links sent by email",
     "u_mcp": "MCP Server",
     "m_mcp_access": "AI access",
     "mcp_apps": "Applications with access",
