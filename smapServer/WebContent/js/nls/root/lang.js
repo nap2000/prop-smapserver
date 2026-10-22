@@ -747,6 +747,7 @@ define({
     "msg_uns": "Unsubscribe successful",
     "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
     "msg_s2": "Subscribed successfully",
+    "msg_s4": "If that address has unsubscribed from emails on this server, an email has been sent to it with a link to re-subscribe to each organisation.  Click a link to confirm.",
     "msg_s3": "Enter your email address to re-subscribe to emails",
     "msg_pd_key": "Specify a data key ",
     "msg_one_role": "At least one role must be selected",

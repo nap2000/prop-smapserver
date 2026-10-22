@@ -729,6 +729,7 @@ define(
     "msg_reg": "Registro aceptado. Un email ha sido enviado a %s1 con el enlace para establecer su contraseña",
     "msg_uns": "Darse de baja exitoso",
     "msg_s1": "Un email se ha enviado a la dirección de correo electrónico suministrada. Haga click en el enlace para confirmar su suscripción.",
+    "msg_s4": "Si esa dirección canceló su suscripción a los correos de este servidor, se le ha enviado un correo con un enlace para volver a suscribirse a cada organización.  Haga clic en un enlace para confirmar.",
     "msg_s2": "Suscripción exitosa",
     "msg_s3": "Ingrese su email para suscribirse y recibir notificaciones",
     "msg_pd_key": "Especifique llave de datos",

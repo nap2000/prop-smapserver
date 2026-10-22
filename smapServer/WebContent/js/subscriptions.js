@@ -21,7 +21,6 @@
 import localise from './app/localise.js';
 import {
     addHourglass,
-    htmlEncode,
     removeHourglass
 } from './app/common.js';
 
@@ -37,7 +36,6 @@ localise.initLocale(gUserLocale).then(function () {
 
     var gToken;
     var gSubscribe;
-    var gOrgList;
 
     $(document).ready(function () {
 
@@ -73,11 +71,6 @@ localise.initLocale(gUserLocale).then(function () {
             $('#heading').text(localise.set["r_s"]);
             $('#subscribe').show();
         }
-
-        $('#email').keyup(function() {
-            $('#org_list').hide();
-            $('#org_empty').hide();
-        });
 
         // Unsubscribe
         $('#unsubscribeSubmit').click(function (e) {
@@ -115,33 +108,29 @@ localise.initLocale(gUserLocale).then(function () {
             });
         });
 
-        // Validate email as part of self subscription
-        $('#validateEmail').click(function (e) {
+        /*
+         * Ask to re-subscribe.  The server emails the address a confirm link for each
+         * organisation it has unsubscribed from.  It says the same whatever the address, so the
+         * page does not show anyone which organisations an address belongs to.
+         */
+        $('#requestSubscribe').click(function (e) {
             e.preventDefault();
 
             if (!$('#subscribeForm')[0].checkValidity()) {
                 $('#subscribeForm')[0].reportValidity()
             } else {
 
-                var email = $('#email').val();
-
                 addHourglass();
                 $.ajax({
                     cache: false,
-                    type: "GET",
-                    dataType: 'json',
-                    url: "/surveyKPI/subscriptions/validateEmail/" + encodeURIComponent(email),
+                    type: "POST",
+                    url: "/surveyKPI/subscriptions/subscribe",
+                    data: {
+                        email: $('#email').val()
+                    },
                     success: function (data, status) {
                         removeHourglass();
-                        if (data && data.length > 0) {
-                            $('#org_list').show();
-                            $('#org_empty').hide();
-                            updateOrgList(data);
-                        } else {
-                            $('#org_list').hide();
-                            $('#org_empty').show();
-
-                        }
+                        showResult(localise.set["msg_s4"]);
                     }, error: function (data, status) {
                         removeHourglass();
                         alert(data.responseText);
@@ -160,92 +149,6 @@ localise.initLocale(gUserLocale).then(function () {
         $('.hideme').hide();
         $('#result_msg').text(msg);
         $('#result').show();
-    }
-
-    /*
-     * Update the organisation list
-     */
-    function updateOrgList(data) {
-
-        var $selector=$('#org_list'),
-            i,
-            h = [],
-            idx = -1;
-
-        gOrgList = data;
-
-        h[++idx] = '<div class="mt-2">';
-
-        h[++idx] = '<b><div class="row">';
-
-        h[++idx] = '<div class="col-lg-4 col-xs-8">';
-        h[++idx] = localise.set["r_o_n"];
-        h[++idx] = '</div>';
-
-
-        h[++idx] = '<div class="col-lg-2 col-xs-4">';
-        h[++idx] = '</div>';
-
-        h[++idx] = '</div></b>';        // Header row
-
-        for(i = 0; i < data.length; i++) {
-
-            h[++idx] = '<div class="row">';
-
-            // name
-            h[++idx] = '<div class="col-lg-4 col-xs-8">';
-            h[++idx] = htmlEncode(data[i].name);
-            h[++idx] = '</div>';
-
-            // actions
-            h[++idx] = '<div class="col-lg-2 col-xs-4">';
-
-            h[++idx] = '<button type="button" value="';
-            h[++idx] = i;
-            h[++idx] = '" class="btn btn-info btn-sm subscribe_org">';
-            h[++idx] = localise.set["c_subscribe"];
-            h[++idx] = '</button>';
-
-            h[++idx] = '</div>';            // end actions
-
-            h[++idx] = '</div>';            // end row
-        }
-        h[++idx] = '</div>';
-
-        $selector.empty().append(h.join(''));
-
-
-        // Self subscribe
-        $('.subscribe_org').click(function (e) {
-            e.preventDefault();
-
-            if (! $('#subscribeForm')[0].checkValidity()) {
-                $('#subscribeForm')[0].reportValidity()
-            } else {
-
-                var email = $('#email').val();
-                var oId = gOrgList[$(this).val()].id;
-
-                addHourglass();
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "/surveyKPI/subscriptions/subscribe",
-                    data: {
-                        email: email,
-                        oId: oId
-                    },
-                    success: function (data, status) {
-                        removeHourglass();
-                        showResult(localise.set["msg_s1"]);
-                    }, error: function (data, status) {
-                        removeHourglass();
-                        alert(data.responseText);
-                    }
-                });
-            }
-        });
-
     }
 
 });
