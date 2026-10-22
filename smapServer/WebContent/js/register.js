@@ -62,18 +62,40 @@ function setupTurnstile() {
             sitekey: gSiteKey,
             callback: function (token) {
                 gCfToken = token;
+                $('#turnstileError').addClass('d-none');
                 validateForm();
             },
             'expired-callback': function () {
                 gCfToken = undefined;
                 validateForm();
+            },
+            // Without these the widget just disappears, for example when the site key does not allow this host
+            'error-callback': function (code) {
+                showTurnstileError(code);
+                return true;		// Handled, stops Turnstile throwing
+            },
+            'timeout-callback': function () {
+                showTurnstileError('timeout');
             }
         });
     };
     var script = document.createElement('script');
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=smapRegisterTurnstile';
     script.async = true;
+    script.onerror = function () {		// Blocked or offline
+        showTurnstileError('not loaded');
+    };
     document.head.appendChild(script);
+}
+
+/*
+ * The challenge could not be completed, so the form can never be submitted.  Say why.
+ */
+function showTurnstileError(code) {
+    gCfToken = undefined;
+    validateForm();
+    var msg = localise.set["msg_reg_check"].replace('%s1', code);
+    $('#turnstileError').text(msg).removeClass('d-none');
 }
 
 /*

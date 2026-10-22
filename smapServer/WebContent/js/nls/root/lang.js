@@ -744,6 +744,7 @@ define({
     "msg_survey_replaced": "Survey replaced",
     "msg_survey_loaded": "Survey loaded",
     "msg_reg": "Registration accepted.  An email has been sent to %s1 with a link that you can use to set your password.",
+    "msg_reg_check": "The check that you are not a robot could not be completed (%s1).  Reload the page and try again, or contact the server administrator if this continues.",
     "msg_uns": "Unsubscribe successful",
     "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
     "msg_s2": "Subscribed successfully",

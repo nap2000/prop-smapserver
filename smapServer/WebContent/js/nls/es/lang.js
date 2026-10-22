@@ -727,6 +727,7 @@ define(
     "msg_survey_replaced": "Formulario reemplazado",
     "msg_survey_loaded": "Formulario cargado",
     "msg_reg": "Registro aceptado. Un email ha sido enviado a %s1 con el enlace para establecer su contraseña",
+    "msg_reg_check": "No se pudo completar la verificación de que no es un robot (%s1).  Recargue la página e inténtelo de nuevo, o contacte al administrador del servidor si esto continúa.",
     "msg_uns": "Darse de baja exitoso",
     "msg_s1": "Un email se ha enviado a la dirección de correo electrónico suministrada. Haga click en el enlace para confirmar su suscripción.",
     "msg_s4": "Si esa dirección canceló su suscripción a los correos de este servidor, se le ha enviado un correo con un enlace para volver a suscribirse a cada organización.  Haga clic en un enlace para confirmar.",
