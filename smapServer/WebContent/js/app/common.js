@@ -2679,16 +2679,26 @@ function getCustomMenuClass() {
  * follows the server administrator's setting.  False if the server cannot be asked.
  */
 function isSelfRegistrationEnabled() {
+	return getSelfRegistration().then(function (data) {
+		return !!data.enabled;
+	});
+}
+
+/*
+ * Resolve to the server's self registration details: enabled, and the Turnstile site key when
+ * the registration page must show the challenge
+ */
+function getSelfRegistration() {
 	return new Promise(function (resolve) {
 		$.ajax({
 			cache: false,
 			dataType: 'json',
 			url: "/surveyKPI/register/enabled",
 			success: function (data) {
-				resolve(!!(data && data.enabled));
+				resolve(data || {enabled: false});
 			},
 			error: function () {
-				resolve(false);
+				resolve({enabled: false});
 			}
 		});
 	});
@@ -7960,6 +7970,7 @@ export {
 	includeByStatus,
 	getSurveyRoles,
 	isSelfRegistrationEnabled,
+	getSelfRegistration,
 	getViewLanguages,
 	translateKey,
 	translateKeyValue,
