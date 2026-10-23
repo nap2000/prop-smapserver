@@ -1,5 +1,6 @@
 define({
     "m_home": "Home",
+    "c_continue": "Continue",
     "m_admin": "Admin",
     "m_tm": "Forms",
     "m_analysis": "Analysis",

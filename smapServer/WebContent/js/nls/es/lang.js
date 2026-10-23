@@ -1,6 +1,7 @@
 define(
 {
     "m_home": "Inicio",
+    "c_continue": "Continuar",
     "m_admin": "Administración",
     "m_tm": "Formularios",
     "m_analysis": "Análisis",
