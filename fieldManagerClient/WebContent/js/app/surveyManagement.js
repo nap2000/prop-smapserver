@@ -441,7 +441,10 @@ import {
              * Check if the password has expired
              */
             if(globals.gLoggedInUser.passwordExpired) {
-                window.location.href = "/app/changePassword.html?expired=yes";
+                // Replace, so back does not return to this page only to be sent on again
+                window.location.replace("/app/changePassword.html?expired=yes&return="
+                    + encodeURIComponent(window.location.pathname + window.location.search));
+                return;
             }
 
             /*

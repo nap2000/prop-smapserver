@@ -1,6 +1,7 @@
 define(
 {
     "m_home": "Inicio",
+    "c_continue": "Continuar",
     "m_admin": "Administración",
     "m_tm": "Formularios",
     "m_analysis": "Análisis",
@@ -727,8 +728,10 @@ define(
     "msg_survey_replaced": "Formulario reemplazado",
     "msg_survey_loaded": "Formulario cargado",
     "msg_reg": "Registro aceptado. Un email ha sido enviado a %s1 con el enlace para establecer su contraseña",
+    "msg_reg_check": "No se pudo completar la verificación de que no es un robot (%s1).  Recargue la página e inténtelo de nuevo, o contacte al administrador del servidor si esto continúa.",
     "msg_uns": "Darse de baja exitoso",
     "msg_s1": "Un email se ha enviado a la dirección de correo electrónico suministrada. Haga click en el enlace para confirmar su suscripción.",
+    "msg_s4": "Si esa dirección canceló su suscripción a los correos de este servidor, se le ha enviado un correo con un enlace para volver a suscribirse a cada organización.  Haga clic en un enlace para confirmar.",
     "msg_s2": "Suscripción exitosa",
     "msg_s3": "Ingrese su email para suscribirse y recibir notificaciones",
     "msg_pd_key": "Especifique llave de datos",
@@ -1216,6 +1219,7 @@ define(
     "lo_lo": "Sesión Finalizada",
     "lo_loa": "Debe cerrar su navegador para asegurarse de que se eliminen los detalles de inicio de sesión almacenados en caché",
     "u_sec_mgr_del": "Se requiere privilegio de Gestión de seguridad y roles para borrar datos",
+    "u_self_registration": "Permitir que cualquiera registre una nueva organización",
     "u_other_msg": "Esta configuración se aplica a la organización actual",
     "u_show_u": "Mostrar usuarios con permisos de",
     "u_show_p": "Mostrar usuarios en proyecto",

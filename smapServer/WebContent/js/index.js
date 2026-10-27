@@ -3,7 +3,7 @@ var gUserLocale = navigator.language;
 
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
-import { getLoggedInUser, handleLogout, isSelfRegistrationServer, setupUserProfile } from "./app/common";
+import { getLoggedInUser, handleLogout, isSelfRegistrationEnabled, setupUserProfile } from "./app/common";
 
 const $ = window.$;
 
@@ -81,15 +81,16 @@ function isLoggedIn() {
 }
 
 /*
- * Enable self registration - only on approved servers
+ * Show the register menu only where the server administrator permits self registration
  * Must run after the .notloggedin class is processed as #signup has that class
  */
 function enableSelfRegistration() {
-	if(isSelfRegistrationServer()) {
-		$('#signup').show().removeClass('d-none');
-	} else {
-		$('#signup').hide().addClass('d-none');
-	}
+	$('#signup').hide().addClass('d-none');
+	isSelfRegistrationEnabled().then(function (enabled) {
+		if(enabled) {
+			$('#signup').show().removeClass('d-none');
+		}
+	});
 }
 
 function getServerVersion() {

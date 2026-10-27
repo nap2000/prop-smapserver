@@ -2674,23 +2674,34 @@ function getCustomMenuClass() {
 
 
 /*
- * Return true if this is a self registration server
+ * Resolve to true if anyone may register on this server
+ * Asks the server, which applies the same check as when a registration is submitted, so this
+ * follows the server administrator's setting.  False if the server cannot be asked.
  */
-function isSelfRegistrationServer() {
-	var hostname = location.hostname;
-	var sr = true;
+function isSelfRegistrationEnabled() {
+	return getSelfRegistration().then(function (data) {
+		return !!data.enabled;
+	});
+}
 
-	// Must match GeneralUtilityMethods.assertSelfRegistrationServer() in smapserver2
-	if(hostname !== 'localhost' &&
-		hostname !== 'sg.smap.com.au' &&
-		!hostname.endsWith('reachnettechnologies.com') &&
-		!hostname.endsWith('datacollect.icanreach.com') &&
-		!hostname.endsWith('encontactone.com') &&
-		hostname !== 'app.kontrolid.com' &&
-		hostname !== 'kontrolid.smap.com.au') {
-		sr = false;
-	}
-	return sr;
+/*
+ * Resolve to the server's self registration details: enabled, and the Turnstile site key when
+ * the registration page must show the challenge
+ */
+function getSelfRegistration() {
+	return new Promise(function (resolve) {
+		$.ajax({
+			cache: false,
+			dataType: 'json',
+			url: "/surveyKPI/register/enabled",
+			success: function (data) {
+				resolve(data || {enabled: false});
+			},
+			error: function () {
+				resolve({enabled: false});
+			}
+		});
+	});
 }
 
 /*
@@ -7958,7 +7969,8 @@ export {
 	saveTask,
 	includeByStatus,
 	getSurveyRoles,
-	isSelfRegistrationServer,
+	isSelfRegistrationEnabled,
+	getSelfRegistration,
 	getViewLanguages,
 	translateKey,
 	translateKeyValue,

@@ -20,7 +20,7 @@
 
 import "./libs/bootbox-bootstrap-bridge.js";
 import localise from "./app/localise.js";
-import { addHourglass, removeHourglass, isSelfRegistrationServer } from "./app/common";
+import { addHourglass, removeHourglass, getSelfRegistration } from "./app/common";
 
 const $ = window.$;
 
@@ -35,19 +35,84 @@ if (typeof localStorage !== "undefined") {
 window.gUserLocale = gUserLocale;
 
 /*
- * Self registration is only permitted on approved servers. The server rejects the
- * POST anyway, this stops a form being presented that can never be submitted
+ * Self registration is only permitted where the server administrator allows it. The server
+ * rejects the POST anyway, this stops a form being presented that can never be submitted
  */
-if(!isSelfRegistrationServer()) {
-    window.location.replace('/');
-}
+var gSiteKey;       // Turnstile site key, set when the server requires the challenge
+var gCfToken;       // Token from a passed challenge
 
-localise.initLocale(gUserLocale).then(function () {
-    if(!isSelfRegistrationServer()) {
+getSelfRegistration().then(function (reg) {
+    if(!reg.enabled) {
+        window.location.replace('/');
         return;
     }
+    gSiteKey = reg.turnstileSiteKey;
+    return localise.initLocale(gUserLocale).then(setupRegisterPage);
+});
+
+/*
+ * Show the Turnstile challenge, the server will not register anyone without a passed one
+ */
+function setupTurnstile() {
+    if(!gSiteKey) {
+        return;
+    }
+    window.smapRegisterTurnstile = function () {
+        window.turnstile.render('#turnstile', {
+            sitekey: gSiteKey,
+            callback: function (token) {
+                gCfToken = token;
+                $('#turnstileError').addClass('d-none');
+                validateForm();
+            },
+            'expired-callback': function () {
+                gCfToken = undefined;
+                validateForm();
+            },
+            // Without these the widget just disappears, for example when the site key does not allow this host
+            'error-callback': function (code) {
+                showTurnstileError(code);
+                return true;		// Handled, stops Turnstile throwing
+            },
+            'timeout-callback': function () {
+                showTurnstileError('timeout');
+            }
+        });
+    };
+    var script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=smapRegisterTurnstile';
+    script.async = true;
+    script.onerror = function () {		// Blocked or offline
+        showTurnstileError('not loaded');
+    };
+    document.head.appendChild(script);
+}
+
+/*
+ * The challenge could not be completed, so the form can never be submitted.  Say why.
+ */
+function showTurnstileError(code) {
+    gCfToken = undefined;
+    validateForm();
+    var msg = localise.set["msg_reg_check"].replace('%s1', code);
+    $('#turnstileError').text(msg).removeClass('d-none');
+}
+
+/*
+ * A token can only be used once, so get a new one after a failed attempt
+ */
+function resetTurnstile() {
+    if(gSiteKey && window.turnstile) {
+        gCfToken = undefined;
+        window.turnstile.reset('#turnstile');
+        validateForm();
+    }
+}
+
+function setupRegisterPage() {
     setCustomRegister();			// Apply custom javascript
     localise.setlang();
+    setupTurnstile();
 
     // Use input/change (not keyup) so autofill, autocomplete and mouse-paste also re-validate
     $('#registerForm input').on('input change', function () {
@@ -78,22 +143,24 @@ localise.initLocale(gUserLocale).then(function () {
             type: "POST",
             cache: false,
             url: "/surveyKPI/register",
-            data: {registrationDetails: regString},
+            data: {registrationDetails: regString, cfToken: gCfToken},
             success: function (data, status) {
                 removeHourglass();
                 var msg = localise.set["msg_reg"];
                 msg = msg.replace('%s1', email);
                 bootbox.alert(msg);
                 $('#registerForm')[0].reset();
+                resetTurnstile();
             }, error: function (data, status) {
                 removeHourglass();
+                resetTurnstile();
                 bootbox.alert("Error: " + data.responseText);
             }
         });
     });
 
 
-});
+}
 
 /*
  * Enable or disable the submit button based on the validity of the form
@@ -112,6 +179,8 @@ function validateForm() {
     } else if (!admin_name || admin_name.trim().length === 0) {
         status = false;
     } else if (!admin_email || admin_email.trim().length === 0) {
+        status = false;
+    } else if (gSiteKey && !gCfToken) {
         status = false;
     }
 

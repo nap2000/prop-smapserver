@@ -37,6 +37,7 @@ if (typeof localStorage !== "undefined") {
 window.gUserLocale = gUserLocale;
 
 	var gToken;
+	var gReturnTo;		// Page to go on to after an expired password has been changed
 
 	$(document).ready(function() {
 
@@ -49,6 +50,13 @@ window.gUserLocale = gUserLocale;
 			var params = location.search.substr(location.search.indexOf("?") + 1);
 			if(params.indexOf('expired') >= 0) {
 				$('.pwd_alert').show().removeClass('alert-danger alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
+
+				// Only a path on this server
+				var returnTo = new URLSearchParams(location.search).get('return');
+				if(returnTo && /^\/(?![\/\\])/.test(returnTo)) {
+					gReturnTo = returnTo;
+					$('#pwd_continue').attr('href', gReturnTo);
+				}
 			}
 			$('#passwordConfirm, #passwordValue').keydown(function() {
 				$('.pwd_alert').hide();
@@ -84,6 +92,35 @@ window.gUserLocale = gUserLocale;
 
 	function gotuser() {
 		$('#id').val(globals.gLoggedInUser.ident);
+	}
+
+	/*
+	 * The logon session holds the password and Apache checks it on every request, so the session ends
+	 * when the password changes.  Log on again with the new one so the user is not asked to.
+	 */
+	function logonAgain(ident, password, callback) {
+		$.ajax({
+			type: "POST",
+			cache: false,
+			url: "/authenticate/login.txt",
+			data: { httpd_username: ident, httpd_password: password },
+			complete: callback		// If it fails the user is asked to log on as before
+		});
+	}
+
+	/*
+	 * Offer to save the new password in the browser.  The page changes it with an ajax call and stays
+	 * where it is, so browsers do not see a form being submitted and would not offer to on their own.
+	 * Browsers without the Credential Management API rely on the autocomplete attributes in the form.
+	 */
+	function savePassword(ident, password) {
+		if(ident && window.PasswordCredential && navigator.credentials) {
+			try {
+				navigator.credentials.store(new PasswordCredential({id: ident, password: password})).catch(function () {});
+			} catch (e) {
+				// Not available, for example where the certificate is not trusted
+			}
+		}
 	}
 
 	function getPassword(length) {
@@ -134,10 +171,16 @@ window.gUserLocale = gUserLocale;
 			url: "/surveyKPI/user/password?lang=" + gUserLocale,
 			data: { passwordDetails: pdString },
 			success: function(data, status) {
-				removeHourglass();
+				var ident = $('#id').val();
+				logonAgain(ident, pd.password, function() {
+					removeHourglass();
 
-				$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
-				$('.pwd_home').show();
+					// Hiding the fields also tells the browser the form was submitted, so it offers to save the password
+					$('#pwd_fields').hide();
+					$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
+					$('.pwd_home').show();
+					savePassword(ident, pd.password);
+				});
 
 			}, error: function(data, status) {
 				removeHourglass();

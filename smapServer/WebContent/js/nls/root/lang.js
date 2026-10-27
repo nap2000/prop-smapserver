@@ -1,5 +1,6 @@
 define({
     "m_home": "Home",
+    "c_continue": "Continue",
     "m_admin": "Admin",
     "m_tm": "Forms",
     "m_analysis": "Analysis",
@@ -744,9 +745,11 @@ define({
     "msg_survey_replaced": "Survey replaced",
     "msg_survey_loaded": "Survey loaded",
     "msg_reg": "Registration accepted.  An email has been sent to %s1 with a link that you can use to set your password.",
+    "msg_reg_check": "The check that you are not a robot could not be completed (%s1).  Reload the page and try again, or contact the server administrator if this continues.",
     "msg_uns": "Unsubscribe successful",
     "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
     "msg_s2": "Subscribed successfully",
+    "msg_s4": "If that address has unsubscribed from emails on this server, an email has been sent to it with a link to re-subscribe to each organisation.  Click a link to confirm.",
     "msg_s3": "Enter your email address to re-subscribe to emails",
     "msg_pd_key": "Specify a data key ",
     "msg_one_role": "At least one role must be selected",
@@ -1258,6 +1261,7 @@ define({
 
     // Users
     "u_sec_mgr_del": "Require security manager privilege to delete data",
+    "u_self_registration": "Allow anyone to register a new organisation",
     "u_mcp": "MCP Server",
     "m_mcp_access": "AI access",
     "mcp_apps": "Applications with access",
