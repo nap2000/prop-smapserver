@@ -480,7 +480,7 @@ localise.initLocale(gUserLocale).then(function () {
 				{ "data": "submissions"  },
 			],
 			order: [[ 0, "asc" ]],
-			columnDefs: [{ targets: '_all', render: $.fn.dataTable.render.text() }],
+			columnDefs: [{ targets: [3, 4], render: $.fn.dataTable.render.text() }],	// The server encodes email and name but not these
 			initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
@@ -498,7 +498,7 @@ localise.initLocale(gUserLocale).then(function () {
 							});
 
 						column.data().unique().sort().each(function (d, j) {
-							select.append($('<option>').val(d).text(d))
+							select.append('<option value="' + d + '">' + d + '</option>')
 						});
 					}
 				} );

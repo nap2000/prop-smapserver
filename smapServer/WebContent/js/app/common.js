@@ -5787,7 +5787,7 @@ function initMsgNotPopup(target) {
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
 				if (value.channel === 'email' || (!value.channel && key.indexOf("@") > 0)) {
 					hasEmailSelect = true;
-					$email.append(`<option value="${htmlEncode(key)}">${htmlEncode(key)}</option>`);
+					$email.append(`<option value="${key}">${key}</option>`);
 				}
 			}
 		}
@@ -7252,7 +7252,7 @@ function formatConversation(val, inEdit, mode) {
 		window.gEditRecord.contacts = {};
 	}
 	if(!(val && val.length > 0 && val !== 'undefined' && val[0] === '[')) {	// Only convert if the data is a json array, otherwise has already been converted
-		return htmlEncode(val);
+		return val;
 	}
 
 	var conv;

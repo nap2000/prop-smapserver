@@ -77,6 +77,7 @@ localise.initLocale(gUserLocale).then(function () {
 			ajax: "/surveyKPI/api/subscriptions?dt=true" + tzString,
 			select: true,
 			rowId: 'id',
+			// email and name are HTML encoded by the server (dt=true)
 			columns: [
 				{ "data": "email" },
 				{ "data": "name" },
@@ -84,7 +85,6 @@ localise.initLocale(gUserLocale).then(function () {
 				{ "data": "time_changed"  }
 			],
 			order: [[ 0, "asc" ]],
-			columnDefs: [{ targets: '_all', render: $.fn.dataTable.render.text() }],
 			initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
@@ -102,7 +102,7 @@ localise.initLocale(gUserLocale).then(function () {
 							});
 
 						column.data().unique().sort().each(function (d, j) {
-							select.append($('<option>').val(d).text(d))
+							select.append('<option value="' + d + '">' + d + '</option>')
 						});
 					}
 				} );

@@ -55,6 +55,8 @@ export {
 
         /*
          * Add HTML to show a form to edit a record
+         * The record values are already HTML encoded by the server (format=dt), so they are added
+         * to the markup as they are.  Encoding them again would show, and save, &lt; etc.
          */
         function showEditRecordForm(record, schema, $surveyForm, includeMaps) {
             var
@@ -288,7 +290,7 @@ export {
                     h[++idx] = ' step="1"';
                 }
                 h[++idx] = ' class="form-control editable" value="';
-                h[++idx] = htmlEncode(value);
+                h[++idx] = value;
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
                 if (first) {
@@ -299,7 +301,7 @@ export {
             } else if (column.type === "date") {
                 h[++idx] = '<div class="input-group date" data-container="body">';
                 h[++idx] = '<input type="date" class="form-control editable" data-date-format="YYYY-MM-DD" value="';
-                h[++idx] = htmlEncode(value);
+                h[++idx] = value;
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
                 if (first) {
@@ -312,7 +314,7 @@ export {
             } else if (column.type === "dateTime") {
                 h[++idx] = '<div class="input-group" data-container="body">';
                 h[++idx] = '<input type="datetime-local" class="form-control editable" data-date-format="YYYY-MM-DD HH:MM" value="';
-                h[++idx] = htmlEncode(value);
+                h[++idx] = value;
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
                 if (first) {
@@ -355,7 +357,7 @@ export {
 
             } else {        // Text + Default
 
-                var v = addAnchors(htmlEncode(value))[0];
+                var v = addAnchors(value)[0];
                 
                 if(v && v.indexOf('<') == 0) {
                     h[++idx] = v;
@@ -371,12 +373,12 @@ export {
                         } else {
                             h[++idx] = '">';
                         }
-                        h[++idx] = htmlEncode(value);
+                        h[++idx] = value;
                         h[++idx] = '</textarea>';
                     } else {
                         h[++idx] = ' <input type="text"';
                         h[++idx] = '" class="form-control editable" value="';
-                        h[++idx] = htmlEncode(value);
+                        h[++idx] = value;
                         h[++idx] = '" data-item="';
                         h[++idx] = itemIndex;
                         if (first) {
@@ -597,7 +599,7 @@ export {
 
         function addSourceQuestion(column, record, ref_rows) {
             var name = column.mgmt ? column.name : column.column_name;        // Name hack
-            var v = addAnchors(htmlEncode(record[name]))[0];
+            var v = addAnchors(record[name])[0];
             var h = [];
             var idx = -1;
 
@@ -746,7 +748,7 @@ export {
          * Add markup for a single cell
          */
         function addCellMarkup(input) {
-            var v = addAnchors(htmlEncode(input))[0],
+            var v = addAnchors(input)[0],
                 h = [],
                 idx = -1;
             if(v && v.indexOf('<') == 0) {
@@ -833,7 +835,7 @@ export {
                     }
                 }
                 h[++idx] = ' value="';
-                h[++idx] = htmlEncode(v);
+                h[++idx] = v;
                 h[++idx] = '">';
                 h[++idx] = htmlEncode(l);
                 h[++idx] = '</option>';

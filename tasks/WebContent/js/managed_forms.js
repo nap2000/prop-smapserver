@@ -1600,7 +1600,8 @@ localise.initLocale(gUserLocale).then(function () {
                         select.append( '<option value=""></option>' );
                         column.data().unique().sort().each( function ( d, j ) {
                             if(d && d.length > 0) {
-                                select.append('<option value="' + htmlEncode(d) + '">' + htmlEncode(d) + '</option>')
+                                // d is already HTML encoded by the server (format=dt)
+                                select.append('<option value="' + d + '">' + d + '</option>')
                             }
                         } );
                         select.append('</select>');
@@ -1618,10 +1619,12 @@ localise.initLocale(gUserLocale).then(function () {
                 {
                     targets: "_all",
                     render: function (data, type, full, meta) {
+                        // data is already HTML encoded by the server (format=dt), do not encode it again
+                        var content = addAnchors(data, true).join(',');
                         if (type === 'display') {
-                            return '<div class="td-scroll">' + addAnchors(typeof data === 'string' ? htmlEncode(data) : data, true).join(',') + '</div>';
+                            return '<div class="td-scroll">' + content + '</div>';
                         }
-                        return addAnchors(data, true).join(',');
+                        return content;
                     }
                 },
                 {
@@ -2475,6 +2478,7 @@ localise.initLocale(gUserLocale).then(function () {
                 h[++idx] = '<tr>';
                 h[++idx] = addCell(translateKey(configItem.displayName));
                 for(j = 0; j < properties.length; j++) {
+                    // Record values are already HTML encoded by the server (format=dt)
                     h[++idx] = addCell(translateKeyValue(configItem.displayName, records[j][configItem.column_name]));
                 }
                 h[++idx] = '</tr>';
@@ -2505,7 +2509,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         // Add form group and label
         h[++idx] = '<td>';
-        h[++idx] = addAnchors(htmlEncode(item), true);
+        h[++idx] = addAnchors(item, true);
         h[++idx] = '</td>';
 
 
