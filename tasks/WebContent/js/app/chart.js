@@ -25,6 +25,7 @@
 import $ from "jquery";
 import localise from "localise";
 import globals from "globals";
+import { htmlEncode } from "common";
 
 var charts = [];
 //var barColors = ["red", "green","blue","orange","brown"];
@@ -83,7 +84,7 @@ export default {
             var card = `<div class="col-sm-12 col-md-6 col-lg-3">
                                     <div class="card">
                                         <div class="card-header panel-header d-flex align-items-center">
-                                            <span class="panel_title me-auto text-truncate">${label}</span>
+                                            <span class="panel_title me-auto text-truncate">${htmlEncode(label)}</span>
                                             <div class="panel-actions">
                                                 <button class="panel-btn" data-idx="${index}" title="Settings">
                                                     <i class="fas fa-sliders-h"></i></button>

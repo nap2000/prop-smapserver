@@ -193,7 +193,7 @@ localise.initLocale(gUserLocale).then(function () {
 					// readonly drives the server footer button, matching read_only_survey
 					var rhref = '/app/myWork/webForm/' + taskList[i].task.form_id;
 					if(taskList[i].task.update_id) {
-						rhref += '?datakey=instanceid&datakeyvalue=' + taskList[i].task.update_id + '&viewOnly=true&readonly=true';
+						rhref += '?datakey=instanceid&datakeyvalue=' + encodeURIComponent(taskList[i].task.update_id) + '&viewOnly=true&readonly=true';
 					} else {
 						rhref += '?viewOnly=true&readonly=true';
 					}
@@ -263,7 +263,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 							href += (hasParam ? '&' : '?');
 							href += 'datakey=instanceid&datakeyvalue=';
-							href += taskList[i].task.update_id;
+							href += encodeURIComponent(taskList[i].task.update_id);
 							hasParam = true;
 
 						} else if (taskList[i].task.initial_data_source === 'task') {

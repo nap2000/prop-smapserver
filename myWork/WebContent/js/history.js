@@ -21,6 +21,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 import "jquery";
 import localise from "localise";
+import { htmlEncode } from "common";
 import dbstorage from "./app/db-storage";
 
 var gUserLocale = navigator.language;
@@ -89,9 +90,9 @@ $(document).ready(function() {
 					let elem = `<tr>
 							<td>${item.date}</td>
 							<td>${action}</td>
-							<td>${item.name}</td>
+							<td>${htmlEncode(item.name)}</td>
 							<td>${status}</td>
-							<td>${item.instanceid}</td>
+							<td>${htmlEncode(item.instanceid)}</td>
 							</tr>tr>`;
 					$table.append(elem);
 				}

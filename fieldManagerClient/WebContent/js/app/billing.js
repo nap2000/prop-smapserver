@@ -358,7 +358,7 @@ $(document).ready(function() {
 				h[++idx] = '</td>';
 
 				h[++idx] = '<td>';			// Changed By
-				h[++idx] = rates[i].modifiedBy;
+				h[++idx] = htmlEncode(rates[i].modifiedBy);
 				h[++idx] = '</td>';
 
 				h[++idx] = '<td>';			// Created date

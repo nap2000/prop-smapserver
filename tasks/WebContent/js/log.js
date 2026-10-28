@@ -173,6 +173,11 @@ localise.initLocale(gUserLocale).then(function () {
 					}
 					return h;
 				}
+			},
+			{
+				// Everything else is shown as text, values can come from submissions
+				targets: '_all',
+				render: DataTable.render.text()
 			}
 			],
 			initComplete: function () {
@@ -192,7 +197,7 @@ localise.initLocale(gUserLocale).then(function () {
 							});
 
 						column.data().unique().sort().each(function (d, j) {
-							select.append('<option value="' + d + '">' + d + '</option>')
+							select.append($('<option>').val(d).text(d))
 						});
 					}
 				} );

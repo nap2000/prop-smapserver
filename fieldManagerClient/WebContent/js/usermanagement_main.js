@@ -1647,7 +1647,7 @@ const moment = window.moment;
 				h[++idx] = '<td class="user_edit_td"><button class="btn btn-secondary user_edit" style="width:100%;" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '">';
-				h[++idx] = user.ident;
+				h[++idx] = htmlEncode(user.ident);
 				h[++idx] = '</button></td>';
 				h[++idx] = '<td style="text-align: center;">';
 				h[++idx] = htmlEncode(user.name);
@@ -1816,7 +1816,7 @@ const moment = window.moment;
 			h[++idx] = htmlEncode(project.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
-			h[++idx] = project.changed_by;
+			h[++idx] = htmlEncode(project.changed_by);
 			h[++idx] = '</td>';
 
 			h[++idx] = '<td>';
@@ -1914,7 +1914,7 @@ const moment = window.moment;
 			h[++idx] = htmlEncode(role.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
-			h[++idx] = role.changed_by;
+			h[++idx] = htmlEncode(role.changed_by);
 			h[++idx] = '</td>';
 
 			h[++idx] = '<td>';
@@ -2022,7 +2022,7 @@ const moment = window.moment;
 			h[++idx] = htmlEncode(organisation.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
-			h[++idx] = organisation.changed_by;
+			h[++idx] = htmlEncode(organisation.changed_by);
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="usage_report_td">';
 

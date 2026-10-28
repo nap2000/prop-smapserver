@@ -1672,7 +1672,7 @@ function refreshVectorSelects(data) {
 		for(i = 0; i < files.length; i++){
 			if(files[i].type === "geojson") {
 				h_d[++idx_d] = '<option value="';
-				h_d[++idx_d] = files[i].name;
+				h_d[++idx_d] = htmlEncode(files[i].name);
 				h_d[++idx_d] = '">';
 				h_d[++idx_d] = htmlEncode(files[i].name);
 				h_d[++idx_d] = '</option>';
@@ -1680,7 +1680,7 @@ function refreshVectorSelects(data) {
 
 			if(files[i].type === "TODO") {
 				h_s[++idx_s] = '<option value="';
-				h_s[++idx_s] = files[i].name;
+				h_s[++idx_s] = htmlEncode(files[i].name);
 				h_s[++idx_s] = '">';
 				h_s[++idx_s] = htmlEncode(files[i].name);
 				h_s[++idx_s] = '</option>';
@@ -3123,7 +3123,7 @@ function refreshLocationGroups(tags, includeAll, currentGroup) {
 							$('.location_group_list_sel').text(g);
 						}
 						h[++idx] = '<a class="dropdown-item" href="#">';
-						h[++idx] = g;
+						h[++idx] = htmlEncode(g);
 						h[++idx] = '</a>';
 					} else {
 						h[++idx] = '<option';
@@ -3131,7 +3131,7 @@ function refreshLocationGroups(tags, includeAll, currentGroup) {
 							h[++idx] = ' selected';
 						}
 						h[++idx] = ' value="';
-						h[++idx] = g;
+						h[++idx] = htmlEncode(g);
 						h[++idx] = '">';
 						h[++idx] = htmlEncode(g);
 						h[++idx] = '</option>';
@@ -5787,7 +5787,7 @@ function initMsgNotPopup(target) {
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
 				if (value.channel === 'email' || (!value.channel && key.indexOf("@") > 0)) {
 					hasEmailSelect = true;
-					$email.append(`<option value="${key}">${key}</option>`);
+					$email.append(`<option value="${htmlEncode(key)}">${htmlEncode(key)}</option>`);
 				}
 			}
 		}
@@ -6498,7 +6498,7 @@ function getWebFormUrl(form_ident, update_id, initial_data_source, taskId, assig
 	url = "/webForm/" + form_ident;
 
 	if (update_id && initial_data_source === 'survey') {
-		url += "?datakey=instanceid&datakeyvalue=" + update_id;
+		url += "?datakey=instanceid&datakeyvalue=" + encodeURIComponent(update_id);
 		url += "&viewOnly=true"
 		hasParams = true;
 	} else {
@@ -7252,7 +7252,7 @@ function formatConversation(val, inEdit, mode) {
 		window.gEditRecord.contacts = {};
 	}
 	if(!(val && val.length > 0 && val !== 'undefined' && val[0] === '[')) {	// Only convert if the data is a json array, otherwise has already been converted
-		return val;
+		return htmlEncode(val);
 	}
 
 	var conv;

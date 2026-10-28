@@ -27,6 +27,7 @@ import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import {
 	addCacheBuster,
 	addHourglass,
+	htmlEncode,
 	removeHourglass,
 	saveCurrentProject,
 	setupUserProfile
@@ -149,8 +150,8 @@ localise.initLocale(gUserLocale).then(function () {
             var linkHtml = `<div class="col-sm-12">
                                     <div class="card">
                                         <div class="card-header d-flex chart-header">
-                                            <span class="mr-auto">${link.colName}</span>
-                                            <img src="${image}" alt="${fpAlt}">
+                                            <span class="mr-auto">${htmlEncode(link.colName)}</span>
+                                            <img src="${htmlEncode(image)}" alt="${fpAlt}">
                                         </div>
                                         <div class="card-body">
                                             <div class="row bg-success" id="matches${index}">
@@ -230,9 +231,9 @@ localise.initLocale(gUserLocale).then(function () {
                     url = url.replace("https://", "http://");
                 }
                 var matchHtml = `<div class="col-sm">
-                                    <img src="${image}" alt="${fpAlt}">
-                                    <p>${match.score}</p>
-                                    <p><a href="${url}">${fpView}</a></p>
+                                    <img src="${htmlEncode(image)}" alt="${fpAlt}">
+                                    <p>${htmlEncode(match.score)}</p>
+                                    <p><a href="${htmlEncode(url)}">${fpView}</a></p>
                                     </div>`;
                 $('#matches' + idx).append(matchHtml);
             }

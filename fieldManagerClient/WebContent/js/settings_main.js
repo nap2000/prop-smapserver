@@ -1704,9 +1704,9 @@ const moment = window.moment;
 		if(names && names.length > 0) {
 			for (let i = 0; i < names.length; i++) {
 				h[++idx] = '<option value="';
-				h[++idx] = names[i]
+				h[++idx] = htmlEncode(names[i]);
 				h[++idx] = '">';
-				h[++idx] = names[i];
+				h[++idx] = htmlEncode(names[i]);
 				h[++idx] = '</option>';
 			}
 		}
@@ -1731,7 +1731,7 @@ const moment = window.moment;
 		if(names && names.length > 0) {
 			for (let i = 0; i < names.length; i++) {
 				h[++idx] = '<option value="';
-				h[++idx] = names[i]
+				h[++idx] = htmlEncode(names[i]);
 				h[++idx] = '">';
 				h[++idx] = htmlEncode(names[i]);
 				h[++idx] = '</option>';

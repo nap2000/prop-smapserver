@@ -21,6 +21,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * The description should always be encoded / not used as html therefore do not encode
  */
 import localise from "../app/localise.js";
+import { htmlEncode } from "../app/common.js";
 
 function getDisplayDescription(fn, reportType, survey, question, group, option, qtype, 
 		date_question, start, end, interval, units, filter) {
@@ -185,7 +186,7 @@ function addAnchors (property, minsize) {
 	
 		} else {
 		    if (typeof property[i] === "object") {      // From: https://stackoverflow.com/questions/11182924/how-to-check-if-javascript-object-is-json
-				output[i] = JSON.stringify(property[i]);
+				output[i] = htmlEncode(JSON.stringify(property[i]));
 				if(output[i] === "{}") {
 					output[i] = "";
 				}

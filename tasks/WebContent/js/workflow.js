@@ -266,9 +266,9 @@ function nodeCard(x, y, item) {
 
 	const body = document.createElement("div");
 	body.style.cssText = "padding:8px 10px;";
-	let bodyHtml = `<div style="font-size:13px;font-weight:600;color:#212529;">${item.name || ""}</div>`;
+	let bodyHtml = `<div style="font-size:13px;font-weight:600;color:#212529;">${esc(item.name)}</div>`;
 	if (hasAssignee) {
-		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:3px;">${item.assignee}</div>`;
+		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:3px;">${esc(item.assignee)}</div>`;
 	}
 	body.innerHTML = bodyHtml;
 
@@ -525,7 +525,7 @@ function showLegend(colourMap) {
 		html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">`
 			+ `<span style="display:inline-block;width:13px;height:13px;border-radius:3px;`
 			+ `background:${colour};flex-shrink:0;"></span>`
-			+ `<span style="color:#495057;">${val || "(none)"}</span></div>`;
+			+ `<span style="color:#495057;">${esc(val || "(none)")}</span></div>`;
 	});
 	leg.innerHTML = html;
 	leg.style.display = "";

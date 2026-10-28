@@ -521,7 +521,7 @@ import {
                     h[++i] = '<td>' + features[j].properties.ue_id + '</td>';
                     h[++i] = '<td>' + localTime(features[j].properties.upload_time) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.user_name) + '</td>';
-                    h[++i] = '<td style="word-wrap: break-word;">' + features[j].properties.imei + '</td>';
+                    h[++i] = '<td style="word-wrap: break-word;">' + htmlEncode(features[j].properties.imei) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.file_name) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.survey_name) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.ident) + '</td>'

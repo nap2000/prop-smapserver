@@ -1600,7 +1600,7 @@ localise.initLocale(gUserLocale).then(function () {
                         select.append( '<option value=""></option>' );
                         column.data().unique().sort().each( function ( d, j ) {
                             if(d && d.length > 0) {
-                                select.append('<option value="' + d + '">' + d + '</option>')
+                                select.append('<option value="' + htmlEncode(d) + '">' + htmlEncode(d) + '</option>')
                             }
                         } );
                         select.append('</select>');
@@ -1618,11 +1618,10 @@ localise.initLocale(gUserLocale).then(function () {
                 {
                     targets: "_all",
                     render: function (data, type, full, meta) {
-                        var content = addAnchors(data, true).join(',');
                         if (type === 'display') {
-                            return '<div class="td-scroll">' + content + '</div>';
+                            return '<div class="td-scroll">' + addAnchors(typeof data === 'string' ? htmlEncode(data) : data, true).join(',') + '</div>';
                         }
-                        return content;
+                        return addAnchors(data, true).join(',');
                     }
                 },
                 {
@@ -2506,7 +2505,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         // Add form group and label
         h[++idx] = '<td>';
-        h[++idx] = addAnchors(item, true);
+        h[++idx] = addAnchors(htmlEncode(item), true);
         h[++idx] = '</td>';
 
 
@@ -3032,13 +3031,13 @@ localise.initLocale(gUserLocale).then(function () {
             h[++idx] = '<br/>';
             h[++idx] = localise.set["t_assigned"];
             h[++idx] = ': ';
-            h[++idx] = current.assigned;
+            h[++idx] = htmlEncode(current.assigned);
         }
         if(current.name) {
             h[++idx] = '<br/>';
             h[++idx] = localise.set["c_name"];
             h[++idx] = ': ';
-            h[++idx] = current.name;
+            h[++idx] = htmlEncode(current.name);
         }
 
         h[++idx] = '</button>';
@@ -3072,7 +3071,7 @@ localise.initLocale(gUserLocale).then(function () {
                     addBreak = true;
                     h[++idx] = localise.set["t_assigned"];
                     h[++idx] = ': ';
-                    h[++idx] = event.assigned;
+                    h[++idx] = htmlEncode(event.assigned);
                 }
                 if(event.schedule_at) {
                     if(addBreak) {
@@ -3099,7 +3098,7 @@ localise.initLocale(gUserLocale).then(function () {
                     addBreak = true;
                     h[++idx] = localise.set["c_name"];
                     h[++idx] = ': ';
-                    h[++idx] = event.name;
+                    h[++idx] = htmlEncode(event.name);
                 }
                 h[++idx] = '</div>';
             }

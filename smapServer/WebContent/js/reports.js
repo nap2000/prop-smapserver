@@ -1049,7 +1049,7 @@ $(document).ready(function() {
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = genItem.status_msg;
+				tab[++idx] = htmlEncode(genItem.status_msg);
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';

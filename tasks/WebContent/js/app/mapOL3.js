@@ -25,7 +25,7 @@ import $ from "jquery";
 import localise from "localise";
 import globals from "globals";
 import "icheck";
-import { getMapboxDefault } from "common";
+import { getMapboxDefault, htmlEncode } from "common";
 
 var gMap,
 	gLayers = [],
@@ -141,7 +141,7 @@ export default {
                 h[++idx] = ' id="layer' + i + '"';
                 h[++idx] = '>';
                 h[++idx] = '<label class="form-check-label" for="layer' + i + '">';
-                h[++idx] = gLayers[i].title;
+                h[++idx] = htmlEncode(gLayers[i].title);
                 h[++idx] = '</label>';
                 h[++idx] = '</div>';
                 h[++idx] = '</td>';
@@ -695,7 +695,7 @@ export default {
                         config.map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
 
                             var properties = feature.getProperties();
-                            $tooltip.html(properties.label);
+                            $tooltip.text(properties.label);
                             $tooltip.css(
                                 {
                                     position: "absolute",

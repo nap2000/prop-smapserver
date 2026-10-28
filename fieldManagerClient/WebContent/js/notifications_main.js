@@ -438,7 +438,7 @@ $(document).ready(function() {
 		$selector.append(`<option value="ops_summary">${localise.set["ops_summary_report"] || "Operations Summary"}</option>`);
 		if(data && data.length > 0) {
 			for(i = 0; i < data.length; i++) {
-				$selector.append(`<option value="${data[i].id}">${data[i].name}</option>`);
+				$selector.append(`<option value="${data[i].id}">${htmlEncode(data[i].name)}</option>`);
 			}
 		}
 	}
@@ -547,7 +547,7 @@ $(document).ready(function() {
 						|| data[i].notifyDetails.emailAssigned) {
 
 					if(data[i].notifyDetails.emails && data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
-						h[++idx] = data[i].notifyDetails.emails.join(",");
+						h[++idx] = htmlEncode(data[i].notifyDetails.emails.join(","));
 						notifyEmail = true;
 					}
 					if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {
@@ -580,7 +580,7 @@ $(document).ready(function() {
 					(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")) {
 					h[++idx] = localise.set["msg_sms_n1"];
 					h[++idx] = ' ';
-					h[++idx] = data[i].notifyDetails.emails.join(",");
+					h[++idx] = htmlEncode(data[i].notifyDetails.emails.join(","));
 					if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {
 						if(data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
 							h[++idx] = ', '

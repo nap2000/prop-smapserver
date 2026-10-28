@@ -1169,9 +1169,9 @@ localise.initLocale(gUserLocale).then(function () {
 							for (i = 0; i < data.options.length; i++) {
 								option = data.options[i];
 								h[++idx] = '<option value="';
-								h[++idx] = option.value;
+								h[++idx] = htmlEncode(option.value);
 								h[++idx] = '">';
-								h[++idx] = option.label;
+								h[++idx] = htmlEncode(option.label);
 								h[++idx] = '</option>';
 							}
 							$filter_option.append(h.join(''));
