@@ -248,7 +248,7 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 			j = -1;
 			btns = [];
 	
-			$btnSelect.append('<p class="small fw-semibold mb-1">' + title + ': ' + data.question + ' (' + fn + ')</p>');
+			$btnSelect.append('<p class="small fw-semibold mb-1">' + htmlEncode(title) + ': ' + htmlEncode(data.question) + ' (' + htmlEncode(fn) + ')</p>');
 			$btnSelect.append('<div id="mDataOptions' + pId1 + '_' + pId2 +'"></div>');
 
 			$btnLayerSelect = $('#mDataOptions' + pId1 + "_" + pId2);
@@ -263,7 +263,7 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 					btns[++j] = ' checked="checked"';
 				}
 				btns[++j] = '><label class="form-check-label" for="radio'+ pId1 + '_' + pId2 + '_' + i + '">';
-				btns[++j] = cols[pareto[i]];
+				btns[++j] = htmlEncode(cols[pareto[i]]);
 				btns[++j] = '</label></div>';
 			}
 

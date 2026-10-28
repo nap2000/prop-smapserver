@@ -17,6 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getDisplayDescription } from "commonReportFunctions";
+import { htmlEncode } from "common";
 
 var CHART_COLORS = [
 	'rgba(54, 162, 235, 0.8)',
@@ -162,7 +163,7 @@ export function setGraph(data, chart, optionSelElement, pId, chartType) {
 					}
 					btns[++j] = '/><label for="';
 					btns[++j] = id_name + i;
-					btns[++j] = '">' + cols[pareto[i]];
+					btns[++j] = '">' + htmlEncode(cols[pareto[i]]);
 					btns[++j] =	 '</label><br/>';
 				}
 				$btnSelect.empty().append(btns.join(''));

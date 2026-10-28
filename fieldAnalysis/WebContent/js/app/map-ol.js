@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import globals from "globals";
 import localise from "localise";
-import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault } from "common";
+import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault, htmlEncode } from "common";
 import { addLayer, addSharedMaps, zoomToData } from "./map-functions";
 import { showSettings } from "./survey_control";
 
@@ -301,7 +301,7 @@ function addSettingsButton(title, pIdSecondary, pIdPrimary) {
 		$existingButton = $('button[value="' + pIdSecondary + '"]', $settingsLayer );
 	
 	if($existingButton.length === 0) { 
-		$settingsLayer.append('<button class="layerSettings" value="' + pIdSecondary + '">' + title + '</button>');
+		$settingsLayer.append('<button class="layerSettings" value="' + pIdSecondary + '">' + htmlEncode(title) + '</button>');
 	}
 }
 

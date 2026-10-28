@@ -1022,7 +1022,7 @@ function updateFilterOptions(data, value, isSelect) {
 	} else {
         for (i = 0; i < data.length; i++) {
             h[++idx] = '<option value="';
-			h[++idx] = data[i].text;
+			h[++idx] = htmlEncode(data[i].text);
             h[++idx] = '">';
 			h[++idx] = htmlEncode(data[i].text);
             h[++idx] = '</option>';

@@ -145,7 +145,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 			gTab[++gIdx] = '<th colspan="';
 			gTab[++gIdx] = numberCols;
 			gTab[++gIdx] = '">';
-			gTab[++gIdx] = groupLabels[i];
+			gTab[++gIdx] = htmlEncode(groupLabels[i]);
 			gTab[++gIdx] = '</th>';
 		}
 		gTab[++gIdx] = '</tr>';
@@ -185,7 +185,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 					}
 				}
 				if(types[i] === "dateTime") {
-					gTab[++gIdx] = translatedName + ' (' + localise.set["c_lt"] + ')';
+					gTab[++gIdx] = htmlEncode(translatedName) + ' (' + localise.set["c_lt"] + ')';
 				} else {
 					gTab[++gIdx] = htmlEncode(translatedName);
 				}
@@ -234,7 +234,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 
 			if(isGrouped && !isPeriod) {
 				gTab[++gIdx] = '<td>';
-				gTab[++gIdx] = groups[i].properties.group_label;
+				gTab[++gIdx] = htmlEncode(groups[i].properties.group_label);
 				gTab[++gIdx] = '</td>';
 			} else if(isPeriod) {
 				gTab[++gIdx] = '<td>';
