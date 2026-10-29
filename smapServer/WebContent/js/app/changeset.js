@@ -2018,9 +2018,9 @@ export default {
             }
 
             // Update DOM
-            $changedRow.find('.error-msg').html(msg);	// Add message
+            $changedRow.find('.error-msg').text(msg);	// Add message, it can contain names and expressions
             if(globals.gShowingChoices) {
-                $(".choice_filter_error").html(msg);
+                $(".choice_filter_error").text(msg);
             }
 
             $changedRow.removeClass("error warning");

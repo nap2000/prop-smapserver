@@ -31,6 +31,7 @@ import localise from "./localise.js";
 import globals from "./globals.js";
 import markup from "./editorMarkup";
 import changeset from "./changeset";
+import { htmlEncode } from "./common";
 
 export default {	
 	refreshOptionListControls: refreshOptionListControls,
@@ -153,11 +154,11 @@ export default {
 			h[++idx] = '" data-fid="';					
 			h[++idx] = formIndex;
 			h[++idx] = '" data-qname="';
-			h[++idx] = qname;
+			h[++idx] = htmlEncode(qname);
 			h[++idx] = '" data-list_name="';
-			h[++idx] = list_name;
-			h[++idx] = '" data-filters=';
-			h[++idx] = JSON.stringify(option.cascade_filters);
+			h[++idx] = htmlEncode(list_name);
+			h[++idx] = '" data-filters="';
+			h[++idx] = htmlEncode(JSON.stringify(option.cascade_filters)) + '"';
 			h[++idx] = '>';
 			
 				// Add select for cascade selects
@@ -194,7 +195,7 @@ export default {
 				h[++idx] = '<td>';
 					
 					h[++idx] = '<input class="oname form-control has_tt" value="';
-					h[++idx] = option.value;
+					h[++idx] = htmlEncode(option.value);
 					h[++idx] = '" ';
 
 					h[++idx] = ' type="text" title="';
@@ -302,7 +303,7 @@ export default {
 									h[++idx] = '</label>';
 									h[++idx] = '<div class="col-sm-8">';
 										h[++idx] = '<textarea id="choiceFilter" class="input-block" form-control has_tt" type="text">';
-										h[++idx] = question.choice_filter;
+										h[++idx] = htmlEncode(question.choice_filter);
 										h[++idx] = '</textarea>';
 										h[++idx] = addChoiceFilterError(question.errorMsg);
 									h[++idx] = '</div>';
@@ -363,11 +364,11 @@ export default {
 		
 		if(listName) {
 			h[++idx] = addOptions(undefined, undefined, listName);
-			$('#choiceViewQuestion').html(localise.set["ed_cl"] + ": " + listName);
+			$('#choiceViewQuestion').text(localise.set["ed_cl"] + ": " + listName);
 		} else {
 			// Opened from a specific question
 			h[++idx] = addOptions(question, formIndex, undefined);
-			$('#choiceViewQuestion').html(localise.set["c_question"] + ": " + question.name);
+			$('#choiceViewQuestion').text(localise.set["c_question"] + ": " + question.name);
 		}
 		
 		$element.html(h.join());
@@ -421,10 +422,10 @@ export default {
 			    	  h[++idx] = 'checked=true ';
 			      }
 			      h[++idx] = 'value="';
-			      h[++idx] = filter;
+			      h[++idx] = htmlEncode(filter);
 			      h[++idx] = '"> ';
 				  h[++idx] = '<label>';
-			      h[++idx] = filter
+			      h[++idx] = htmlEncode(filter);
 			    h[++idx] = '</label>';
 			    h[++idx] = '</div>';
 			}
@@ -567,7 +568,7 @@ export default {
 				h[++idx] = '<textarea class="odisplayname has_tt" title="';
 				h[++idx] = localise.set["ed_dn"];
 				h[++idx] = '">';
-				h[++idx] = option.display_name;
+				h[++idx] = htmlEncode(option.display_name);
 				h[++idx] = '</textarea>';
 				h[++idx] = addOptionErrorMsg(option.errorMsg);
 
@@ -575,7 +576,7 @@ export default {
 				h[++idx] = '<textarea data-bs-toggle="tooltip" class="labelProp has_tt" title="';
 				h[++idx] = localise.set["ed_clab"];
 				h[++idx] = '">';
-				h[++idx] = option.labels[globals.gLanguage].text;
+				h[++idx] = htmlEncode(option.labels[globals.gLanguage].text);
 				h[++idx] = '</textarea>';
 				h[++idx] = addOptionErrorMsg(option.errorMsg);
 			}
@@ -601,12 +602,12 @@ export default {
 		}
 		if(typeof list_name !== "undefined") {
 			h[++idx] = ' data-list_name="';
-			h[++idx] = list_name;
+			h[++idx] = htmlEncode(list_name);
 			h[++idx] = '"';
 		}
 		if(typeof qname !== "undefined") {
 			h[++idx] = ' data-qname="';
-			h[++idx] = qname;
+			h[++idx] = htmlEncode(qname);
 			h[++idx] = '"';
 		}
 		if(typeof formIndex !== "undefined") {
@@ -646,9 +647,9 @@ export default {
 		// Create html
 		for(i = 0; i < nameArray.length; i++) {
 			h[++idx] = '<option value ="';
-			h[++idx] = nameArray[i];
+			h[++idx] = htmlEncode(nameArray[i]);
 			h[++idx] = '">';
-			h[++idx] = nameArray[i];
+			h[++idx] = htmlEncode(nameArray[i]);
 			h[++idx] = '</option>';
 		}
 		return h.join("");
@@ -667,7 +668,7 @@ export default {
 			h[++idx] = '<th class="f';		// Class to hide / show filter
 			h[++idx] = i;
 			h[++idx] = '">';
-			h[++idx] = globals.gFilterArray[i];
+			h[++idx] = htmlEncode(globals.gFilterArray[i]);
 			h[++idx] = '</th>';
 		}
 		
@@ -687,10 +688,10 @@ export default {
 			h[++idx] = '<td class="f';		// Class to hide / show filter
 			h[++idx] = i;
 			h[++idx] = '" data-f_name="';
-			h[++idx] = globals.gFilterArray[i];
+			h[++idx] = htmlEncode(globals.gFilterArray[i]);
 			h[++idx] = '">';
 			h[++idx] = '<input class="filter form-control data-bs-toggle="tooltip" has_tt" value="';
-			h[++idx] = filters ? filters[globals.gFilterArray[i]] : "";
+			h[++idx] = htmlEncode(filters ? filters[globals.gFilterArray[i]] : "");
 			h[++idx] = '" ';	
 			h[++idx] = ' type="text" title="';
 			h[++idx] = localise.set["ed_fv"];
@@ -717,7 +718,7 @@ export default {
 		h[++idx] = 'Element">';
 		if(mediaIdent) {
 			h[++idx] = '<a target="_blank" href="';
-			h[++idx] = url
+			h[++idx] = htmlEncode(url);
 			h[++idx] = '"';
 		} else {
 			h[++idx] = "<div";
@@ -728,9 +729,9 @@ export default {
 			if(thumbUrl || (lcLabel === "image" && url)) {
 				h[++idx] = '<img src="';
 				if(thumbUrl) {
-					h[++idx] = thumbUrl;
+					h[++idx] = htmlEncode(thumbUrl);
 				} else {
-					h[++idx] = url;
+					h[++idx] = htmlEncode(url);
 				}
 				h[++idx] = '">';
 			} else {
@@ -761,7 +762,7 @@ export default {
 			idx = -1;
 		
 		h[++idx] = '<div class="error-msg pull-right">';
-		h[++idx] = msg;
+		h[++idx] = htmlEncode(msg);
 		h[++idx] = '</div>';
 		return h.join("");
 	}
@@ -771,7 +772,7 @@ export default {
 			idx = -1;
 		
 		h[++idx] = '<div class="error-msg choice_filter_error pull-right">';
-		h[++idx] = msg;
+		h[++idx] = htmlEncode(msg);
 		h[++idx] = '</div>';
 		return h.join("");
 	}
@@ -802,9 +803,9 @@ export default {
 						h[++idx] = 'selected ';
 					}
 					h[++idx] = 'value="';
-					h[++idx] = question.list_name;
+					h[++idx] = htmlEncode(question.list_name);
 					h[++idx] = '">';
-					h[++idx] = question.name;
+					h[++idx] = htmlEncode(question.name);
 					h[++idx] = '</option>';
 				}
 			}
@@ -838,9 +839,9 @@ export default {
 					h[++idx] = 'selected ';
 				}
 				h[++idx] = 'value="';
-				h[++idx] = option.value;
+				h[++idx] = htmlEncode(option.value);
 				h[++idx] = '">';
-				h[++idx] = option.value;
+				h[++idx] = htmlEncode(option.value);
 			h[++idx] = '</option>';
 		}
 		$("#previousSelectChoice").html(h.join(""));

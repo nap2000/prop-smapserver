@@ -89,9 +89,9 @@ export default {
 
 				// Add question name cell
 				h[++idx] = '<div class="col-sm-3 col-12 "><input class="qname form-control has_tt" data-bs-toggle="tooltip" title="';
-				h[++idx] = question.name;
+				h[++idx] = htmlEncode(question.name);
 				h[++idx] = '" value="';
-				h[++idx] = question.name;
+				h[++idx] = htmlEncode(question.name);
 				h[++idx] = '" ';
 						
 				if(question.published) {				// Mark disabled if the question has been published
@@ -145,7 +145,7 @@ export default {
 						h[++idx] = '<label>Repeat Count: </label>';
 						h[++idx] = '<div class="input-group">';
 							h[++idx] = '<input class="form-control repeat-counts" value="';
-							h[++idx] = question.calculation;
+							h[++idx] = htmlEncode(question.calculation);
 							h[++idx] = '">';
 						h[++idx] = '</div>';
 					h[++idx] = '</div>';
@@ -192,7 +192,7 @@ export default {
 
 		// Add choice name cell
 		h[++idx] = '<div class="col-10"><input class="olname form-control has_tt" data-bs-toggle="tooltip" title="List Name" value="';
-		h[++idx] = list_name;
+		h[++idx] = htmlEncode(list_name);
 		h[++idx] = '" type="text"></div>';
 
 		// Add buttons
@@ -266,7 +266,7 @@ export default {
 		h[++idx] = localise.set['ed_aq'];
 		if(formName) {
 			h[++idx] = ' - ';
-			h[++idx] = formName;
+			h[++idx] = htmlEncode(formName);
 		}
 
 		h[++idx] = '</button>';
@@ -328,7 +328,7 @@ export default {
 		}
 		if(typeof list_name !== "undefined") {
 			h[++idx] = ' data-list_name="';
-			h[++idx] = list_name;
+			h[++idx] = htmlEncode(list_name);
 			h[++idx] = '"';
 		}
 		
@@ -455,7 +455,7 @@ export default {
 				h[++idx] = '" data-prop="required_msg" placeholder="';
 				h[++idx] = localise.set['ed_r_msg'];
 				h[++idx] = '">';
-				h[++idx] = question.labels[globals.gLanguage].required_msg;
+				h[++idx] = htmlEncode(question.labels[globals.gLanguage].required_msg);
 				h[++idx] = '</textarea>';
 			    h[++idx] = '</div>';
 
@@ -472,7 +472,7 @@ export default {
 				h[++idx] = '" data-prop="required_expression" placeholder="';
 				h[++idx] = localise.set['ed_r_expression'];
 				h[++idx] = '">';
-				h[++idx] = question.required_expression;
+				h[++idx] = htmlEncode(question.required_expression);
 				h[++idx] = '</textarea>';
 				h[++idx] = '</div>';
 			    
@@ -517,7 +517,7 @@ export default {
 				h[++idx] = '" data-prop="readonly_expression" placeholder="';
 				h[++idx] = localise.set['ed_r_readonly'];
 				h[++idx] = '">';
-				h[++idx] = question.readonly_expression;
+				h[++idx] = htmlEncode(question.readonly_expression);
 				h[++idx] = '</textarea>';
 				h[++idx] = '</div>';
 			    
@@ -599,7 +599,7 @@ export default {
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = question["parameters"];
+				h[++idx] = htmlEncode(question["parameters"]);
 				h[++idx] = '</textarea>';
 				h[++idx] = '</div>';    // End Col
 
@@ -629,7 +629,7 @@ export default {
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = question["appearance"];
+				h[++idx] = htmlEncode(question["appearance"]);
 				h[++idx] = '</textarea>';
 				h[++idx] = '</div>';    // End Col
 
@@ -693,7 +693,7 @@ export default {
 				h[++idx] = ' readonly tabindex="-1"';
 			}
 			h[++idx] = '>';
-			h[++idx] = question.calculation ? question.calculation : '';
+			h[++idx] = htmlEncode(question.calculation);
 			h[++idx] = '</textarea>';
 			h[++idx] = '</div>';		// End Col
 
@@ -729,22 +729,22 @@ export default {
 			} else {
 				h[++idx] = '>';
 				if(question.type === 'calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
-					h[++idx] = question.calculation;
+					h[++idx] = htmlEncode(question.calculation);
 				} else if(question.type === 'server_calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 					if(question.server_calculation && question.server_calculation.expression) {
-						h[++idx] = question.server_calculation.expression;
+						h[++idx] = htmlEncode(question.server_calculation.expression);
 					}
 				} else {
 					if(selProperty === "label") { 
-						h[++idx] = question.labels[globals.gLanguage].text;
+						h[++idx] = htmlEncode(question.labels[globals.gLanguage].text);
 					} else if(selProperty === "hint") { 
-						h[++idx] = question.labels[globals.gLanguage].hint;
+						h[++idx] = htmlEncode(question.labels[globals.gLanguage].hint);
 					} else if(selProperty === "constraint_msg") {
-						h[++idx] = question.labels[globals.gLanguage].constraint_msg || question.constraint_msg;    // Allow for multi language or single language message
+						h[++idx] = htmlEncode(question.labels[globals.gLanguage].constraint_msg || question.constraint_msg);    // Allow for multi language or single language message
 					} else if(selProperty === "guidance_hint") {
-						h[++idx] = question.labels[globals.gLanguage].guidance_hint;
+						h[++idx] = htmlEncode(question.labels[globals.gLanguage].guidance_hint);
 					} else {
-						h[++idx] = question[selProperty];
+						h[++idx] = htmlEncode(question[selProperty]);
 					}
 				}
 			}
@@ -906,7 +906,7 @@ export default {
 		h[++idx] = 'Element">';
 		if(mediaIdent) {
 			h[++idx] = '<a target="_blank" href="';
-			h[++idx] = url
+			h[++idx] = htmlEncode(url);
 			h[++idx] = '"';
 		} else {
 			h[++idx] = "<div";
@@ -917,9 +917,9 @@ export default {
 			if(thumbUrl || (lcLabel === "image" && url)) {
 				h[++idx] = '<img src="';
 				if(thumbUrl) {
-					h[++idx] = thumbUrl + addCacheBuster(thumbUrl);;
+					h[++idx] = htmlEncode(thumbUrl + addCacheBuster(thumbUrl));
 				} else {
-					h[++idx] = url + addCacheBuster(url) ;
+					h[++idx] = htmlEncode(url + addCacheBuster(url));
 				}
 				h[++idx] = '">';
 			} else {
@@ -1149,7 +1149,7 @@ export default {
 						h[++idx] = ' selected';
 					} 
 					h[++idx] = '>';
-					h[++idx] = data[i].q;
+					h[++idx] = htmlEncode(data[i].q);
 					h[++idx] = '</option>';
 				}
 			}
