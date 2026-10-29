@@ -535,23 +535,23 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 	    lowerBoundary: md["startIdx"],
 	    upperBoundary: md["startIdx"] + md["span"]
 	});
-	md["filterStrategy"] = new OpenLayers.Strategy.Filter({filter: md["filter"]});
-	
-	var strategies = [];
-	if(isPeriod) {
-		strategies.push(md["filterStrategy"]);
-	} else {
-		strategies.push(clusterStrategy);
-	}
-	
+
+	// Time series layers are clustered too, a filter strategy cannot be combined with clustering
+	// so the features in the time window are added to the layer by applyTimeFilter
 	var resultsLayer = new OpenLayers.Layer.Vector(key, {
-			strategies: strategies,
+			strategies: [clusterStrategy],
 			styleMap:styleMap
 		});
 
 	
 	map.addLayer(resultsLayer);		// Add layer to map before adding features or clustering does not work
-	resultsLayer.addFeatures(featuresObj);
+	if(isPeriod) {
+		md["layer"] = resultsLayer;
+		md["features"] = featuresObj;
+		applyTimeFilter(md);
+	} else {
+		resultsLayer.addFeatures(featuresObj);
+	}
 	layers.push(resultsLayer);
 }
 
@@ -689,8 +689,22 @@ function setTimeFilter(md) {
         md["$slider"].val(Math.max(0, Math.round(md["filter"].lowerBoundary + 0.5)));
         md["$slideDate1"].text(getPeriodLabel(md["filter"].lowerBoundary + 0.5, md));
         md["$slideDate2"].text(getPeriodLabel(md["filter"].upperBoundary + 0.5, md));
-        md["filterStrategy"].setFilter(md["filter"]);
+        applyTimeFilter(md);
 };
+
+/*
+ * Show only the features in the time window, the cluster strategy clusters them as they are added
+ */
+function applyTimeFilter(md) {
+	var inWindow = [];
+	for(var i = 0; i < md["features"].length; i++) {
+		if(md["filter"].evaluate(md["features"][i])) {
+			inWindow.push(md["features"][i]);
+		}
+	}
+	md["layer"].removeAllFeatures();
+	md["layer"].addFeatures(inWindow);
+}
 
 /*
  * Animate the time history
@@ -708,7 +722,7 @@ function startAnimation(md) {
         if (theMD["currentIdx"] - theMD["step"] + theMD["span"] < theMD["endIdx"]) {
             theMD["filter"].lowerBoundary = theMD["currentIdx"];
             theMD["filter"].upperBoundary = theMD["currentIdx"] + theMD["span"];
-            theMD["filterStrategy"].setFilter(theMD["filter"]);
+            applyTimeFilter(theMD);
             theMD["currentIdx"] = theMD["currentIdx"] + theMD["step"];
             theMD["$slider"].val(Math.max(0, Math.round(theMD["filter"].lowerBoundary + 0.5)));
             theMD["$slideDate1"].text(getPeriodLabel(theMD["filter"].lowerBoundary + 0.5, theMD));
