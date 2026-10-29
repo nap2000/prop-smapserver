@@ -416,7 +416,7 @@ define({
     "a_lh": "XLSX / HTML Herdado",
     "a_ua": "Atividade do Usuário",
     "a_ul": "Localizações do Usuário",
-    "a_tc": "Este Gráfico",
+    "a_tc": "Este mapa",
     "a_start_pk": "Primeira Chave Primária",
     "a_end_pk": "Última Chave Primária",
     "a_dd_sl": "Exibir os resultados",

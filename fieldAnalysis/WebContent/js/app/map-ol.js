@@ -22,7 +22,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import globals from "globals";
 import localise from "localise";
-import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault, htmlEncode } from "common";
+import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault, getTrailData, htmlEncode } from "common";
+import { getEffectiveDateFilter } from "data";
 import { addLayer, addSharedMaps, zoomToData } from "./map-functions";
 import { showSettings } from "./survey_control";
 
@@ -222,6 +223,9 @@ export function setMap(view, secondaryLayer) {
 		} else {
 			console.log("setMap: view " + view.title + " has no results");
 		}
+		if(view.subject_type === "user") {
+			addUserTrail(view);
+		}
 	}
 	
 	// Add the layer for any other panels that are displayed on this panel
@@ -249,48 +253,66 @@ export function setMap(view, secondaryLayer) {
 }
 
 /*
- * Add user trail to a map
+ * Add the trail of the user whose activity is shown on this map
+ * The service returns points in EPSG:3857, the same projection as the map
  */
-function addUserTrail(view, secondaryLayer, data) {
+function addUserTrail(view) {
+	var df = getEffectiveDateFilter(view, 1),
+		start = 0,
+		end = moment().add(1, 'days').valueOf();	// The service needs an end date, without one it returns nothing
 
-	var i, j,
-		views = globals.gSelector.getViews(),
-		map = globals.gSelector.getMap(view.pId);
-
-	// Add the layer(s) for the selected panel
-	if(!secondaryLayer) {
-
-		if(view.results) {
-			for(i = 0; i < view.results.length; i++) {
-				addLayer(view.results[i], view.pId, view.pId, view, view.title + i + " " + view.pId, map);
-			}
-		} else {
-			console.log("Selected View: "+ view.title + " does not have results");
+	if(df.dateRange) {
+		start = moment().subtract(1, {"1d": "days", "1w": "weeks", "1m": "months"}[df.dateRange]).valueOf();
+	} else {
+		if(df.fromDate) {
+			start = moment(df.fromDate, "YYYY-MM-DD").valueOf();
+		}
+		if(df.toDate) {
+			end = moment(df.toDate, "YYYY-MM-DD").add(1, 'days').valueOf();	// The to date is inclusive
 		}
 	}
 
-	// Add the layer for any other panels that are displayed on this panel
-	if(secondaryLayer) {
-		for(i = 0; i < views.length; i++) {
+	getTrailData(globals.gCurrentProject, view.uId, start, end, function(data) {
+		var map = globals.gSelector.getMap(view.pId),
+			name = localise.set["a_trail"] || "Trail",
+			lines = [],
+			layer,
+			i, j, points;
 
-			if(views[i].results) {
-				if(view.id !== views[i].id && views[i].state != "deleted"  && views[i].layerId === view.id) {
-					addSettingsButton(views[i].title, views[i].pId, view.pId);
+		if(!map) {
+			return;
+		}
+		layer = map.getLayersBy("trailOf", view.pId);
+		for(i = 0; i < layer.length; i++) {
+			map.removeLayer(layer[i]);
+		}
 
-					for(j = 0; j < views[i].results.length; j++) {
-						addLayer(views[i].results[j], view.pId, views[i].pId, view, views[i].title + j + " " + views[i].pId, map);
-					}
-				}
+		for(i = 0; i < data.features.length; i++) {
+			points = [];
+			for(j = 0; j < data.features[i].points.length; j++) {
+				points.push(new OpenLayers.Geometry.Point(data.features[i].points[j].coordinates[0],
+					data.features[i].points[j].coordinates[1]));
+			}
+			if(points.length > 1) {
+				lines.push(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(points)));
 			}
 		}
-		$('.layerSettings').off().click(function() {	// display the settings dialog
-			showSettings($(this));
+		if(lines.length === 0) {
+			return;
+		}
+
+		layer = new OpenLayers.Layer.Vector(name, {
+			style: {strokeColor: "blue", strokeWidth: 3, strokeOpacity: 0.6}
 		});
-	}
+		layer.trailOf = view.pId;
+		map.addLayer(layer);
+		layer.addFeatures(lines);
 
-	if(typeof view.bounds != "undefined") {
-		map.zoomToExtent(view.bounds);
-	}
+		if(view.bounds) {
+			view.bounds.extend(layer.getDataExtent());
+			map.zoomToExtent(view.bounds);
+		}
+	}, globals.gTimezone);
 }
 
 /*

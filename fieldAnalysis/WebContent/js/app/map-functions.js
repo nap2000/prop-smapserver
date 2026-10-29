@@ -19,6 +19,7 @@ import { addAnchors, getDisplayDescription } from "commonReportFunctions";
 import { htmlEncode, translateKey, translateKeyValue } from "common";
 
 var gMapData = {};
+var MAX_CLUSTER_LABELS = 3;		// Labels shown on a cluster of user activity or user locations
 
 var gCurrentBoundsLayer,
 	gSelectedBounds;
@@ -412,7 +413,7 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 				pointRadius: "${radius}",
 				fillOpacity: 0.6,
 				strokeWidth: "${width}",
-				stokeColor: "${strokeColor}",
+				strokeColor: "${strokeColor}",
 				label: "${count}",
 				labelXOffset: "${xOffset}",
 				labelYOffset: "${yOffset}",
@@ -440,18 +441,17 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
                             pix = Math.min(feature.attributes.count, 8) + 8;
                             // Set the value to be processed by color lookup rule
                             var newValue = 0;
-                            var newLabel = '';
+                            var labels = [];
                             for(var i = 0; i < feature.cluster.length; i++) {
                                 newValue += feature.cluster[i].attributes.value;
                                 if(setLabels) {
-                                	if(newLabel.length > 0) {
-		                                newLabel += ', ';
-	                                }
-	                                newLabel +=  feature.cluster[i].attributes._label;
+	                                labels.push(feature.cluster[i].attributes._label);
                                 }
                             }
                             feature.attributes.value = Math.round(newValue / feature.cluster.length);
-                            feature.attributes._label = newLabel;
+                            // Show a few labels and a count of the rest, zooming in separates the cluster
+                            feature.attributes._label = labels.slice(0, MAX_CLUSTER_LABELS).join(', ') +
+	                            (labels.length > MAX_CLUSTER_LABELS ? ' +' + (labels.length - MAX_CLUSTER_LABELS) : '');
                         } 
                         return pix;
                     },

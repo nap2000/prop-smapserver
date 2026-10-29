@@ -603,6 +603,7 @@ function getUserLocationsData(view, start_rec, nocache) {
 }
 
 export {
+	getEffectiveDateFilter,
 	getGroupMeta,
 	getQuestionMeta,
 	getResults,

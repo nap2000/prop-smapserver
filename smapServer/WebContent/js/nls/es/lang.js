@@ -559,7 +559,7 @@ define(
     "a_lh": "XLS Anterior / HTML",
     "a_ua": "Actividad del Usuario",
     "a_ul": "Ubicaciones de usuarios",
-    "a_tc": "Este Gráfico",
+    "a_tc": "Este mapa",
     "a_start_pk": "Llave Primaria (Record) Inicial",
     "a_end_pk": "Llave Primaria (Record) Final",
     "a_inc_ro": "Incluir preguntas de sólo lectura",

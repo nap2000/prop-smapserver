@@ -21,7 +21,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { surveyList, regionsURL, getQuestionInfo } from "./script";
-import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, getQuestionList, getTrailData, getViewLanguages, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages, setSurveyViewQuestions } from "common";
+import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, getQuestionList, getViewLanguages, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages, setSurveyViewQuestions } from "common";
 import globals from "globals";
 import localise from "localise";
 import { getGroupMeta, getQuestionMeta, getResults, getSurveyDataSE, getSurveyMetaSE, getUserData, getUserLocationsData } from "data";
@@ -429,9 +429,12 @@ function subjectTypeChangeEvent() {
 
 	var subjectType = $('#subject_type option:selected').val();
 
-	$('.subject_survey_only, .subject_user_only, .subject_user_location').hide();
+	$('.subject_survey_only, .subject_user_only, .subject_user_location_only').hide();
 	if(subjectType === "survey") {
 		$('.subject_survey_only').show();
+		// Keep fields for other panel types hidden
+		$('.map_only, .table_only, .graph_only').filter('.subject_survey_only')
+			.not('.' + $('#settings_type').val() + '_only').hide();
 	} else if(subjectType === "user") {
 		$('.subject_user_only').show();
 	} else {
@@ -614,7 +617,7 @@ function setSurveyViewControl(view) {
 	if(!view.subject_type) {
 		view.subject_type = "survey";
 	}
-	$('.subject_survey_only, .subject_user_only, .subject_user_location').hide();
+	$('.subject_survey_only, .subject_user_only, .subject_user_location_only').hide();
 	if(view.subject_type === "survey") {
 		$('.subject_survey_only').show();
 
@@ -797,37 +800,11 @@ export function getData(view, nocache) {
 			}
 		}
 	} else if(view.subject_type === "user") {
-		getUserData(view, 0);       // Start from the first record
-		if(view.type === "map") {
-			addUserTrail(view);
-		}
+		getUserData(view, 0);       // Start from the first record, a map also draws the user's trail
 
 	} else if(view.subject_type === "user_locations") {
 		getUserLocationsData(view, 0, nocache);
 	}
-}
-
-function addUserTrail(view) {
-	var startDate = $('#from_date').val(),
-		endDate = $('#to_date').val();
-
-	var startUtcValue = 0;
-	var endUtcValue = 0;
-	if(startDate !== "") {
-		var startUtc = moment.utc(startDate);
-		startUtcValue = startUtc.valueOf();
-	}
-	if(endDate !== "") {
-		var endUtc = moment.utc(endDate);
-		endUtcValue = endUtc.valueOf();
-	}
-
-	getTrailData(globals.gCurrentProject, view.uId, startUtcValue, endUtcValue, showUserTrail, 200);
-
-}
-
-function showUserTrail(data) {
-
 }
 
 // Populate the list of available functions
