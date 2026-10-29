@@ -25,6 +25,7 @@ import changeset from "./app/changeset";
 import aws from "./app/aws";
 import {
 	addHourglass,
+	htmlEncode,
 	getLoggedInUser,
 	getSurveyDetails,
 	openForm,
@@ -438,10 +439,10 @@ function setTranslateHtml($element, language_items, survey) {
 		var tabidx = i + 1;
 		var content = `
 			<div class="col-6">
-				<textarea class="lang_a" tabindex="-1" readonly>${label_a}</textarea>
+				<textarea class="lang_a" tabindex="-1" readonly>${htmlEncode(label_a)}</textarea>
 			</div>
 			<div class="col-6">
-				<textarea class="lang_b" tabindex="${tabidx}" data-index="${i}">${label_b}</textarea>
+				<textarea class="lang_b" tabindex="${tabidx}" data-index="${i}">${htmlEncode(label_b)}</textarea>
 			<div>`;
 		$element.append(content);
 	}
@@ -482,8 +483,8 @@ function autoTranslate() {
 				idx = -1,
 				msg = localise.set["ed_transd"];
 
-			msg = msg.replace("%s1", globals.model.survey.languages[globals.gLanguage1].name);
-			msg = msg.replace("%s2", globals.model.survey.languages[globals.gLanguage2].name);
+			msg = msg.replace("%s1", htmlEncode(globals.model.survey.languages[globals.gLanguage1].name));
+			msg = msg.replace("%s2", htmlEncode(globals.model.survey.languages[globals.gLanguage2].name));
 
 			h[++idx] = '<div class="alert alert-success" role="alert">';
 			h[++idx] = '<p>';
@@ -504,7 +505,7 @@ function autoTranslate() {
 				if(xhr.responseText.indexOf("<html>") > 0) {
 					bootbox.alert(localise.set["msg_trans_to"]);
 				} else {
-					bootbox.alert(xhr.responseText);
+					bootbox.alert(htmlEncode(xhr.responseText));
 				}
 
 			}

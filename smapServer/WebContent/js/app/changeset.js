@@ -1497,7 +1497,7 @@ export default {
 
             if(data.updateFailed && forError) {
                 h[++idx] = '<li>';
-                h[++idx] = data.errorMsg;
+                h[++idx] = htmlEncode(data.errorMsg);
                 h[++idx] = '</li>';
             } else if(!data.updateFailed && !forError) {
                 for(j = 0; j < data.items.length; j++) {

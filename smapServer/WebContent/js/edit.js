@@ -287,7 +287,7 @@ $(function() {
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						bootbox.alert(ident + " " + localise.set["msg_not_f"]);
+						bootbox.alert(htmlEncode(ident) + " " + localise.set["msg_not_f"]);
 					}
 				}
 			});
@@ -316,7 +316,7 @@ $(function() {
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						bootbox.alert(ident + " " + localise.set["msg_not_f"]);
+						bootbox.alert(htmlEncode(ident) + " " + localise.set["msg_not_f"]);
 					}
 				}
 			});
@@ -1354,7 +1354,7 @@ $(function() {
 			 * Create the choice list for the default logo
 			 */
 			h2[++idx2] = '<option value="';
-			h2[++idx2] = f.name;
+			h2[++idx2] = htmlEncode(f.name);
 			h2[++idx2] = '">';
 			h2[++idx2] = htmlEncode(f.name);
 			h2[++idx2] = '</option>';
@@ -3133,7 +3133,7 @@ $(function() {
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" required class="form-control pd_survey" value="';
-			h[++idx] = pulldata[i].survey;
+			h[++idx] = htmlEncode(pulldata[i].survey);
 			h[++idx] = '">';
 			h[++idx] = '</td>';
 
@@ -3142,7 +3142,7 @@ $(function() {
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" required class="form-control pd_data_key" value="';
-			h[++idx] = pulldata[i].data_key;
+			h[++idx] = htmlEncode(pulldata[i].data_key);
 			h[++idx] = '"';
 			h[++idx] = '</td>';
 
@@ -3382,7 +3382,7 @@ $(function() {
 		if(forms[i].form === "main") {
 			h[++idx] = localise.set["ed_tlf"];
 		} else {
-			h[++idx] = forms[i].form;
+			h[++idx] = htmlEncode(forms[i].form);
 		}
 		h[++idx] = '</option>';
 	}
@@ -3754,7 +3754,7 @@ $(function() {
 								if (filterColumn !== '' && filterColumn !== '0') {
 									if (filter === '') {
 										msg = localise.set["msg_filter_col"];
-										msg = msg.replace('%s1', filterColumn);
+										msg = msg.replace('%s1', htmlEncode(filterColumn));
 										$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
 										return false;
 									} else {
@@ -3967,9 +3967,9 @@ $(function() {
 						for(i = 0; i < survey.forms.length; i++) {
 							if(survey.forms[i].name !== excludeForm && survey.forms[i].parentFormIndex != -1) {
 								h[++idx] = '<option value="';
-								h[++idx] = survey.forms[i].name;
+								h[++idx] = htmlEncode(survey.forms[i].name);
 								h[++idx] = '">';
-								h[++idx] = survey.forms[i].name;
+								h[++idx] = htmlEncode(survey.forms[i].name);
 								h[++idx] = '</option>';
 							}
 						}
@@ -4038,9 +4038,9 @@ $(function() {
 
 						if(!textOnly || isTextStorageType(question.type)) {
 							h[++idx] = '<option value="';
-							h[++idx] = question.name;
+							h[++idx] = htmlEncode(question.name);
 							h[++idx] = '">';
-							h[++idx] = question.name;
+							h[++idx] = htmlEncode(question.name);
 							h[++idx] = '</option>';
 						}
 					}

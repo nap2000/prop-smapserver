@@ -2934,7 +2934,7 @@ function getChangeDescription(change, version) {
 			 * Options added or deleted from the editor
 			 */
 			str = localise.set["ed_c_add_o"];
-			var valueStr = '<span style="color:blue;">' + change.option.value;
+			var valueStr = '<span style="color:blue;">' + htmlEncode(change.option.value);
 			if(change.option.labels && change.option.labels.length >= 1) {
 				valueStr += ' (';
 				valueStr += htmlEncode(change.option.labels[0].text);

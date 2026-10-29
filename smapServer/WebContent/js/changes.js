@@ -137,7 +137,7 @@ function setChangesHtml($element, survey) {
 						url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';		// Legacy - for new template uploads the server will supply the URL
 					}
 				}
-                filehtml = '<a href="' + url + '">' + filename + '</a>';
+                filehtml = '<a href="' + htmlEncode(url) + '">' + htmlEncode(filename) + '</a>';
 			}
 			h[++idx] = '<tr class="change_';
 					h[++idx] = status;
@@ -167,7 +167,7 @@ function setChangesHtml($element, survey) {
 				h[++idx] = filehtml;
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
-				h[++idx] = changes[i].msg;
+				h[++idx] = htmlEncode(changes[i].msg);
 				h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}
