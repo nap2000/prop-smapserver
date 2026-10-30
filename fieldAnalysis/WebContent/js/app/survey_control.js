@@ -63,7 +63,7 @@ $(document).ready(function() {
 	 	var sId = $('#settings_survey option:selected').val();
  		var groupId = $('#settings_group option:selected').val();
 		if(gSurveyControlView.type === "map") {
-			setRegionLabelList(sId);		// Maps are grouped by regions not questions
+			setRegionLabelList();		// Maps are grouped by regions not questions
 		} else {
 	 		groupChangeEvent(sId, groupId);
 		}
@@ -321,6 +321,7 @@ function typeChangeEvent(type) {
 	}
 	
 	if(type == "map") {
+		$('#settings_group').prop("disabled", false);
 		getViewRegions(surveyId, gSurveyControlView.region);
 		
 		// Set the geometry question 
@@ -396,7 +397,7 @@ function surveyChangeEvent(sId) {
 	if(gSurveyControlView.type == "map") {
 		getViewRegions(sId);
 	}
-	$('#settings_group').prop("disabled", true).val("-1");
+	$('#settings_group').prop("disabled", gSurveyControlView.type != "map").val("-1");	// A map can be grouped by regions without a question
 	$('#q1_function').prop("disabled", true).val("none");
 	$('.select_only', '#p_settings').hide();
 	$('#time_group').prop("disabled", true).val("none");
@@ -454,9 +455,11 @@ function questionChangeEvent(sId, qId, question) {
 		qMeta;
 	
 	if(qId == "-1") {	
-		// Disable question level filters
-		$('#settings_group').val("-1");
-		$('#settings_group').prop("disabled", true);
+		// Disable question level filters, a map can still be grouped by regions to count its records
+		if(type !== "map") {
+			$('#settings_group').val("-1");
+			$('#settings_group').prop("disabled", true);
+		}
 		$('#q1_function').prop("disabled", true).val("none");
 		$('.select_only', '#p_settings').hide();
 		$('#time_group').prop("disabled", true).val("none");
@@ -654,7 +657,7 @@ function setSurveyViewControl(view) {
 		$('#q1_function').prop("disabled", false);
 	} else {
 		$('#settings_question').val("-1");
-		$('#settings_group').prop("disabled", true);
+		$('#settings_group').prop("disabled", view.type != "map");
 		$('#q1_function').prop("disabled", true);
 		$('.select_only', '#p_settings').hide();
 }
@@ -703,16 +706,18 @@ function setSurveyViewRegions(list, region, sId) {
 
 	var $regionSelect = $('#settings_group');
 
-	$regionSelect.empty().append(regionOptions(list));
+	gRegionList = list;
+	$regionSelect.empty().append(regionOptions(list, sId));
 	selectRegion($regionSelect, region);
 	gSurveyControlView.region = region;
-	setRegionLabelList(sId, (region || "").split(":")[2]);
+	setRegionLabelList(regionLabelOf(region));
 }
 
 /*
  * The options of a Group by select for a map, from GET /surveyKPI/regions
+ * A grid's value is grid:{id} and a polygon question's is shape:{survey ident}:{question}
  */
-export function regionOptions(list) {
+export function regionOptions(list, sId) {
 	var h = [],
 		idx = -1;
 
@@ -727,7 +732,8 @@ export function regionOptions(list) {
 	if(list.shapes && list.shapes.length > 0) {
 		h[++idx] = '<optgroup label="' + htmlEncode(localise.set["a_polygons"]) + '">';
 		$.each(list.shapes, function(j, item) {
-			h[++idx] = '<option value="shape:' + htmlEncode(item.question) + '">' + htmlEncode(item.question) + '</option>';
+			var text = item.sId == sId ? item.question : item.survey + " : " + item.question;		// Another survey in the bundle
+			h[++idx] = '<option value="shape:' + htmlEncode(item.sIdent + ":" + item.question) + '">' + htmlEncode(text) + '</option>';
 		});
 		h[++idx] = '</optgroup>';
 	}
@@ -735,14 +741,42 @@ export function regionOptions(list) {
 }
 
 /*
- * Select a saved region, grid:{id} or shape:{question}:{label question}, None if it has been deleted
+ * Select a saved region, None if it has been deleted
+ * A region is saved as grid:{id} or shape:{survey ident}:{question}:{label question}.  Panels saved before
+ * polygons could come from another survey hold shape:{question}:{label question}, the panel's own survey
+ * is listed first so its question is the first match
  */
 export function selectRegion($select, region) {
-	var parts = (region || "").split(":");
-	$select.val(parts.length > 1 ? parts[0] + ":" + parts[1] : "-1");
+	var parts = (region || "").split(":"),
+		value = "-1";
+
+	if(parts[0] === "grid") {
+		value = "grid:" + parts[1];
+	} else if(parts[0] === "shape" && parts.length >= 4) {
+		value = "shape:" + parts[1] + ":" + parts[2];
+	} else if(parts[0] === "shape") {
+		$select.find('option').each(function() {
+			var v = $(this).val();
+			if(value === "-1" && v.indexOf("shape:") === 0 && v.split(":")[2] === parts[1]) {
+				value = v;
+			}
+		});
+	}
+	$select.val(value);
 	if(!$select.val()) {
 		$select.val("-1");
 	}
+}
+
+/*
+ * The label question of a saved region
+ */
+export function regionLabelOf(region) {
+	var parts = (region || "").split(":");
+	if(parts[0] !== "shape") {
+		return undefined;
+	}
+	return parts.length >= 4 ? parts[3] : parts[2];
 }
 
 /*
@@ -763,27 +797,63 @@ export function regionLabelOptions(questions) {
 }
 
 /*
- * Show the label question select when the map is grouped by a survey's polygons
+ * Get the questions of the survey that holds the polygons selected in a Group by select, value is
+ * shape:{survey ident}:{question}, then call show with them
  */
-function setRegionLabelList(sId, label, attempt) {
+var gRegionQuestions = {};
+export function getRegionLabelQuestions(list, value, show) {
+	var ident = (value || "").split(":")[1],
+		shape,
+		i;
 
-	var $label = $('#settings_region_label'),
-		language = $('#settings_language option:selected').val(),
-		questions = globals.gSelector.getSurveyQuestions(sId, language);
+	for(i = 0; list && list.shapes && i < list.shapes.length; i++) {
+		if(list.shapes[i].sIdent === ident) {
+			shape = list.shapes[i];
+		}
+	}
+	if(!shape) {
+		show([]);
+	} else if(gRegionQuestions[shape.sId]) {
+		show(gRegionQuestions[shape.sId]);
+	} else {
+		$.ajax({
+			url: "/surveyKPI/languages/" + shape.sId,
+			dataType: 'json',
+			cache: false,
+			success: function(languages) {
+				var lang = (languages && languages.length > 0) ? (languages[0].name || languages[0]) : "none";
+				$.ajax({
+					url: "/surveyKPI/questionList/" + shape.sId + "/" + encodeURIComponent(lang) + "?exc_read_only=false",
+					dataType: 'json',
+					cache: false,
+					success: function(questions) {
+						gRegionQuestions[shape.sId] = questions;
+						show(questions);
+					}
+				});
+			}
+		});
+	}
+}
 
-	if(($('#settings_group').val() || "").indexOf("shape:") !== 0) {
+/*
+ * Show the label question select when the map is grouped by polygons
+ */
+var gRegionList;
+function setRegionLabelList(label) {
+
+	var value = $('#settings_group').val() || "";
+
+	if(value.indexOf("shape:") !== 0) {
 		$('.region_label_row').hide();
 		return;
 	}
-	if(!questions && (attempt || 0) < 6) {		// The questions may still be loading
-		setTimeout(function() { setRegionLabelList(sId, label, (attempt || 0) + 1); }, 500);
-	}
-
-	$label.empty().append(regionLabelOptions(questions));
-	if(label) {
-		$label.val(label);
-	}
-	$('.region_label_row').show();
+	getRegionLabelQuestions(gRegionList, value, function(questions) {
+		var $label = $('#settings_region_label');
+		$label.empty().append(regionLabelOptions(questions));
+		$label.val(label || "");
+		$('.region_label_row').show();
+	});
 }
 
 //Set the group list in the survey view control
@@ -861,8 +931,8 @@ function autoRefreshAnalysisData() {
 export function getData(view, nocache) {
 
 	if(view.subject_type === "survey") {
-		if (view.qId != "-1") {			// Question level results
-			getResults(view);
+		if (view.qId != "-1" || (view.type === "map" && /^(grid|shape):/.test(view.region || ""))) {
+			getResults(view);			// Question level results, or a count of the records in each region
 
 		} else {				// Whole of survey results
 			var sMeta = globals.gSelector.getSurvey(view.sId);

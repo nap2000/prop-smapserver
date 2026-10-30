@@ -25,7 +25,7 @@ import localise from "localise";
 import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault, getTrailData, htmlEncode } from "common";
 import { getEffectiveDateFilter } from "data";
 import { addLayer, addSharedMaps, zoomToData } from "./map-functions";
-import { regionLabelOptions, regionOptions, selectRegion, showSettings } from "./survey_control";
+import { getRegionLabelQuestions, regionLabelOf, regionLabelOptions, regionOptions, selectRegion, showSettings } from "./survey_control";
 
 /*
  * Globals specifically for OpenLayers Use
@@ -367,17 +367,14 @@ export function addGridControls(idx, savePanel) {
 		'<button type="button" class="btn btn-sm btn-primary grid_create">' + htmlEncode(localise.set["c_create"]) + '</button>' +
 		'<p class="small grid_msg mt-1"></p>');
 
-	// Grouping by region needs a question whose answers are coloured
-	if(!view.qId || view.qId == -1) {
-		$grids.find('.region_group').hide();
-	}
 
 	refreshGridList(view, $grids, savePanel);
 
 	$grids.find('.region_select').on('change', function() {
 		var region = $(this).val();
 		if(region.indexOf("shape:") === 0) {
-			showRegionLabels(view, $grids, "");
+			showRegionLabels($grids, "");
+			region += ":";		// No label question yet
 		} else {
 			$grids.find('.region_label_wrap').hide();
 		}
@@ -428,28 +425,15 @@ function saveRegion(view, region, savePanel) {
 }
 
 /*
- * Show the questions that can label the polygons of a survey
+ * Show the questions that can label the selected polygons, they are in the survey that holds the polygons
  */
-function showRegionLabels(view, $grids, label) {
-	var questions = globals.gSelector.getSurveyQuestions(view.sId, view.lang),
-		$label = $grids.find('.region_label_select');
-
-	function show(list) {
-		$label.empty().append(regionLabelOptions(list));
+function showRegionLabels($grids, label) {
+	getRegionLabelQuestions($grids.data("regions"), $grids.find('.region_select').val(), function(questions) {
+		var $label = $grids.find('.region_label_select');
+		$label.empty().append(regionLabelOptions(questions));
 		$label.val(label || "");
 		$grids.find('.region_label_wrap').show();
-	}
-
-	if(questions) {
-		show(questions);
-	} else {
-		$.ajax({
-			url: "/surveyKPI/questionList/" + view.sId + "/" + encodeURIComponent(view.lang) + "?exc_read_only=false",
-			dataType: 'json',
-			cache: false,
-			success: show
-		});
-	}
+	});
 }
 
 function refreshGridList(view, $grids, savePanel) {
@@ -463,10 +447,11 @@ function refreshGridList(view, $grids, savePanel) {
 				$select = $grids.find('.region_select'),
 				region = view.region || "";
 
-			$select.empty().append(regionOptions(data));
+			$grids.data("regions", data);
+			$select.empty().append(regionOptions(data, view.sId));
 			selectRegion($select, region);
 			if(region.indexOf("shape:") === 0 && $select.val() !== "-1") {
-				showRegionLabels(view, $grids, region.split(":")[2]);
+				showRegionLabels($grids, regionLabelOf(region));
 			} else {
 				$grids.find('.region_label_wrap').hide();
 			}

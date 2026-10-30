@@ -3344,16 +3344,29 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 }
 
 /*
- * The parameters that group a map's records by region, grid:{id} or shape:{question}:{label question}
+ * The parameters that group a map's records by region, grid:{id}, shape:{survey ident}:{question}:{label question}
+ * or, saved before polygons could come from another survey of the bundle, shape:{question}:{label question}
  * Other values, such as the table names regions used to have, group nothing
  */
 function regionParams(region) {
-	var parts = (region || "").split(":");
+	var parts = (region || "").split(":"),
+		survey, question, label;
 	if(parts[0] === "grid" && /^[0-9]+$/.test(parts[1])) {
 		return "&regionId=" + parts[1];
-	} else if(parts[0] === "shape" && parts[1]) {
-		return "&regionShape=" + encodeURIComponent(parts[1]) +
-			(parts[2] ? "&regionLabel=" + encodeURIComponent(parts[2]) : "");
+	} else if(parts[0] === "shape") {
+		if(parts.length >= 4) {
+			survey = parts[1];
+			question = parts[2];
+			label = parts[3];
+		} else {
+			question = parts[1];
+			label = parts[2];
+		}
+		if(question) {
+			return (survey ? "&regionSurvey=" + encodeURIComponent(survey) : "") +
+				"&regionShape=" + encodeURIComponent(question) +
+				(label ? "&regionLabel=" + encodeURIComponent(label) : "");
+		}
 	}
 	return "";
 }
