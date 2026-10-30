@@ -304,8 +304,21 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 	}
 	
 	
+	// Percent is always the share of a feature's records with the answer, a count is too when the answers are
+	// counted, select and text like questions, rather than summed numbers
+	var countsAnswers = data.qtype && (data.qtype.indexOf("select") === 0 || data.qtype === "string"
+			|| data.qtype === "calculate" || data.qtype === "server_calculate");
+	var byShare = fn === "percent" || (fn === "count" && countsAnswers);
 	for(var i = 0; i < data.features.length; i++) {
-		if(max > min) {
+		var nRecords = data.features[i].properties.prikeys ? data.features[i].properties.prikeys.length : 0;
+		if(byShare && nRecords > 0) {
+			// The share of the feature's records with the selected choice, as clusters are coloured,
+			// so a region where every record matches is red whatever the other regions hold
+			// A text answer that none of the feature's records gave is missing rather than 0
+			var matching = matrix[data.optionIdx][i] || 0;
+			var share = fn === "percent" ? matching / 100 : matching / nRecords;
+			var val = 4 * Math.min(1, Math.max(0, share));
+		} else if(max > min) {
 			var diff = max - min;
 			var val = 4 * (matrix[data.optionIdx][i] - min) / diff;		// Normalise value to 5 levels
 		} else if(matrix[data.optionIdx][i] > 0) {
