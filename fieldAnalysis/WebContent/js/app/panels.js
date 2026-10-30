@@ -30,7 +30,7 @@ import "rmm";
 import "moment";
 import { copyView, getData, getViewSurveys, refreshAnalysisData, showSettings } from "./survey_control";
 import extendedModel from "./extended_model";
-import { initializeMap } from "./map-ol";
+import { addGridControls, initializeMap } from "./map-ol";
 
 var gNewPanel = false;	// Set to true when editing settings of a new panel
 var gExpandedPanelSeq;	// Set to the sequence number of a newly created panel
@@ -154,9 +154,12 @@ $(document).ready(function() {
 
 		if(newType === "map") {
 			view.selectedGeomQuestion = $('.geomSelect', '#p_settings').val();
-			view.groupQuestionId = $('#settings_group option:selected').val();
+			view.groupQuestionId = -1;		// A map's records are located by its location question
 			view.groupQuestionText = "Location";
-			view.region = $('#settings_group option:selected').val();
+			view.region = $('#settings_group').val() || "-1";
+			if(view.region.indexOf("shape:") === 0) {
+				view.region += ":" + ($('#settings_region_label').val() || "");
+			}
 		} else {
 			view.groupQuestionId = $('#settings_group option:selected').val();
 			view.groupQuestionText = $('#settings_group option:selected').text();
@@ -615,9 +618,12 @@ function setPanelType(type, idx, period, qId, subject_type) {
 				<div class="dataOptions" id="mDataOptions${idx}"></div>
 				<h3>${localise.set["c_settings"] || "Settings"}</h3>
 				<div id="mLayerSettings${idx}"></div>
+				<h3 class="grid_heading">${localise.set["a_grids"] || "Grids"}</h3>
+				<div class="grid_controls" id="mGrids${idx}"></div>
 			</div>`;
 		$panelContent.append(html);
 		initializeMap(idx);
+		addGridControls(idx);
 		break;
 	case "table":
 		if(subject_type === 'survey') {

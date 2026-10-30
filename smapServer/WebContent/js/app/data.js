@@ -441,10 +441,10 @@ function getUserLocationsData(view, start_rec, nocache) {
   */
  function getResults(view) {
 	 
-	 	function getAsyncResults(view, sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
+	 	function getAsyncResults(view, sId, data, dateId, groupId, groupType, region, fn, lang, timeGroup, 
 	 			fromDate, toDate, qId_is_calc, dateRange) {
 			
-			var url = resultsURL (sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
+			var url = resultsURL (sId, data, dateId, groupId, groupType, region, fn, lang, timeGroup, 
 					fromDate, toDate, qId_is_calc, view.filter, view.advanced_filter, view.geomFormQuestions,
 					view.selectedGeomQuestion, dateRange);
 			
@@ -480,9 +480,9 @@ function getUserLocationsData(view, start_rec, nocache) {
 			view.sId,
 			view.qId,
 			df.dateQuestionId,
-			view.groupQuestionId,
+			isNaN(view.groupQuestionId) ? -1 : view.groupQuestionId,	// Old map panels may hold a region name
 			view.groupType,
-			view.region,
+			view.type === "map" ? view.region : undefined,
 			view.fn,
 			view.lang,
 			view.timeGroup,

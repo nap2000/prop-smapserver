@@ -3343,7 +3343,22 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 	return url;
 }
 
-function resultsURL(sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
+/*
+ * The parameters that group a map's records by region, grid:{id} or shape:{question}:{label question}
+ * Other values, such as the table names regions used to have, group nothing
+ */
+function regionParams(region) {
+	var parts = (region || "").split(":");
+	if(parts[0] === "grid" && /^[0-9]+$/.test(parts[1])) {
+		return "&regionId=" + parts[1];
+	} else if(parts[0] === "shape" && parts[1]) {
+		return "&regionShape=" + encodeURIComponent(parts[1]) +
+			(parts[2] ? "&regionLabel=" + encodeURIComponent(parts[2]) : "");
+	}
+	return "";
+}
+
+function resultsURL(sId, qId, dateId, groupId, groupType, region, fn, lang, timeGroup,
 	startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
 	selectedGeomQuestion, dateRange) {
 
@@ -3360,10 +3375,8 @@ function resultsURL(sId, qId, dateId, groupId, groupType, geoTable, fn, lang, ti
 		if(groupType != null) {
 			url += "&group_t=" + groupType;
 		}
-		if(geoTable != null && geoTable.toLowerCase() != "none") {
-			url += "&geoTable=" + geoTable;
-		}
 	}
+	url += regionParams(region);
 	if(fn) {
 		url += "&fn=" + fn;
 	} else {

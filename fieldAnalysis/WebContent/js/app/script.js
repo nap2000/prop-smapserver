@@ -573,13 +573,6 @@ export function deleteSurveyDataURL(sId) {
     return url;
 }
 
-function regionURL(region) {
-
-    var url = "/surveyKPI/region/";
-    url += region;
-
-    return url;
-}
 
 export { formItemsURL, resultsURL };
 
@@ -597,12 +590,6 @@ export function surveyList () {
 
 }
 
-
-export function regionsURL () {
-
-    var url = "/surveyKPI/regions";
-    return url;
-}
 
 /*
  * Web service handler for exporting a table

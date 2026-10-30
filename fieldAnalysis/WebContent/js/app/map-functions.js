@@ -536,10 +536,19 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 	    upperBoundary: md["startIdx"] + md["span"]
 	});
 
+	// Polygons, regions the records have been grouped by, are not clustered
+	var isRegion = false;
+	for(var i = 0; i < featuresObj.length; i++) {
+		if(featuresObj[i].geometry && featuresObj[i].geometry.CLASS_NAME.indexOf("Polygon") >= 0) {
+			isRegion = true;
+			break;
+		}
+	}
+
 	// Time series layers are clustered too, a filter strategy cannot be combined with clustering
 	// so the features in the time window are added to the layer by applyTimeFilter
 	var resultsLayer = new OpenLayers.Layer.Vector(key, {
-			strategies: [clusterStrategy],
+			strategies: isRegion ? [] : [clusterStrategy],
 			styleMap:styleMap
 		});
 

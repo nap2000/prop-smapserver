@@ -327,5 +327,102 @@ function addSettingsButton(title, pIdSecondary, pIdPrimary) {
 	}
 }
 
+/*
+ * Controls in a map panel's sidebar to create and delete the hexagonal grids of the panel's survey bundle
+ * A grid covers the area of the map that is showing when it is created
+ */
+export function addGridControls(idx) {
 
+	var views = globals.gSelector.getViews() || [],
+		view,
+		$grids = $('#mGrids' + idx),
+		i;
 
+	for(i = 0; i < views.length; i++) {
+		if(views[i].pId == idx) {
+			view = views[i];
+		}
+	}
+	if(!view || view.subject_type !== "survey" || !(view.sId > 0) || !(globals.gIsAnalyst || globals.gIsAdministrator)) {
+		$grids.prev('.grid_heading').hide();
+		$grids.hide();
+		return;
+	}
+
+	$grids.html('<div class="grid_list mb-2"></div>' +
+		'<p class="small">' + htmlEncode(localise.set["a_grid_new"]) + '</p>' +
+		'<input type="text" class="form-control form-control-sm mb-1 grid_name" placeholder="' + htmlEncode(localise.set["c_name"]) + '">' +
+		'<label class="small">' + htmlEncode(localise.set["a_cell_size"]) + '</label>' +
+		'<input type="number" class="form-control form-control-sm mb-1 grid_size" min="10" value="500">' +
+		'<button type="button" class="btn btn-sm btn-primary grid_create">' + htmlEncode(localise.set["c_create"]) + '</button>' +
+		'<p class="small grid_msg mt-1"></p>');
+
+	refreshGridList(view, $grids);
+
+	$grids.find('.grid_create').on('click', function() {
+		var map = globals.gSelector.getMap(idx),
+			bounds = map.getExtent().clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326")),
+			grid = {
+				sId: view.sId,
+				name: $grids.find('.grid_name').val(),
+				cellSize: parseInt($grids.find('.grid_size').val(), 10),
+				extent: [bounds.left, bounds.bottom, bounds.right, bounds.top]
+			};
+
+		$grids.find('.grid_msg').text("");
+		$.ajax({
+			type: "POST",
+			url: "/surveyKPI/regions",
+			cache: false,
+			data: { grid: JSON.stringify(grid) },
+			success: function() {
+				$grids.find('.grid_name').val("");
+				$grids.find('.grid_msg').text(localise.set["a_grid_made"]);
+				refreshGridList(view, $grids);
+			},
+			error: function(xhr) {
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				}
+				$grids.find('.grid_msg').text(localise.set["c_error"] + ": " + (xhr.responseText || xhr.status));
+			}
+		});
+	});
+}
+
+function refreshGridList(view, $grids) {
+
+	$.ajax({
+		url: "/surveyKPI/regions?sId=" + view.sId,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			var $list = $grids.find('.grid_list').empty();
+			$.each(data.grids || [], function(j, grid) {
+				var $row = $('<div class="d-flex justify-content-between align-items-center small mb-1"></div>');
+				$row.append($('<span></span>').text(grid.name + " (" + grid.cell_size + "m)"));
+				$row.append($('<button type="button" class="btn btn-sm btn-outline-danger"></button>')
+					.text(localise.set["c_del"])
+					.on('click', function() {
+						var $btn = $(this);
+						if(!$btn.data("confirm")) {		// Second click deletes, avoids a confirm dialog
+							$btn.data("confirm", true).text(localise.set["c_del"] + "?");
+							return;
+						}
+						$.ajax({
+							type: "DELETE",
+							url: "/surveyKPI/regions/" + grid.id + "?sId=" + view.sId,
+							cache: false,
+							success: function() {
+								refreshGridList(view, $grids);
+							},
+							error: function(xhr) {
+								$grids.find('.grid_msg').text(localise.set["c_error"] + ": " + (xhr.responseText || xhr.status));
+							}
+						});
+					}));
+				$list.append($row);
+			});
+		}
+	});
+}

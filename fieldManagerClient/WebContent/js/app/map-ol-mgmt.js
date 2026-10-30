@@ -39,7 +39,6 @@ window.addMarker = addMarker;
 window.zoomTo = zoomTo;
 window.refreshMap = refreshMap;
 window.refreshMapAssignments = refreshMapAssignments;
-window.setMapRegions = setMapRegions;
 window.updateMapTaskSelections = updateMapTaskSelections;
 window.registerForNewTasks = registerForNewTasks;
 window.clearNewTasks = clearNewTasks;
@@ -284,77 +283,6 @@ function refreshMapAssignments(data) {
             {onSelect: onFeatureSelectOL, onUnselect: onFeatureUnselect});
 	map.addControl(selectResultsControl);
 	selectResultsControl.activate();
-
-}
-
-/*
- * This function adds a vector layer to the map, this layer should consist only of polygons
- * Commonly it would be the same layer that is being used to geo-spatially aggregate the survey
- * data, however if the data isn't being aggregated then it can be any arbitrary vector layer
- */
-function setMapRegions(region) {
-	
-	
-	function getRegion(theRegion) {
-
-		var url="/surveyKPI/region/" + theRegion;
-
-		addHourglass();
-
-		$.ajax({
-			url: url,
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				var features = JSON.stringify(data);
-
-				var featuresObj = new OpenLayers.Format.GeoJSON({
-			        	'internalProjection': new OpenLayers.Projection("EPSG:900913"),
-			        	'externalProjection': new OpenLayers.Projection("EPSG:4326")
-					}).read(features);
-			
-				if(featuresObj.constructor != Array) {
-			        featuresObj = [featuresObj];
-			    }
-				
-				var defaultStyle = new OpenLayers.Style(
-						{				
-							pointRadius: "${radius}",
-							fillOpacity: 0.0,
-							strokeWidth: "${width}",
-						});
-				var selectStyle = new OpenLayers.Style(
-						{
-							'fillColor': "blue",
-							'fillOpacity': 0.5
-						});
-				
-				var styleMap = new OpenLayers.StyleMap({'default': defaultStyle,
-			        'select': selectStyle});
-				
-				var regionLayer = new OpenLayers.Layer.Vector(theRegion, {styleMap:styleMap});
-				regionLayer.addFeatures(featuresObj);
-				map.addLayer(regionLayer);
-				zoomTo(theRegion);
-				allLayers[1] = regionLayer;
-
-			}, error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
-				} else {
-					alert("Failed to set map regions");
-				}
-			}
-			
-		});	
-	}
-
-	if(globals.gCurrentLayer) {
-		clearLayer(globals.gCurrentLayer);
-	}
-	globals.gCurrentLayer = region;
-	getRegion(region);
 
 }
 
