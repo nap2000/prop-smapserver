@@ -25,7 +25,7 @@ import localise from "localise";
 import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault, getTrailData, htmlEncode } from "common";
 import { getEffectiveDateFilter } from "data";
 import { addLayer, addSharedMaps, zoomToData } from "./map-functions";
-import { showSettings } from "./survey_control";
+import { regionLabelOptions, regionOptions, selectRegion, showSettings } from "./survey_control";
 
 /*
  * Globals specifically for OpenLayers Use
@@ -328,10 +328,11 @@ function addSettingsButton(title, pIdSecondary, pIdPrimary) {
 }
 
 /*
- * Controls in a map panel's sidebar to create and delete the hexagonal grids of the panel's survey bundle
- * A grid covers the area of the map that is showing when it is created
+ * Controls in a map panel's sidebar to group the map by region and to create and delete the
+ * hexagonal grids of the panel's survey bundle.  A grid covers the area of the map that is showing
+ * when it is created.  Changing the group saves the panel with savePanel.
  */
-export function addGridControls(idx) {
+export function addGridControls(idx, savePanel) {
 
 	var views = globals.gSelector.getViews() || [],
 		view,
@@ -349,7 +350,16 @@ export function addGridControls(idx) {
 		return;
 	}
 
-	$grids.html('<div class="grid_list mb-2"></div>' +
+	$grids.html('<div class="region_group mb-3">' +
+			'<label class="small">' + htmlEncode(localise.set["a_gb"]) + '</label>' +
+			'<select class="form-select form-select-sm region_select"></select>' +
+			'<div class="region_label_wrap mt-1" style="display:none;">' +
+				'<label class="small">' + htmlEncode(localise.set["a_region_label"]) + '</label>' +
+				'<select class="form-select form-select-sm region_label_select"></select>' +
+			'</div>' +
+		'</div>' +
+		'<p class="small fw-bold mb-1">' + htmlEncode(localise.set["a_hex_grids"]) + '</p>' +
+		'<div class="grid_list mb-2"></div>' +
 		'<p class="small">' + htmlEncode(localise.set["a_grid_new"]) + '</p>' +
 		'<input type="text" class="form-control form-control-sm mb-1 grid_name" placeholder="' + htmlEncode(localise.set["c_name"]) + '">' +
 		'<label class="small">' + htmlEncode(localise.set["a_cell_size"]) + '</label>' +
@@ -357,7 +367,25 @@ export function addGridControls(idx) {
 		'<button type="button" class="btn btn-sm btn-primary grid_create">' + htmlEncode(localise.set["c_create"]) + '</button>' +
 		'<p class="small grid_msg mt-1"></p>');
 
-	refreshGridList(view, $grids);
+	// Grouping by region needs a question whose answers are coloured
+	if(!view.qId || view.qId == -1) {
+		$grids.find('.region_group').hide();
+	}
+
+	refreshGridList(view, $grids, savePanel);
+
+	$grids.find('.region_select').on('change', function() {
+		var region = $(this).val();
+		if(region.indexOf("shape:") === 0) {
+			showRegionLabels(view, $grids, "");
+		} else {
+			$grids.find('.region_label_wrap').hide();
+		}
+		saveRegion(view, region, savePanel);
+	});
+	$grids.find('.region_label_select').on('change', function() {
+		saveRegion(view, $grids.find('.region_select').val() + ":" + $(this).val(), savePanel);
+	});
 
 	$grids.find('.grid_create').on('click', function() {
 		var map = globals.gSelector.getMap(idx),
@@ -378,7 +406,7 @@ export function addGridControls(idx) {
 			success: function() {
 				$grids.find('.grid_name').val("");
 				$grids.find('.grid_msg').text(localise.set["a_grid_made"]);
-				refreshGridList(view, $grids);
+				refreshGridList(view, $grids, savePanel);
 			},
 			error: function(xhr) {
 				if(xhr.readyState == 0 || xhr.status == 0) {
@@ -390,14 +418,59 @@ export function addGridControls(idx) {
 	});
 }
 
-function refreshGridList(view, $grids) {
+/*
+ * Save the panel grouped by a region, the panel is redrawn when it has been saved
+ */
+function saveRegion(view, region, savePanel) {
+	view.region = region;
+	view.groupQuestionId = -1;
+	savePanel(view);
+}
+
+/*
+ * Show the questions that can label the polygons of a survey
+ */
+function showRegionLabels(view, $grids, label) {
+	var questions = globals.gSelector.getSurveyQuestions(view.sId, view.lang),
+		$label = $grids.find('.region_label_select');
+
+	function show(list) {
+		$label.empty().append(regionLabelOptions(list));
+		$label.val(label || "");
+		$grids.find('.region_label_wrap').show();
+	}
+
+	if(questions) {
+		show(questions);
+	} else {
+		$.ajax({
+			url: "/surveyKPI/questionList/" + view.sId + "/" + encodeURIComponent(view.lang) + "?exc_read_only=false",
+			dataType: 'json',
+			cache: false,
+			success: show
+		});
+	}
+}
+
+function refreshGridList(view, $grids, savePanel) {
 
 	$.ajax({
 		url: "/surveyKPI/regions?sId=" + view.sId,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
-			var $list = $grids.find('.grid_list').empty();
+			var $list = $grids.find('.grid_list').empty(),
+				$select = $grids.find('.region_select'),
+				region = view.region || "";
+
+			$select.empty().append(regionOptions(data));
+			selectRegion($select, region);
+			if(region.indexOf("shape:") === 0 && $select.val() !== "-1") {
+				showRegionLabels(view, $grids, region.split(":")[2]);
+			} else {
+				$grids.find('.region_label_wrap').hide();
+			}
+
 			$.each(data.grids || [], function(j, grid) {
 				var $row = $('<div class="d-flex justify-content-between align-items-center small mb-1"></div>');
 				$row.append($('<span></span>').text(grid.name + " (" + grid.cell_size + "m)"));
@@ -414,7 +487,11 @@ function refreshGridList(view, $grids) {
 							url: "/surveyKPI/regions/" + grid.id + "?sId=" + view.sId,
 							cache: false,
 							success: function() {
-								refreshGridList(view, $grids);
+								if(view.region === "grid:" + grid.id) {
+									saveRegion(view, "-1", savePanel);		// The panel was grouped by the deleted grid
+								} else {
+									refreshGridList(view, $grids, savePanel);
+								}
 							},
 							error: function(xhr) {
 								$grids.find('.grid_msg').text(localise.set["c_error"] + ": " + (xhr.responseText || xhr.status));

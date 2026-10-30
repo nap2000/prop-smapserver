@@ -618,12 +618,12 @@ function setPanelType(type, idx, period, qId, subject_type) {
 				<div class="dataOptions" id="mDataOptions${idx}"></div>
 				<h3>${localise.set["c_settings"] || "Settings"}</h3>
 				<div id="mLayerSettings${idx}"></div>
-				<h3 class="grid_heading">${localise.set["a_grids"] || "Grids"}</h3>
+				<h3 class="grid_heading">${localise.set["a_regions"] || "Regions"}</h3>
 				<div class="grid_controls" id="mGrids${idx}"></div>
 			</div>`;
 		$panelContent.append(html);
 		initializeMap(idx);
-		addGridControls(idx);
+		addGridControls(idx, savePanels);
 		break;
 	case "table":
 		if(subject_type === 'survey') {

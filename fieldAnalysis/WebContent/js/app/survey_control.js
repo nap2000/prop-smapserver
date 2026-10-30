@@ -701,16 +701,26 @@ function setSurveyViewSurveys(surveyList, sId, elem) {
  */
 function setSurveyViewRegions(list, region, sId) {
 
-	var $regionSelect = $('#settings_group'),
-		parts = (region || "").split(":"),
-		h = [],
+	var $regionSelect = $('#settings_group');
+
+	$regionSelect.empty().append(regionOptions(list));
+	selectRegion($regionSelect, region);
+	gSurveyControlView.region = region;
+	setRegionLabelList(sId, (region || "").split(":")[2]);
+}
+
+/*
+ * The options of a Group by select for a map, from GET /surveyKPI/regions
+ */
+export function regionOptions(list) {
+	var h = [],
 		idx = -1;
 
 	h[++idx] = '<option value="-1">' + htmlEncode(localise.set["c_none"]) + '</option>';
 	if(list.grids && list.grids.length > 0) {
 		h[++idx] = '<optgroup label="' + htmlEncode(localise.set["a_hex_grids"]) + '">';
 		$.each(list.grids, function(j, item) {
-			h[++idx] = '<option value="grid:' + item.id + '">' + htmlEncode(item.name + " (" + item.cell_size + "m)") + '</option>';
+			h[++idx] = '<option value="grid:' + htmlEncode(item.id) + '">' + htmlEncode(item.name + " (" + item.cell_size + "m)") + '</option>';
 		});
 		h[++idx] = '</optgroup>';
 	}
@@ -721,14 +731,35 @@ function setSurveyViewRegions(list, region, sId) {
 		});
 		h[++idx] = '</optgroup>';
 	}
-	$regionSelect.empty().append(h.join(''));
+	return h.join('');
+}
 
-	$regionSelect.val(parts.length > 1 ? parts[0] + ":" + parts[1] : "-1");
-	if(!$regionSelect.val()) {
-		$regionSelect.val("-1");		// The region has been deleted
+/*
+ * Select a saved region, grid:{id} or shape:{question}:{label question}, None if it has been deleted
+ */
+export function selectRegion($select, region) {
+	var parts = (region || "").split(":");
+	$select.val(parts.length > 1 ? parts[0] + ":" + parts[1] : "-1");
+	if(!$select.val()) {
+		$select.val("-1");
 	}
-	gSurveyControlView.region = region;
-	setRegionLabelList(sId, parts.length > 2 ? parts[2] : undefined);
+}
+
+/*
+ * The options of a Label select, the questions that can name a survey's polygons
+ */
+export function regionLabelOptions(questions) {
+	var h = [],
+		idx = -1;
+
+	h[++idx] = '<option value="">' + htmlEncode(localise.set["c_none"]) + '</option>';
+	$.each(questions || [], function(j, item) {
+		if(item.type && !item.type.startsWith("geo") && item.type !== "begin group" && item.type !== "end group"
+				&& item.type !== "begin repeat" && item.type !== "image" && item.type !== "audio" && item.type !== "video") {
+			h[++idx] = '<option value="' + htmlEncode(item.name) + '">' + htmlEncode(item.name + " : " + (item.q || "")) + '</option>';
+		}
+	});
+	return h.join('');
 }
 
 /*
@@ -738,9 +769,7 @@ function setRegionLabelList(sId, label, attempt) {
 
 	var $label = $('#settings_region_label'),
 		language = $('#settings_language option:selected').val(),
-		questions = globals.gSelector.getSurveyQuestions(sId, language),
-		h = [],
-		idx = -1;
+		questions = globals.gSelector.getSurveyQuestions(sId, language);
 
 	if(($('#settings_group').val() || "").indexOf("shape:") !== 0) {
 		$('.region_label_row').hide();
@@ -750,14 +779,7 @@ function setRegionLabelList(sId, label, attempt) {
 		setTimeout(function() { setRegionLabelList(sId, label, (attempt || 0) + 1); }, 500);
 	}
 
-	h[++idx] = '<option value="">' + htmlEncode(localise.set["c_none"]) + '</option>';
-	$.each(questions || [], function(j, item) {
-		if(item.type && !item.type.startsWith("geo") && item.type !== "begin group" && item.type !== "end group"
-				&& item.type !== "begin repeat" && item.type !== "image" && item.type !== "audio" && item.type !== "video") {
-			h[++idx] = '<option value="' + htmlEncode(item.name) + '">' + htmlEncode(item.name + " : " + (item.q || "")) + '</option>';
-		}
-	});
-	$label.empty().append(h.join(''));
+	$label.empty().append(regionLabelOptions(questions));
 	if(label) {
 		$label.val(label);
 	}

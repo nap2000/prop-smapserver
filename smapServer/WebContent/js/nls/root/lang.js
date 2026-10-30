@@ -572,7 +572,7 @@ define({
     "a_ul": "User Locations",
     "a_tc": "This Map",
     "a_trail": "Trail",
-    "a_grids": "Grids",
+    "a_regions": "Regions",
     "a_hex_grids": "Hex grids",
     "a_polygons": "Polygons",
     "a_region_label": "Label",
