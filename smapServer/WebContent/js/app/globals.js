@@ -147,7 +147,6 @@ import localise from "./localise.js";
 
         // Dashboard
         gMainTable: undefined,			// Data tables
-        gReports: undefined,			// reports
         gCharts: {},					// charts
 	    gRecordMaps: [],                // Maps shown when editing a record
 	    gRecordChangeMaps: [],          // Maps shown when viewing change history

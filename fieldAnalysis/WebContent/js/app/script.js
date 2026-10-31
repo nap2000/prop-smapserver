@@ -17,7 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import globals from "globals";
-import { addDatePickList, addFormPickList, addGeomPickList, cleanFileName, downloadFile, formItemsURL, getLanguageList, getReports, getSelectedForm, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
+import { addDatePickList, addFormPickList, addGeomPickList, cleanFileName, downloadFile, formItemsURL, getLanguageList, getSelectedForm, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
 import { getSurveyMetaSE } from "data";
 import { refreshAnalysisData, getViewSurveys } from "./survey_control";
 
@@ -144,8 +144,6 @@ export function initialiseDialogs() {
             embedImages = $('#embedImages:checked').prop("checked"),
             incHxl = $('#incHxl:checked').prop("checked"),
             exportReadOnly = $('#exportReadOnly').prop("checked"),
-            sources = $('#sources').prop("checked"),
-            exportReport = $('#export_report_defn').val(),
             forms = [],
             form,
             name_questions = [],
@@ -232,10 +230,6 @@ export function initialiseDialogs() {
 
             url = exportSurveyMediaURL(sId, displayName, undefined, mediaQuestion, name_questions.join(','),
                 exp_from_date, exp_to_date, dateQuestionId, filter);
-
-        } else if(format === "lqas") {
-
-            url = exportSurveyLqasURL(sId, sources, exportReport);
 
         } else {
             if(xlstype === "new_xlsx") {
@@ -357,9 +351,6 @@ $('.exportcontrol').hide();
         $('.showshape').show();
     } else if(format === "media") {
         $('.showmedia, .showlang').show();
-    } else if(format === "lqas") {
-        $('.showlqas, .selectsurvey').show();
-        getReports(showReportList, undefined, "lqas");
     } else {    // Default including xls
         $('.showro,.showlang, .mergeselmult').show();
         if(format === "xls" && xlsType === "new_xlsx") {
@@ -430,27 +421,6 @@ function addMediaPickList() {
         $('#export_media_question').html(h.join(''));
         $('.mediaselect').html(h2.join(''));
     }
-
-}
-
-/*
- * Add the Custom Report Configuration Select list
- */
-function addCustomReportList(templates) {
-
-    var i,
-        h = [],
-        idx = -1;
-
-    for(i = 0; i < templates.length; i++) {
-        h[++idx] = '<option value="';
-        h[++idx] = templates[i].id;
-        h[++idx] = '">';
-        h[++idx] = templates[i].name;
-        h[++idx] = '</option>';
-    }
-
-    $('#export_report_defn').html(h.join(''));
 
 }
 
@@ -791,41 +761,6 @@ function exportSurveyMediaURL (sId, filename, form, mediaQuestion, nameQuestions
     }
 
     return url;
-}
-
-function exportSurveyLqasURL (sId, sources, reportDefn,
-                              exp_from_date,
-                              exp_to_date,
-                              dateQuestionId) {
-
-    var url = "/surveyKPI/lqasExport/",
-        hasParam = false;
-
-    url += sId;
-    url += "/" + reportDefn;
-
-    if(sources) {
-        url+="?sources=true";
-        hasParam = true;
-    }
-
-    if(dateQuestionId > 0) {
-        if(hasParam) {
-            url += "&";
-        } else {
-            url += "?";
-        }
-        url += "dateId=" + dateQuestionId;
-
-        if(exp_from_date) {
-            url += "&from=" + exp_from_date;
-        }
-        if(exp_to_date) {
-            url += "&to=" + exp_to_date;
-        }
-    }
-
-    return encodeURI(url);
 }
 
 /*
