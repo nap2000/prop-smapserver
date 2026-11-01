@@ -450,6 +450,10 @@ function refreshGridList(view, $grids, savePanel) {
 			$grids.data("regions", data);
 			$select.empty().append(regionOptions(data, view.sId));
 			selectRegion($select, region);
+			if(region.indexOf("grid:") === 0 && $select.val() === "-1") {
+				saveRegion(view, "-1", savePanel);		// The grid was deleted from another panel
+				return;
+			}
 			if(region.indexOf("shape:") === 0 && $select.val() !== "-1") {
 				showRegionLabels($grids, regionLabelOf(region));
 			} else {
