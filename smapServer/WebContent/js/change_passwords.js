@@ -21,7 +21,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import $ from "jquery";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
-import { addHourglass, getLoggedInUser, htmlEncode, removeHourglass } from "./app/common";
+import { addHourglass, getLoggedInUser, htmlEncode, localPath, removeHourglass } from "./app/common";
 
 var gUserLocale = navigator.language;
 if (typeof localStorage !== "undefined") {
@@ -51,9 +51,9 @@ window.gUserLocale = gUserLocale;
 			if(params.indexOf('expired') >= 0) {
 				$('.pwd_alert').show().removeClass('alert-danger alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
 
-				// Only a path on this server
-				var returnTo = new URLSearchParams(location.search).get('return');
-				if(returnTo && /^\/(?![\/\\])/.test(returnTo)) {
+				// Only a path on this server, and not this page
+				var returnTo = localPath(new URLSearchParams(location.search).get('return'));
+				if(returnTo && returnTo.indexOf('/app/changePassword.html') !== 0) {
 					gReturnTo = returnTo;
 					$('#pwd_continue').attr('href', gReturnTo);
 				}

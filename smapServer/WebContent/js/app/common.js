@@ -7179,6 +7179,28 @@ function conversationIcons(msg) {
 }
 
 /*
+ * A path on this site to go to, from a parameter such as "return", or undefined if it is not one
+ * Resolved the way the browser will, rather than checking characters, as the browser strips
+ * tabs and newlines so "/\t/evil.com" becomes "//evil.com".  twoFactor.js has its own copy as it
+ * is not part of a bundle.
+ */
+function localPath(path) {
+	var url;
+	if(!path || path.charAt(0) !== '/') {
+		return undefined;
+	}
+	try {
+		url = new URL(path, window.location.origin);
+	} catch (e) {
+		return undefined;
+	}
+	if(url.origin !== window.location.origin) {
+		return undefined;
+	}
+	return url.pathname + url.search + url.hash;
+}
+
+/*
  * Encode text for inclusion in HTML
  * Empty, false, null and undefined give an empty string, rather than undefined which reads as the word "undefined"
  * once it is joined into markup.  A number, including 0, is encoded as its text
@@ -7739,6 +7761,7 @@ export {
 	handleLogout,
 	htmlDecode,
 	htmlEncode,
+	localPath,
 	isBusinessServer,
 	loadSurveys,
 	loadSurveyIdentList,
