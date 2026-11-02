@@ -287,7 +287,7 @@ function setFeatureValue(data, pId1, pId2, view, title, map, dataView, savePanel
 				if(dataView) {
 					dataView.mapOption = data.option;
 					if(savePanel) {
-						savePanel(dataView);
+						savePanel(dataView, true);		// The map is redrawn here, reloading the panels would lose the choice
 					}
 				}
 				addLayer(data, pId1, pId2, view, title, map, dataView, savePanel);

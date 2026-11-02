@@ -731,9 +731,10 @@ function expandFunction($this) {
 }
 
 /*
- * Save the panels to the database
+ * Save the panels to the database, then load them again so they are redrawn with the change, unless
+ * keepShown is true and the panel already shows the change
  */
-function savePanels(newPanel) {
+function savePanels(newPanel, keepShown) {
 	var views = globals.gSelector.getViews(),
 		idx,
 		i,
@@ -780,7 +781,7 @@ function savePanels(newPanel) {
 		  data: postData,
 		  success: function(data, status) {
 			  removeHourglass();
-			  if(handleLogout(data)) {
+			  if(handleLogout(data) && !keepShown) {
 				  getPanels(globals.gCurrentProject);
 			  }
 		  }, error: function(data, status) {
