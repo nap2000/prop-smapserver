@@ -32,6 +32,7 @@ import { getRegionLabelQuestions, regionLabelOf, regionLabelOptions, regionOptio
  */
 	
 var defaultMapExtent = [-20037508, -20037508, 20037508, 20037508.34];
+var gSavePanel;		// Saves a panel, set with the drawer controls
 
 // OL2 Google layer div is created asynchronously; guard against uninitialized state
 if (typeof OpenLayers !== "undefined" && OpenLayers.Layer && OpenLayers.Layer.Google) {
@@ -218,7 +219,7 @@ export function setMap(view, secondaryLayer) {
 		if(view.results) {
 			console.log("setMap: view.pId=" + view.pId + " results length=" + view.results.length + " map=" + (map ? "ok" : "NULL"));
 			for(i = 0; i < view.results.length; i++) {
-				addLayer(view.results[i], view.pId, view.pId, view, view.title + i + " " + view.pId, map);
+				addLayer(view.results[i], view.pId, view.pId, view, view.title + i + " " + view.pId, map, view, gSavePanel);
 			}
 		} else {
 			console.log("setMap: view " + view.title + " has no results");
@@ -237,7 +238,7 @@ export function setMap(view, secondaryLayer) {
 					addSettingsButton(views[i].title, views[i].pId, view.pId);
 
 					for(j = 0; j < views[i].results.length; j++) {
-						addLayer(views[i].results[j], view.pId, views[i].pId, view, views[i].title + j + " " + views[i].pId, map);
+						addLayer(views[i].results[j], view.pId, views[i].pId, view, views[i].title + j + " " + views[i].pId, map, views[i], gSavePanel);
 					}
 				}
 			} 
@@ -333,6 +334,8 @@ function addSettingsButton(title, pIdSecondary, pIdPrimary) {
  * when it is created.  Changing the group saves the panel with savePanel.
  */
 export function addGridControls(idx, savePanel) {
+
+	gSavePanel = savePanel;		// Also saves the value a map shows when it is chosen in the drawer
 
 	var views = globals.gSelector.getViews() || [],
 		view,

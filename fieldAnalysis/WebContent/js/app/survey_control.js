@@ -166,7 +166,8 @@ function copyView(v) {
 		    tWrapText: v.tWrapText,
 			geomFormQuestions: v.geomFormQuestions,
 		    selectedGeomQuestion: v.selectedGeomQuestion,
-		    chartType: v.chartType
+		    chartType: v.chartType,
+		    mapOption: v.mapOption
 	};
 	
 	return cp;

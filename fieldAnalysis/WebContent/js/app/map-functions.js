@@ -24,7 +24,12 @@ var MAX_CLUSTER_LABELS = 3;		// Labels shown on a cluster of user activity or us
 var gCurrentBoundsLayer,
 	gSelectedBounds;
 
-export function addLayer(data, pId1, pId2, view, title, map) {
+/*
+ * dataView is the panel whose data this is, the map's own panel or one shown on it as a layer.  The value
+ * chosen to show is kept in it as mapOption, and saved with savePanel when there is one, so the map shows
+ * the same value when it is next drawn
+ */
+export function addLayer(data, pId1, pId2, view, title, map, dataView, savePanel) {
 	"use strict";
 	
 	var itemIdx,
@@ -54,7 +59,7 @@ export function addLayer(data, pId1, pId2, view, title, map) {
 	
 	onFeatureUnselect();
 	if(typeof question !== "undefined" && question !== "None") {
-		setFeatureValue(data, pId1, pId2, view, title, map);	// Set the question level feature values
+		setFeatureValue(data, pId1, pId2, view, title, map, dataView, savePanel);	// Set the question level feature values
 	}
 	
 	if(typeof view.bounds === "undefined") {
@@ -200,7 +205,7 @@ export function addLayer(data, pId1, pId2, view, title, map) {
 	
 }
 
-function setFeatureValue(data, pId1, pId2, view, title, map) {
+function setFeatureValue(data, pId1, pId2, view, title, map, dataView, savePanel) {
 	
 	var groups = data.features,
 		fn = data.fn,
@@ -254,13 +259,20 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 
 			$btnLayerSelect = $('#mDataOptions' + pId1 + "_" + pId2);
 
+			// The value chosen before, or the first if it is no longer in the data
+			var checkedIdx = 0;
+			for(i = 0; i < pareto.length; i++) {
+				if(dataView && dataView.mapOption && cols[pareto[i]] === dataView.mapOption) {
+					checkedIdx = i;
+				}
+			}
 			for(i = 0; i < pareto.length; i++) {		// Add in descending order of series total value
 				btns[++j] = '<div class="form-check">';
 				btns[++j] = '<input class="form-check-input" type="radio" id="radio';
 				btns[++j] = pId1 + '_' + pId2 + '_' + i;
 				btns[++j] = '" name="radio' + pId1 + '_' +  pId2;
 				btns[++j] = '" value="' + pareto[i] + '"';
-				if(i == 0) {
+				if(i == checkedIdx) {
 					btns[++j] = ' checked="checked"';
 				}
 				btns[++j] = '><label class="form-check-label" for="radio'+ pId1 + '_' + pId2 + '_' + i + '">';
@@ -272,7 +284,13 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 			$btnLayerSelect.find('input').change(function() {
 				data.optionIdx = $(this).val();
 				data.option = cols[data.optionIdx];
-				addLayer(data, pId1, pId2, view, title, map);
+				if(dataView) {
+					dataView.mapOption = data.option;
+					if(savePanel) {
+						savePanel(dataView);
+					}
+				}
+				addLayer(data, pId1, pId2, view, title, map, dataView, savePanel);
 			});
 		}
 	} 
