@@ -1687,8 +1687,10 @@ localise.initLocale(gUserLocale).then(function () {
         // Remember the value as the search box is recreated, and loses its value, whenever
         //  the table is redrawn.  The search box is not referred to by id as data tables
         //  generates a new one, dt-search-n, each time it creates the box
-        globals.gMainTable.off('search.dt.mf').on('search.dt.mf', function () {
-            gTableSearch = globals.gMainTable.search();
+        // The handler stays on the table element when the table is destroyed, and a new table searches
+        //  while it is being created, before globals.gMainTable refers to it, so use the table that searched
+        globals.gMainTable.off('search.dt.mf').on('search.dt.mf', function (e, settings) {
+            gTableSearch = new $.fn.dataTable.Api(settings).search();
             checkFilters();
         });
 
