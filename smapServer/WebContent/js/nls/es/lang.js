@@ -1015,6 +1015,7 @@ define(
     "ed_qh": "Texto de Ayuda",
     "ed_cl": "Lista de Selección",
     "ed_appearance": "Apariencia",
+    "u_org_appearance": "Apariencia de la organización",
     "ed_parameters": "Parámetros",
     "ed_con": "Restricción",
     "ed_con_msg": "Mens. Restricción",

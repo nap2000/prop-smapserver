@@ -719,6 +719,7 @@ define({
     "ed_qh": "Question Hint",
     "ed_cl": "Liste de Choix",
     "ed_appearance": "Apparence",
+    "u_org_appearance": "Apparence de l'organisation",
     "ed_parameters": "Paramètres",
     "ed_con": "Contrainte",
     "ed_con_msg": "Constraint Message",

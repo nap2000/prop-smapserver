@@ -449,6 +449,7 @@ define({
     "ed_qh": "Question Hint",
     "ed_cl": "Choice List",
     "ed_appearance": "Appearance",
+    "u_org_appearance": "مظهر المنظمة",
     "ed_con": "Constraint",
     "ed_con_msg": "Constraint Message",
     "ed_rel": "Relevant",

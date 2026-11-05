@@ -804,6 +804,7 @@ define({
     "ed_qh": "Sugestão da questão",
     "ed_cl": "Lista de Opções",
     "ed_appearance": "Aparência",
+    "u_org_appearance": "Aparência da organização",
     "ed_parameters": "Parâmetros",
     "ed_con": "Limite",
     "ed_con_msg": "Mensagem do limite",
