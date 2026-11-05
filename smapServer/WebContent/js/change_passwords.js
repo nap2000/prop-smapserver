@@ -83,7 +83,8 @@ window.gUserLocale = gUserLocale;
 				history.back();
 			});
 
-			$('#changePasswordSubmit').click(function(e) {
+			// On the form's submit, not the button's click, so the browser sees a submission and offers to save the password
+			$('#changePassword').on('submit', function(e) {
 				e.preventDefault();
 				changePasswordSubmit(e);
 			});
@@ -172,11 +173,11 @@ window.gUserLocale = gUserLocale;
 			data: { passwordDetails: pdString },
 			success: function(data, status) {
 				var ident = $('#id').val();
+
+				// Hidden as soon as the change succeeds, which tells the browser the submission worked, so it offers to save the password
+				$('#pwd_fields').hide();
 				logonAgain(ident, pd.password, function() {
 					removeHourglass();
-
-					// Hiding the fields also tells the browser the form was submitted, so it offers to save the password
-					$('#pwd_fields').hide();
 					$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
 					$('.pwd_home').show();
 					savePassword(ident, pd.password);
