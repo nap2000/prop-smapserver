@@ -707,7 +707,7 @@ localise.initLocale(gUserLocale).then(function () {
 				assignObj["blank"] = false;
 				if(initial_data === "prepopulate") {
 					assignObj["prepopulate"] = true;
-				}  if(initial_data === "update_results") {
+				} else if(initial_data === "update_results") {
 					assignObj["update_results"] = true;
 				} else {
 					assignObj["blank"] = true;
