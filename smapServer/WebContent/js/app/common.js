@@ -2241,7 +2241,7 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 	}
 
 	for(i = 0; i < list.length; i++) {
-		$languageSelect.append('<option value="' + list[i] + '">' + htmlEncode(list[i]) + '</option>');
+		$languageSelect.append('<option value="' + htmlEncode(list[i]) + '">' + htmlEncode(list[i]) + '</option>');
 	}
 
 	if(language) {
