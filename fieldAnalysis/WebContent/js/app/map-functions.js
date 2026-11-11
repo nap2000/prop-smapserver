@@ -350,7 +350,11 @@ function setFeatureValue(data, pId1, pId2, view, title, map, dataView, savePanel
 		data.features[i].properties.units = data.units;
 		data.features[i].properties.question = data.question;
 		data.features[i].properties.selected = data.cols[data.optionIdx];
-		data.features[i].properties.result = matrix[data.optionIdx][i];
+		var result = matrix[data.optionIdx][i];
+		if(typeof result === "undefined" && (fn === "percent" || fn === "count")) {
+			result = 0;		// None of the feature's records gave the answer
+		}
+		data.features[i].properties.result = result;
 	}
 }
 
@@ -885,16 +889,19 @@ export function addSharedMaps(map, sharedMaps) {
 			if (clusterData) {
 				computedResult = 0.0;
 				if (aDataItem.aggregation === "percent") {
+					// Weight each member's percent by its records, a missing answer counts as 0
 					total = 0; totalRecs = 0;
 					for (i = 0; i < clusterData.length; i++) {
-						total += clusterData[i].attributes.result;
-						totalRecs++;
+						var mAttrs = clusterData[i].attributes;
+						var mRecs = mAttrs.prikeys && mAttrs.prikeys.length ? mAttrs.prikeys.length : 1;
+						total += (Number(mAttrs.result) || 0) * mRecs;
+						totalRecs += mRecs;
 					}
 					computedResult = totalRecs > 0 ? Math.round(100 * total / totalRecs) / 100 : 0.0;
 				} else if (aDataItem.aggregation === "count") {
 					computedResult = 0;
 					for (i = 0; i < clusterData.length; i++) {
-						computedResult += clusterData[i].attributes.result;
+						computedResult += Number(clusterData[i].attributes.result) || 0;
 					}
 				} else {
 					computedResult = "";
