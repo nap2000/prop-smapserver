@@ -2617,8 +2617,9 @@ localise.initLocale(gUserLocale).then(function () {
 
             /*
              * Multi select is only available for Admin, Security Manager and analyst roles
+             * Not on the rows of a sub form, as they belong to records that are edited as a whole
              */
-            if(globals.gIsSecurityAdministrator || globals.gIsAdministrator || globals.gIsAnalyst) {
+            if((globals.gIsSecurityAdministrator || globals.gIsAdministrator || globals.gIsAnalyst) && !isSubFormView()) {
                 $('.multiSelectOnly').show();
             }
 
