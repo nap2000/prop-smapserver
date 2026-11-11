@@ -1430,6 +1430,18 @@ localise.initLocale(gUserLocale).then(function () {
     }
 
     /*
+     * True if the table shows the rows of a sub form rather than records.  A sub form row acts on the
+     * record it belongs to, whose instance id the server adds to the row, so rows are told apart by prikey
+     */
+    function isSubFormView() {
+        if(gDrillDownStack.length > 0) {
+            return gDrillDownStack[gDrillDownStack.length - 1].type === "sub_form";
+        }
+        var subForm = globals.gSubForms[globals.gCurrentSurvey];
+        return !!(subForm && subForm !== '_none');
+    }
+
+    /*
      * Show the survey data along with the management columns
      */
     function showManagedData(sId, callback, clearCache) {
@@ -1564,7 +1576,7 @@ localise.initLocale(gUserLocale).then(function () {
             select: {
                 selector: 'td'
             },
-            rowId: 'instanceid',
+            rowId: isSubFormView() ? 'prikey' : 'instanceid',
             data: dataSet.data,
             columns: shownColumns,
             order: [0],
@@ -2659,6 +2671,11 @@ localise.initLocale(gUserLocale).then(function () {
                 }
             }
 
+            // Delete applies to the whole record, so it is not offered on a row of a sub form
+            if(isSubFormView()) {
+                $('#m_delete').hide();
+            }
+
             if(globals.gIsAdministrator) {
                 $('.assigned_admin').show();
             }
@@ -3715,8 +3732,11 @@ localise.initLocale(gUserLocale).then(function () {
                             checkFilters();
                             theCallback(data);
                         }
-                        if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
-                            globals.gMainTable.row('#' + escSelector(gTasks.gSelectedRecord.instanceid)).select();
+                        if(gTasks.gSelectedRecord) {
+                            var selectedRowId = isSubFormView() ? gTasks.gSelectedRecord.prikey : gTasks.gSelectedRecord.instanceid;
+                            if(selectedRowId) {
+                                globals.gMainTable.row('#' + escSelector(String(selectedRowId))).select();
+                            }
                         }
                     }
 			    },
