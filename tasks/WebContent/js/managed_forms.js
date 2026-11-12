@@ -765,6 +765,28 @@ localise.initLocale(gUserLocale).then(function () {
                                 delete gTasks.cache.data[key];
                             }
                         });
+
+                        /*
+                         * A change is saved as a new version of the record, work on that from now on
+                         */
+                        var version;
+                        try {
+                            version = JSON.parse(data);
+                        } catch (err) {
+                            version = undefined;
+                        }
+                        if(version && !biString) {
+                            if(version.row) {
+                                gTasks.gSelectedRecord.prikey = version.row;
+                            } else {
+                                if(version.instanceid) {
+                                    gTasks.gSelectedRecord.instanceid = version.instanceid;
+                                }
+                                if(version.prikey) {
+                                    gTasks.gSelectedRecord.prikey = version.prikey;
+                                }
+                            }
+                        }
                         loadAndShowSubForms(gTasks.gSelectedRecord);
 
                         getRecordChanges(gTasks.gSelectedRecord);
@@ -2752,6 +2774,7 @@ localise.initLocale(gUserLocale).then(function () {
         var includeChanges = $('#er_show_changes').is(':checked');
         var includeAssignments = $('#er_show_assignments').is(':checked');
         var includeEmailReplies = $('#er_show_email_replies').is(':checked');
+        var includeConflicts = $('#er_show_conflicts').is(':checked');
 
         // Add header
         h[++idx] = '<thead>';
@@ -2792,7 +2815,8 @@ localise.initLocale(gUserLocale).then(function () {
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
                     (includeNotifications && data[i].event === 'notification') ||
-                    (includeEmailReplies && data[i].event === 'email_reply')) {
+                    (includeEmailReplies && data[i].event === 'email_reply') ||
+                    (includeConflicts && data[i].event === 'conflict')) {
                     h[++idx] = '<tr>';
 
                     h[++idx] = '<td>';
@@ -2820,6 +2844,8 @@ localise.initLocale(gUserLocale).then(function () {
                         }
                     } else if (data[i].event === 'email_reply') {
                         h[++idx] = '<i class="fa fa-lg fa-reply text-info"></i>';
+                    } else if (data[i].event === 'conflict') {
+                        h[++idx] = '<i class="fas fa-lg fa-code-branch text-warning"></i>';
                     }
 
                     h[++idx] = '</td>';
@@ -2883,6 +2909,8 @@ localise.initLocale(gUserLocale).then(function () {
                         h[++idx] = getNotificationInfo(data[i].notification, data[i].description, i);
                     } else if (data[i].event === 'email_reply' && data[i].emailReply) {
                         h[++idx] = getEmailReplyInfo(data[i].emailReply, i);
+                    } else if (data[i].event === 'conflict' && data[i].conflict) {
+                        h[++idx] = getConflictCard(data[i].conflict, data[i].status, i);
                     } else {
                         h[++idx] = htmlEncode(data[i].description);
                     }
@@ -2900,6 +2928,17 @@ localise.initLocale(gUserLocale).then(function () {
                         h[++idx] = i;
                         h[++idx] = '">';
                         h[++idx] = localise.set["t_edit_task"];
+                        h[++idx] = '</button>';
+                    } else if (data[i].event === 'conflict' && data[i].conflict && data[i].status === 'unresolved') {
+                        h[++idx] = '<button class="btn btn-secondary mb-1 save_conflict" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["cf_save"];
+                        h[++idx] = '</button>';
+                        h[++idx] = '<button class="btn btn-secondary keep_conflict" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["cf_keep_all"];
                         h[++idx] = '</button>';
                     }
                     h[++idx] = '</td>';
@@ -2924,6 +2963,13 @@ localise.initLocale(gUserLocale).then(function () {
         });
         $('.change_card').on('hidden.bs.collapse', function() {
             $('.mincol').show();
+        });
+
+        $('.save_conflict').click(function() {
+            saveConflict($(this).data("idx"), false);
+        });
+        $('.keep_conflict').click(function() {
+            saveConflict($(this).data("idx"), true);
         });
 
         $('.edit_notification').click(function(){
@@ -3365,6 +3411,168 @@ localise.initLocale(gUserLocale).then(function () {
     /*
      * Convert a list of changes into a bs4 card
      */
+    /*
+     * Show the answers two people changed at the same time
+     * The answers of the person who saved last were applied
+     */
+    function getConflictCard(conflict, status, index) {
+        var h = [],
+            idx = -1,
+            i,
+            item,
+            label;
+
+        h[++idx] = '<div>';
+        h[++idx] = htmlEncode(localise.set["cf_by"]
+            .replace("%s1", conflict.theirsUser || "")
+            .replace("%s2", conflict.theirsTime || ""));
+        h[++idx] = '</div>';
+        if(conflict.resolvedBy) {
+            h[++idx] = '<div class="text-muted small">';
+            h[++idx] = htmlEncode(localise.set["cf_resolved_by"]
+                .replace("%s1", conflict.resolvedBy)
+                .replace("%s2", conflict.resolvedTime || ""));
+            h[++idx] = '</div>';
+        }
+
+        h[++idx] = '<table class="table table-sm mt-2">';
+        h[++idx] = '<thead><tr>';
+        h[++idx] = '<th>' + htmlEncode(localise.set["c_question"]) + '</th>';
+        h[++idx] = '<th>' + htmlEncode(localise.set["cf_base"]) + '</th>';
+        h[++idx] = '<th>' + htmlEncode(localise.set["cf_theirs"]) + '</th>';
+        h[++idx] = '<th>' + htmlEncode(localise.set["cf_applied"]) + '</th>';
+        h[++idx] = '<th></th>';
+        h[++idx] = '</tr></thead><tbody>';
+
+        if(conflict.items) {
+            for(i = 0; i < conflict.items.length; i++) {
+                item = conflict.items[i];
+                label = item.repeat ? item.repeat + (item.name ? ': ' + item.name : '') : item.name;
+
+                h[++idx] = '<tr>';
+                h[++idx] = '<td>' + htmlEncode(label) + '</td>';
+                if(item.kind === 'value') {
+                    h[++idx] = '<td>' + htmlEncode(item.base) + '</td>';
+                    h[++idx] = '<td>' + htmlEncode(item.theirs) + '</td>';
+                    h[++idx] = '<td>' + htmlEncode(item.mine) + '</td>';
+                } else if(item.kind === 'theirs_deleted') {
+                    h[++idx] = '<td>' + htmlEncode(getRowValues(item.values)) + '</td>';
+                    h[++idx] = '<td>' + htmlEncode(localise.set["cf_row_deleted"]) + '</td>';
+                    h[++idx] = '<td>' + htmlEncode(localise.set["cf_row_changed"]) + '</td>';
+                } else {
+                    h[++idx] = '<td>' + htmlEncode(getRowValues(item.values)) + '</td>';
+                    h[++idx] = '<td>' + htmlEncode(localise.set["cf_row_changed"]) + '</td>';
+                    h[++idx] = '<td>' + htmlEncode(localise.set["cf_row_deleted"]) + '</td>';
+                }
+
+                h[++idx] = '<td>';
+                if(item.resolution) {
+                    h[++idx] = htmlEncode(item.resolution === 'theirs' ? localise.set["cf_use_theirs"] : localise.set["cf_keep"]);
+                } else if(status === 'unresolved') {
+                    h[++idx] = '<select class="form-select form-select-sm conflict_choice" data-event="' + index + '" data-item="' + i + '">';
+                    h[++idx] = '<option value="">' + htmlEncode(localise.set["cf_later"]) + '</option>';
+                    h[++idx] = '<option value="applied">' + htmlEncode(localise.set["cf_keep"]) + '</option>';
+                    h[++idx] = '<option value="theirs">' + htmlEncode(localise.set["cf_use_theirs"]) + '</option>';
+                    h[++idx] = '</select>';
+                }
+                h[++idx] = '</td>';
+                h[++idx] = '</tr>';
+            }
+        }
+        h[++idx] = '</tbody></table>';
+
+        return h.join('');
+    }
+
+    /*
+     * The answers in a repeat row, as one line
+     */
+    function getRowValues(values) {
+        var i,
+            v = [];
+        if(values) {
+            for(i = 0; i < values.length; i++) {
+                if(values[i].newVal) {
+                    v.push(values[i].displayName + ': ' + values[i].newVal);
+                }
+            }
+        }
+        return v.join(', ');
+    }
+
+    /*
+     * Save the review of a conflict
+     */
+    function saveConflict(eventIdx, keepAll) {
+        var event = window.gChanges[eventIdx],
+            choices = {},
+            count = 0,
+            i;
+
+        if(!event || !event.conflict) {
+            return;
+        }
+        if(keepAll) {
+            for(i = 0; i < event.conflict.items.length; i++) {
+                if(!event.conflict.items[i].resolution) {
+                    choices[i] = 'applied';
+                    count++;
+                }
+            }
+        } else {
+            $('.conflict_choice').each(function() {
+                var $this = $(this);
+                if($this.data("event") == eventIdx && $this.val()) {
+                    choices[$this.data("item")] = $this.val();
+                    count++;
+                }
+            });
+        }
+        if(count === 0) {
+            return;
+        }
+
+        addHourglass();
+        $.ajax({
+            type: "POST",
+            dataType: 'text',
+            contentType: "application/x-www-form-urlencoded",
+            cache: false,
+            url: "/surveyKPI/managed/conflict/" + globals.gCurrentSurvey + "/" + event.id,
+            data: {
+                choices: JSON.stringify(choices),
+                tz: globals.gTimezone
+            },
+            success: function (data) {
+                removeHourglass();
+                if(handleLogout(data)) {
+                    // Putting back an answer makes a new version of the record, work on that from now on
+                    var version;
+                    try {
+                        version = JSON.parse(data);
+                    } catch (err) {
+                        version = undefined;
+                    }
+                    if(version && version.instanceid && version.prikey) {
+                        gTasks.gSelectedRecord.instanceid = version.instanceid;
+                        gTasks.gSelectedRecord.prikey = version.prikey;
+                    }
+                    getRecordChanges(gTasks.gSelectedRecord);
+                }
+            },
+            error: function (xhr, textStatus, err) {
+                removeHourglass();
+                if(handleLogout(xhr.responseText)) {
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["error"] + ": " + xhr.responseText);
+                    }
+                }
+            }
+        });
+    }
+
     function getChangeCard(changes, index) {
         var h = [],
             idx = -1,

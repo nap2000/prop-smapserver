@@ -122,6 +122,7 @@ define(
     "c_moved": "Movido",
     "c_opened": "Abierto",
     "c_periodic": "Periódico",
+    "c_conflict": "Actualización en conflicto",
     "c_project": "Proyecto",
     "c_sub_form": "Subformulario (Repetición)",
     "c_threshold": "Umbral",

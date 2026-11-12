@@ -5311,7 +5311,7 @@ function getStatusClass(status, assign_auto) {
 		statusClass = "bg-success";
 	} else if (status === "late") {
 		statusClass = "bg-danger";
-	} else if (status === "accepted" || status === "pending") {
+	} else if (status === "accepted" || status === "pending" || status === "unresolved") {
 		statusClass = "bg-warning";
 	} else 	if (status === "error" || status === "unsent" || status === "unsubscribed"
 		|| status === "blocked" || status === "rejected" || status === "cancelled" || status === "deleted") {
@@ -5570,7 +5570,7 @@ function applyPeriodicRestrictions() {
 
 function setTriggerDependencies(trigger) {
 	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options, .sc_options').hide();
-	if(trigger === "submission") {
+	if(trigger === "submission" || trigger === "conflict") {
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
 		$('.task_reminder_options').show();
