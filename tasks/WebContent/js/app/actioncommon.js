@@ -29,6 +29,7 @@ export {
 	showBulkEditForm,
 	addCellMarkup,
 	addCellMap,
+	addValuesMap,
 	initialiseDynamicMaps,
 	formatConversation
 };
@@ -572,6 +573,50 @@ export {
             h[++idx] = config.id;
             h[++idx] = '" data-item="';
             h[++idx] = itemIndex;
+            h[++idx] = '" class="small_map">';
+            h[++idx] = '<div id="tooltip_';
+            h[++idx] = config.id;
+            h[++idx] = '"></div>';
+            h[++idx] = '</div>';
+
+            maps.push(config);
+
+            return h.join('');
+        }
+
+        /*
+         * A read only map showing several values of one question
+         * values: [{value: geojson, type: old | current | other, label}]
+         */
+        function addValuesMap(idbase, maps, values) {
+            var h = [],
+                idx = -1,
+                i,
+                geometry;
+
+            var config = {
+                readOnly: true,
+                id: idbase + maps.length,
+                values: []
+            };
+            for(i = 0; i < values.length; i++) {
+                geometry = values[i].value;
+                if(typeof geometry === "string") {
+                    try {
+                        geometry = JSON.parse(geometry);
+                    } catch(err) {
+                        geometry = undefined;
+                    }
+                }
+                config.values.push({
+                    geometry: geometry,
+                    type: values[i].type,
+                    label: values[i].label
+                });
+            }
+
+            h[++idx] = '<div id="';
+            h[++idx] = config.id;
             h[++idx] = '" class="small_map">';
             h[++idx] = '<div id="tooltip_';
             h[++idx] = config.id;

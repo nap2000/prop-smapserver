@@ -513,7 +513,24 @@ export default {
 
                 // Add the vector layer
                 var features = [];
-                if(config.currentValue) {
+                if(config.values) {
+                    /*
+                     * Several values of the same question, each labelled with its role, such as the
+                     * values of a conflicting update.  type sets the colour: old, current or other
+                     */
+                    for(var vi = 0; vi < config.values.length; vi++) {
+                        if(config.values[vi].geometry) {
+                            features.push({
+                                "type": "Feature",
+                                "geometry": config.values[vi].geometry,
+                                "properties": {
+                                    "type": config.values[vi].type,
+                                    "label": config.values[vi].label
+                                }
+                            });
+                        }
+                    }
+                } else if(config.currentValue) {
                     var currentValue = {
                         "type": "Feature",
                         "geometry": config.currentValue,

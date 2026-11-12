@@ -128,6 +128,7 @@ localise.initLocale(gUserLocale).then(function () {
     };
 
     var gSfMapSeq = 0;              // Unique ID counter for sub-form map elements
+    var gConflictMaps = [];         // Maps of conflicting geometry answers in the record history
     var gTags;                      // Task Map
     var gModalMapInitialised;
     var gTaskMapConfig = {
@@ -978,6 +979,7 @@ localise.initLocale(gUserLocale).then(function () {
                 }
             } else if(target === '#changes-view') {
                 $('.historyView').removeClass('d-none').show();
+                setTimeout(initConflictMaps, 0);
             }
 
             $('.re_alert').hide();
@@ -2741,6 +2743,7 @@ localise.initLocale(gUserLocale).then(function () {
                     if(handleLogout(data)) {
                         window.gChanges = data;
                         globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
+                        gConflictMaps = [];
 
                         showHistory(data);
                     }
@@ -2950,6 +2953,7 @@ localise.initLocale(gUserLocale).then(function () {
         }
         h[++idx] = '</tbody>';
         $elem.empty().html(h.join(''));
+        initConflictMaps();
 
         $('.change_card').on('shown.bs.collapse', function() {
             var $this = $(this);
@@ -3451,7 +3455,21 @@ localise.initLocale(gUserLocale).then(function () {
 
                 h[++idx] = '<tr>';
                 h[++idx] = '<td>' + htmlEncode(label) + '</td>';
-                if(item.kind === 'value') {
+                if(item.kind === 'value' && isGeometryType(item.type)) {
+                    // One map with the three values, coloured and labelled by their role
+                    h[++idx] = '<td colspan="3">';
+                    h[++idx] = actioncommon.addValuesMap('conflict_maps_', gConflictMaps, [
+                        { value: item.base, type: 'old', label: localise.set["cf_base"] },
+                        { value: item.theirs, type: 'other', label: localise.set["cf_theirs"] },
+                        { value: item.mine, type: 'current', label: localise.set["cf_applied"] }
+                    ]);
+                    h[++idx] = '<div class="small">';
+                    h[++idx] = '<span style="color: rgb(10, 10, 255);">&#9632;</span> ' + htmlEncode(localise.set["cf_base"]) + ' ';
+                    h[++idx] = '<span style="color: rgb(10, 200, 255);">&#9632;</span> ' + htmlEncode(localise.set["cf_theirs"]) + ' ';
+                    h[++idx] = '<span style="color: rgb(255, 10, 10);">&#9632;</span> ' + htmlEncode(localise.set["cf_applied"]);
+                    h[++idx] = '</div>';
+                    h[++idx] = '</td>';
+                } else if(item.kind === 'value') {
                     h[++idx] = '<td>' + htmlEncode(item.base) + '</td>';
                     h[++idx] = '<td>' + htmlEncode(item.theirs) + '</td>';
                     h[++idx] = '<td>' + htmlEncode(item.mine) + '</td>';
@@ -3482,6 +3500,19 @@ localise.initLocale(gUserLocale).then(function () {
         h[++idx] = '</tbody></table>';
 
         return h.join('');
+    }
+
+    function isGeometryType(type) {
+        return type === 'geopoint' || type === 'geoshape' || type === 'geotrace' || type === 'geocompound';
+    }
+
+    /*
+     * Draw the maps of conflicting geometry answers, once the history is visible
+     */
+    function initConflictMaps() {
+        if(gConflictMaps.length > 0 && $('#changes').is(':visible')) {
+            actioncommon.initialiseDynamicMaps(gConflictMaps);
+        }
     }
 
     /*
@@ -3699,7 +3730,7 @@ localise.initLocale(gUserLocale).then(function () {
                     oldVal = baseUrl + oldVal;
                 }
 
-                if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace' || type === 'geocompund') {
+                if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace' || type === 'geocompound') {
                     h[++idx] = actioncommon.addCellMap(true, 'change_maps_',
                         globals.gRecordChangeMaps, changes[i], newVal, oldVal);
                 } else {
