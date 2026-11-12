@@ -979,7 +979,6 @@ localise.initLocale(gUserLocale).then(function () {
                 }
             } else if(target === '#changes-view') {
                 $('.historyView').removeClass('d-none').show();
-                setTimeout(initConflictMaps, 0);
             }
 
             $('.re_alert').hide();
@@ -2953,7 +2952,6 @@ localise.initLocale(gUserLocale).then(function () {
         }
         h[++idx] = '</tbody>';
         $elem.empty().html(h.join(''));
-        initConflictMaps();
 
         $('.change_card').on('shown.bs.collapse', function() {
             var $this = $(this);
@@ -2961,9 +2959,15 @@ localise.initLocale(gUserLocale).then(function () {
                 console.log($(this).attr("id"));
                 actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps, $(this).attr("id"));
             });
+            $('.conflict_map', $this).each(function(){
+                actioncommon.initialiseDynamicMaps(gConflictMaps, $(this).attr("id"));
+            });
         });
         $('.change_card').on('show.bs.collapse', function() {
-            $('.mincol').hide();
+            // Give the details the whole width on a small screen only
+            if(window.innerWidth < 1200) {
+                $('.mincol').hide();
+            }
         });
         $('.change_card').on('hidden.bs.collapse', function() {
             $('.mincol').show();
@@ -3426,6 +3430,29 @@ localise.initLocale(gUserLocale).then(function () {
             item,
             label;
 
+        var count = conflict.items ? conflict.items.length : 0;
+        h[++idx] = '<div class="card bg-white">';
+        h[++idx] = '<div class="card-header" id="heading_';
+        h[++idx] = index;
+        h[++idx] = '">';
+        h[++idx] = '<h5 class="mb-0">';
+        h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#collapse_';
+        h[++idx] = index;
+        h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
+        h[++idx] = index;
+        h[++idx] = '">';
+        h[++idx] = count + ' ' + htmlEncode(count === 1 ? localise.set["cf_answer"] : localise.set["cf_answers"]);
+        h[++idx] = '</button>';
+        h[++idx] = '</h5>';
+        h[++idx] = '</div>';    // Header
+
+        h[++idx] = '<div id="collapse_';
+        h[++idx] = index;
+        h[++idx] = '" class="collapse change_card" aria-labelledby="heading_';
+        h[++idx] = index;
+        h[++idx] = '">';
+        h[++idx] = '<div class="card-body">';
+
         h[++idx] = '<div>';
         h[++idx] = htmlEncode(localise.set["cf_by"]
             .replace("%s1", conflict.theirsUser || "")
@@ -3463,11 +3490,11 @@ localise.initLocale(gUserLocale).then(function () {
                         { value: item.theirs, type: 'other', label: localise.set["cf_theirs"] },
                         { value: item.mine, type: 'current', label: localise.set["cf_applied"] }
                     ]);
-                    h[++idx] = '<div class="small">';
-                    h[++idx] = '<span style="color: rgb(10, 10, 255);">&#9632;</span> ' + htmlEncode(localise.set["cf_base"]) + ' ';
-                    h[++idx] = '<span style="color: rgb(10, 200, 255);">&#9632;</span> ' + htmlEncode(localise.set["cf_theirs"]) + ' ';
-                    h[++idx] = '<span style="color: rgb(255, 10, 10);">&#9632;</span> ' + htmlEncode(localise.set["cf_applied"]);
-                    h[++idx] = '</div>';
+                    h[++idx] = getMapKey([
+                        { colour: 'rgb(10, 10, 255)', label: localise.set["cf_base"] },
+                        { colour: 'rgb(10, 200, 255)', label: localise.set["cf_theirs"] },
+                        { colour: 'rgb(255, 10, 10)', label: localise.set["cf_applied"] }
+                    ]);
                     h[++idx] = '</td>';
                 } else if(item.kind === 'value') {
                     h[++idx] = '<td>' + htmlEncode(item.base) + '</td>';
@@ -3499,6 +3526,10 @@ localise.initLocale(gUserLocale).then(function () {
         }
         h[++idx] = '</tbody></table>';
 
+        h[++idx] = '</div>';    // Body
+        h[++idx] = '</div>';    // Collapse
+        h[++idx] = '</div>';    // Card
+
         return h.join('');
     }
 
@@ -3507,12 +3538,21 @@ localise.initLocale(gUserLocale).then(function () {
     }
 
     /*
-     * Draw the maps of conflicting geometry answers, once the history is visible
+     * The key to the colours of the values on a map
+     * entries: [{colour, label}]
      */
-    function initConflictMaps() {
-        if(gConflictMaps.length > 0 && $('#changes').is(':visible')) {
-            actioncommon.initialiseDynamicMaps(gConflictMaps);
+    function getMapKey(entries) {
+        var h = [],
+            idx = -1,
+            i;
+        h[++idx] = '<div class="small">';
+        for(i = 0; i < entries.length; i++) {
+            h[++idx] = '<span class="me-2"><span style="color: ' + entries[i].colour + ';">&#9632;</span> ';
+            h[++idx] = htmlEncode(entries[i].label);
+            h[++idx] = '</span>';
         }
+        h[++idx] = '</div>';
+        return h.join('');
     }
 
     /*
@@ -3733,6 +3773,10 @@ localise.initLocale(gUserLocale).then(function () {
                 if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace' || type === 'geocompound') {
                     h[++idx] = actioncommon.addCellMap(true, 'change_maps_',
                         globals.gRecordChangeMaps, changes[i], newVal, oldVal);
+                    h[++idx] = getMapKey([
+                        { colour: 'rgb(10, 10, 255)', label: localise.set["c_from"] },
+                        { colour: 'rgb(255, 10, 10)', label: localise.set["c_to"] }
+                    ]);
                 } else {
 
                     h[++idx] = '<div class="col-md-3">';

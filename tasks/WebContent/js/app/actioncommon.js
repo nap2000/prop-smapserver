@@ -617,7 +617,7 @@ export {
 
             h[++idx] = '<div id="';
             h[++idx] = config.id;
-            h[++idx] = '" class="small_map">';
+            h[++idx] = '" class="small_map conflict_map">';
             h[++idx] = '<div id="tooltip_';
             h[++idx] = config.id;
             h[++idx] = '"></div>';

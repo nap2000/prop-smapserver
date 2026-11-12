@@ -996,6 +996,8 @@ define({
     "cf_keep_all": "Keep all applied",
     "cf_row_deleted": "Row deleted",
     "cf_row_changed": "Row changed",
+    "cf_answer": "Conflicting answer",
+    "cf_answers": "Conflicting answers",
     "created": "Created",
 
     // Web forms
