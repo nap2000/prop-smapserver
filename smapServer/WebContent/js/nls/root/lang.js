@@ -992,7 +992,7 @@ define({
     "cf_keep": "Keep applied",
     "cf_use_theirs": "Use other change",
     "cf_later": "Review later",
-    "cf_save": "Save review",
+    "cf_save": "Apply choices",
     "cf_keep_all": "Keep all applied",
     "cf_row_deleted": "Row deleted",
     "cf_row_changed": "Row changed",
