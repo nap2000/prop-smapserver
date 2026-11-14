@@ -907,20 +907,6 @@ localise.initLocale(gUserLocale).then(function () {
             })
         });
 
-        // Add a new map layer
-        $('#m_add_layer').click(function (e) {
-            e.preventDefault();
-            $('#layerInfo').hide();
-            $('#ml_title').val("");
-            window.bsModalShow('#layerEdit');
-        });
-
-        // Respond to save on a layer edit dialog
-        $('#addLayerSave').click(function (e) {
-            e.preventDefault();
-            map.saveLayer(gOverallMapConfig.map);
-        });
-
         // Respond to a new task location being clicked
         $('#taskPropertiesForm').on("smap_task::geopoint", function (event, config) {
 			globals.gCurrentTaskFeature.geometry = config.value;

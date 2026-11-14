@@ -38,7 +38,6 @@ export default {
 	setLayers: setLayers,
 	refreshLayer: refreshLayer,
 	refreshAllLayers: refreshAllLayers,
-	saveLayer: saveLayer,
 	deleteLayers: deleteLayers,
 	initDynamicMap: initDynamicMap,
 	clearSelectFeatures: clearSelectFeatures,
@@ -130,7 +129,7 @@ export default {
                 h[++idx] = '<tr>';
 
                 h[++idx] = '<td>';      // Select
-                h[++idx] = '<div class="switch form-check form-check">';
+                h[++idx] = '<div class="form-check form-switch">';
                 h[++idx] = '<input type="checkbox" class="form-check-input layerSelect" name="columnSelect"';
                 if(gLayers[i].enabled) {
                     h[++idx] = 'checked="checked"';
@@ -145,17 +144,6 @@ export default {
                 h[++idx] = '</label>';
                 h[++idx] = '</div>';
                 h[++idx] = '</td>';
-                h[++idx] = '<td>';      // Delete
-                h[++idx] = '<button type="button" data-idx="';
-                h[++idx] = i;
-                h[++idx] = '" class="btn btn-secondary btn-sm rm_layer danger"';
-                if(gLayers[i].fixed) {
-                    h[++idx] = ' disabled';
-                }
-                h[++idx] = '>';
-                h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-                h[++idx] = '</td>';
-
                 h[++idx] = '</tr>';
             }
 
@@ -165,21 +153,13 @@ export default {
             //    checkboxClass: 'icheckbox_square-green',
             //    radioClass: 'iradio_square-green'
             //});
-            $('.rm_layer', '#layerSelect tbody').click(function() {
-                var idx = $(this).data("idx");
-                deleteLayer(idx);
-                gLayers.splice(idx, 1);
-                showLayerSelections(gMap);
-            });
-
             $('.layerSelect').change(function() {
-                var $this = $(this);
-                var index = $(this).val();
-               if($this.prop('checked')) {
-                   showLayer(index, map);
-               } else {
-                   hideLayer(index, map);
-               }
+                var index = Number($(this).val());
+                if($(this).prop('checked')) {
+                    showLayer(index, map || gMap);
+                } else {
+                    hideLayer(index, map || gMap);
+                }
             });
         }
 
@@ -233,6 +213,7 @@ export default {
             var layer = gLayers[index];
             var geoJson = getGeoJson(results, layer);		// Get a geoson of data
 
+            deleteLayer(index);     // Take any earlier version of this layer off the map
             if (!gVectorSources[index]) {
                 gVectorSources[index] = new ol.source.Vector();
             } else {
@@ -265,50 +246,41 @@ export default {
             fitExtent(map, gVectorSources[index].getExtent());
         }
 
+        /*
+         * Take a layer off the map, keeping its place in the list of layers
+         * Removing it from the arrays here would move the layers after it to the wrong index
+         */
         function deleteLayer(index) {
-
             if (gVectorLayers[index]) {
-                gMap.removeLayer(gVectorLayers[index]);
-                gVectorSources.splice(index, 1);
-                gVectorLayers.splice(index, 1);
+                if (gMap) {
+                    gMap.removeLayer(gVectorLayers[index]);
+                }
+                gVectorLayers[index] = undefined;
             }
-
         }
 
-        function hideLayer(index) {
-            map.removeLayer(gVectorLayers[index]);
+        function onMap(map, layer) {
+            return map.getLayers().getArray().indexOf(layer) >= 0;
+        }
+
+        function hideLayer(index, map) {
+            gLayers[index].enabled = false;
+            if (map && gVectorLayers[index] && onMap(map, gVectorLayers[index])) {
+                map.removeLayer(gVectorLayers[index]);
+            }
         }
 
         function showLayer(index, map) {
-            map.addLayer(gVectorLayers[index]);
-        }
-
-        /*
-         * Save a layer after the user specifies it in the layer dialog
-         */
-        function saveLayer(map) {
-
-            var title = $('#ml_title').val(),
-                local = $('#usecurrent_tabledata').is(':checked'),
-                layer = {};
-
-            // Validation
-            if (typeof title === "undefined" || title.trim().length === 0) {
-                $('#layerInfo').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["mf_tr"]);
-                return false;
+            gLayers[index].enabled = true;
+            if (!map) {
+                return;
             }
-
-            layer.title = title;
-            layer.local = local;
-            layer.clump = $('input[name=clump]:checked', '#mapForm').val();
-
-            gLayers.push(layer);
-            window.bsModalHide('#layerEdit');	// All good close the modal
-
-            refreshLayer(gLayers.length - 1, map);
-            showLayerSelections(map);
-
-        };
+            if (!gVectorLayers[index]) {
+                refreshLayer(index, map);       // Not drawn yet, draw it now that it is wanted
+            } else if (!onMap(map, gVectorLayers[index])) {
+                map.addLayer(gVectorLayers[index]);
+            }
+        }
 
         /*
          * Process the map data according to the layer specification
