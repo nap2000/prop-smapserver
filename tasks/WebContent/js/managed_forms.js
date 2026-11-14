@@ -2917,17 +2917,6 @@ localise.initLocale(gUserLocale).then(function () {
                         h[++idx] = '">';
                         h[++idx] = localise.set["t_edit_task"];
                         h[++idx] = '</button>';
-                    } else if (data[i].event === 'conflict' && data[i].conflict && data[i].status === 'unresolved') {
-                        h[++idx] = '<button class="btn btn-secondary mb-1 save_conflict" data-idx="';
-                        h[++idx] = i;
-                        h[++idx] = '">';
-                        h[++idx] = localise.set["cf_save"];
-                        h[++idx] = '</button>';
-                        h[++idx] = '<button class="btn btn-secondary keep_conflict" data-idx="';
-                        h[++idx] = i;
-                        h[++idx] = '">';
-                        h[++idx] = localise.set["cf_keep_all"];
-                        h[++idx] = '</button>';
                     }
                     h[++idx] = '</td>';
 
@@ -2960,10 +2949,7 @@ localise.initLocale(gUserLocale).then(function () {
         });
 
         $('.save_conflict').click(function() {
-            saveConflict($(this).data("idx"), false);
-        });
-        $('.keep_conflict').click(function() {
-            saveConflict($(this).data("idx"), true);
+            saveConflict($(this).data("idx"));
         });
 
         $('.edit_notification').click(function(){
@@ -3501,8 +3487,7 @@ localise.initLocale(gUserLocale).then(function () {
                     h[++idx] = htmlEncode(item.resolution === 'theirs' ? localise.set["cf_use_theirs"] : localise.set["cf_keep"]);
                 } else if(status === 'unresolved') {
                     h[++idx] = '<select class="form-select form-select-sm conflict_choice" data-event="' + index + '" data-item="' + i + '">';
-                    h[++idx] = '<option value="">' + htmlEncode(localise.set["cf_later"]) + '</option>';
-                    h[++idx] = '<option value="applied">' + htmlEncode(localise.set["cf_keep"]) + '</option>';
+                    h[++idx] = '<option value="applied" selected>' + htmlEncode(localise.set["cf_keep"]) + '</option>';
                     h[++idx] = '<option value="theirs">' + htmlEncode(localise.set["cf_use_theirs"]) + '</option>';
                     h[++idx] = '</select>';
                 }
@@ -3511,6 +3496,15 @@ localise.initLocale(gUserLocale).then(function () {
             }
         }
         h[++idx] = '</tbody></table>';
+
+        // Saved from inside the panel, where the choices are, as the action column is hidden while it is open
+        if(status === 'unresolved') {
+            h[++idx] = '<div class="text-end">';
+            h[++idx] = '<button type="button" class="btn btn-primary btn-sm save_conflict" data-idx="' + index + '">';
+            h[++idx] = htmlEncode(localise.set["c_save"]);
+            h[++idx] = '</button>';
+            h[++idx] = '</div>';
+        }
 
         h[++idx] = '</div>';    // Body
         h[++idx] = '</div>';    // Collapse
@@ -3560,7 +3554,7 @@ localise.initLocale(gUserLocale).then(function () {
     /*
      * Save the review of a conflict
      */
-    function saveConflict(eventIdx, keepAll) {
+    function saveConflict(eventIdx) {
         var event = window.gChanges[eventIdx],
             choices = {},
             count = 0,
@@ -3569,22 +3563,14 @@ localise.initLocale(gUserLocale).then(function () {
         if(!event || !event.conflict) {
             return;
         }
-        if(keepAll) {
-            for(i = 0; i < event.conflict.items.length; i++) {
-                if(!event.conflict.items[i].resolution) {
-                    choices[i] = 'applied';
-                    count++;
-                }
+        // Every answer not yet reviewed has a choice, keeping the applied value unless another is picked
+        $('.conflict_choice').each(function() {
+            var $this = $(this);
+            if($this.data("event") == eventIdx && $this.val()) {
+                choices[$this.data("item")] = $this.val();
+                count++;
             }
-        } else {
-            $('.conflict_choice').each(function() {
-                var $this = $(this);
-                if($this.data("event") == eventIdx && $this.val()) {
-                    choices[$this.data("item")] = $this.val();
-                    count++;
-                }
-            });
-        }
+        });
         if(count === 0) {
             return;
         }
