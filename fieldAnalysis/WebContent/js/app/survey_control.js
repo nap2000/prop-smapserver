@@ -584,6 +584,21 @@ function groupChangeEvent(sId, groupId) {
 	} 
 }
 
+/*
+ * A panel with no survey gets the only survey there is to choose
+ */
+function selectOnlySurvey(view) {
+	if(view !== gSurveyControlView || (view.sId && view.sId != -1)) {
+		return;
+	}
+	var $options = $('#settings_survey option').filter(function() {
+		return $(this).val() != -1;
+	});
+	if($options.length === 1) {
+		$('#settings_survey').val($options.val()).trigger('change');
+	}
+}
+
 //Set the state of the survey view control according to the view
 function setSurveyViewControl(view) {
 
@@ -592,6 +607,7 @@ function setSurveyViewControl(view) {
 	if(view.sId) {
 		$('#settings_survey').val(view.sId);
 	}
+	selectOnlySurvey(view);
 
 	if(view.geomFormQuestions) {
 		for(i = 0; i < view.geomFormQuestions.length; i++) {
@@ -1177,6 +1193,7 @@ function getViewSurveys (view) {
 					globals.gSelector.setSurveyList(data);
 					if (view) {
 						setSurveyViewSurveys(data, view.sId, '#settings_survey, #export_survey, #survey_to_update, #form_select');
+						selectOnlySurvey(view);
 					}
 				}
 			},
