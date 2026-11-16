@@ -5311,7 +5311,7 @@ function getStatusClass(status, assign_auto) {
 		statusClass = "bg-success";
 	} else if (status === "late") {
 		statusClass = "bg-danger";
-	} else if (status === "accepted" || status === "pending" || status === "unresolved") {
+	} else if (status === "accepted" || status === "pending" || status === "unresolved" || status === "no_recipients") {
 		statusClass = "bg-warning";
 	} else 	if (status === "error" || status === "unsent" || status === "unsubscribed"
 		|| status === "blocked" || status === "rejected" || status === "cancelled" || status === "deleted") {

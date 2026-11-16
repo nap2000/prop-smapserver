@@ -950,6 +950,7 @@ define({
     "error": "Error",
     "waiting": "Waiting",
     "success": "Success",
+    "no_recipients": "No recipients",
     "mon_retry": "Re-apply failed uploads",
     "mon_page": "Page %s1 from %s2 to %s3",
     "mon_uid": "Upload Id",
