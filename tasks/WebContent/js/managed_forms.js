@@ -2763,6 +2763,7 @@ localise.initLocale(gUserLocale).then(function () {
         var includeAssignments = $('#er_show_assignments').is(':checked');
         var includeEmailReplies = $('#er_show_email_replies').is(':checked');
         var includeConflicts = $('#er_show_conflicts').is(':checked');
+        var includeAlerts = $('#er_show_alerts').is(':checked');
 
         // Add header
         h[++idx] = '<thead>';
@@ -2804,7 +2805,8 @@ localise.initLocale(gUserLocale).then(function () {
                     (includeAssignments && data[i].event === 'assigned') ||
                     (includeNotifications && data[i].event === 'notification') ||
                     (includeEmailReplies && data[i].event === 'email_reply') ||
-                    (includeConflicts && data[i].event === 'conflict')) {
+                    (includeConflicts && data[i].event === 'conflict') ||
+                    (includeAlerts && data[i].event === 'alert')) {
                     h[++idx] = '<tr>';
 
                     h[++idx] = '<td>';
@@ -2834,6 +2836,8 @@ localise.initLocale(gUserLocale).then(function () {
                         h[++idx] = '<i class="fa fa-lg fa-reply text-info"></i>';
                     } else if (data[i].event === 'conflict') {
                         h[++idx] = '<i class="fas fa-lg fa-code-branch text-warning"></i>';
+                    } else if (data[i].event === 'alert') {
+                        h[++idx] = '<i class="fas fa-lg fa-bell text-warning"></i>';
                     }
 
                     h[++idx] = '</td>';

@@ -981,6 +981,7 @@ define({
     "notification": "Notification",
     "email_reply": "Email Reply",
     "conflict": "Conflicting update",
+    "alert": "Alert",
     "c_conflicts": "Conflicts",
     "unresolved": "Unresolved",
     "resolved": "Resolved",
