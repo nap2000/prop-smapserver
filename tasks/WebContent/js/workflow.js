@@ -67,6 +67,7 @@ const TYPE_COLOURS = {
 	decision:         "#f39c12",
 	periodic:         "#8e44ad",
 	reminder:         "#16a085",
+	conflict:         "#d39e00",
 	email:            "#e74c3c",
 	sms:              "#c0392b",
 	sharepoint_list:  "#0078d4"
@@ -88,6 +89,7 @@ const TYPE_ICONS = {
 	reference:       "fas fa-link",
 	periodic:        "fas fa-clock",
 	reminder:        "fas fa-bell",
+	conflict:        "fas fa-code-branch",
 	email:           "fas fa-envelope",
 	sms:             "fas fa-comment-alt",
 	decision:        "fas fa-filter",
@@ -109,6 +111,7 @@ function typeLabel(type) {
 		periodic: l["c_scheduled"],
 		scheduled: l["c_scheduled"],
 		reminder: l["c_reminder"],
+		conflict: l["c_conflict"],
 		email:    l["c_email"],
 		sms:      l["c_sms"],
 		decision:        l["c_decision"],
@@ -198,6 +201,7 @@ function nodeCard(x, y, item) {
 	const icon       = TYPE_ICONS[item.type] || "fas fa-circle";
 	const label      = typeLabel(item.type);
 	const isDecision  = item.role === "decision";
+	const isConflict  = item.type === "conflict";		// Edited through the notification it starts
 	const hasStartIds = (item.startIds || []).length > 0;
 	const isEditable  = EDITABLE_TYPES.includes(item.type) || (item.type === "form" && hasStartIds);
 
@@ -240,14 +244,14 @@ function nodeCard(x, y, item) {
 		+ (item.label ? `<span style="font-size:12px;font-weight:700;color:#212529;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-left:4px;" title="${esc(item.label)}">${esc(item.label)}</span>` : `<span style="flex:1;"></span>`);
 
 	// Edit button for editable node types and decision nodes
-	if (isEditable || isDecision) {
+	if (isEditable || isDecision || isConflict) {
 		const editBtn = document.createElement("button");
 		editBtn.className = "wf-node-edit-btn";
 		editBtn.title = localise.set["c_edit"];
 		editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
 		editBtn.addEventListener("click", function(e) {
 			e.stopPropagation();
-			if (isDecision) {
+			if (isDecision || isConflict) {
 				// Open the downstream target's drawer
 				const link = (gData && gData.links || []).find(function(l) { return l.from === item.id; });
 				if (!link) return;
@@ -269,6 +273,17 @@ function nodeCard(x, y, item) {
 	let bodyHtml = `<div style="font-size:13px;font-weight:600;color:#212529;">${esc(item.name)}</div>`;
 	if (hasAssignee) {
 		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:3px;">${esc(item.assignee)}</div>`;
+	}
+	// What an email or sms sends and to whom
+	if (item.subject) {
+		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(item.subject)}">`
+			+ `${esc(localise.set["c_subject"])}: ${esc(item.subject)}</div>`;
+	}
+	const to = (item.recipients || []).slice();
+	if (item.emailAssigned) to.push(localise.set["t_assigned"]);
+	if (to.length) {
+		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(to.join(", "))}">`
+			+ `${esc(localise.set["c_to"])}: ${esc(to.join(", "))}</div>`;
 	}
 	body.innerHTML = bodyHtml;
 
