@@ -47,7 +47,7 @@ function conversationCell(raw, pkey, params, metaAttr) {
 		+ '</div></td>';
 }
 
-function generateTable(elementId, data, disp_desc, survey_ident, sId) {
+function generateTable(elementId, data, disp_desc, survey_ident, sId, hideRecord) {
 	var i,j,k,
 		fn = data.fn,
 		groups = data.features,
@@ -161,7 +161,9 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 		if(typeof globals !== "undefined" && globals.gCanEdit) {
 			gTab[++gIdx] = '<th></th>';			// Add empty header for edit button
 		}
-		gTab[++gIdx] = '<th>Record</th>';
+		if(!hideRecord) {
+			gTab[++gIdx] = '<th>Record</th>';
+		}
 	}
 	
 	for(j = 0; j < repeatCols; j++) {
@@ -261,9 +263,11 @@ if(globals.gCanEdit) {
 					}
 					gTab[++gIdx] = '</td>';
 				}
-				gTab[++gIdx] = '<td>';
-				gTab[++gIdx] = groups[i].properties.prikeys[0];
-				gTab[++gIdx] = '</td>';
+				if(!hideRecord) {
+					gTab[++gIdx] = '<td>';
+					gTab[++gIdx] = groups[i].properties.prikeys[0];
+					gTab[++gIdx] = '</td>';
+				}
 			} 
 			
 	

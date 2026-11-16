@@ -744,7 +744,7 @@ export function setTableQuestion(view) {
 	 * Get all the features for all the items in this form, 
 	 */ 
 	if(data) {
-		generateTable(elemMain, data, disp_desc, undefined, 0);
+		generateTable(elemMain, data, disp_desc, undefined, 0, true);	// Question data has no record key
 		addRightClickToTable($selMain, view.sId);
 	} else {
 		$selHead.html(localise.set["an_nd"]);
