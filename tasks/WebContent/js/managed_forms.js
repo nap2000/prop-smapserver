@@ -286,7 +286,7 @@ localise.initLocale(gUserLocale).then(function () {
                 globals.gCurrentSurvey = param[1];
                 saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
             } else if ( param[0] === "instanceid" ) {
-                globals.gCurrentInstance = param[1];
+                globals.gCurrentInstance = decodeURIComponent(param[1]);
                 $('.mrview').hide();
                 $('.srview').show();
             }
@@ -300,7 +300,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         // Get the user details
         globals.gIsConsoleAdmin = false;
-        getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
+        getLoggedInUser(dont_get_current_survey ? surveyFromLink : refreshData, false, true, undefined, false, dont_get_current_survey);
 
         // Set change function on projects
         $('#project_name').change(function () {
@@ -1424,6 +1424,31 @@ localise.initLocale(gUserLocale).then(function () {
     /*
      * Function called when the current project is changed
      */
+    /*
+     * A link named the survey to show, e.g. from the operational issues report.  It may be in a project
+     * other than the user's current one, so show its own project.
+     */
+    function surveyFromLink() {
+        $.ajax({
+            url: "/surveyKPI/survey/" + encodeURIComponent(globals.gCurrentSurvey) + "/getMeta",
+            dataType: 'json',
+            cache: false,
+            success: function(meta) {
+                var pId = meta && (meta.project || meta.p_id);
+                if(pId && String(pId) !== String(globals.gCurrentProject)
+                        && $('#project_name option[value="' + pId + '"]').length > 0) {
+                    globals.gCurrentProject = pId;
+                    $('#project_name').val(pId);
+                    saveCurrentProject(pId, globals.gCurrentSurvey, undefined);
+                }
+                refreshData();
+            },
+            error: function() {
+                refreshData();
+            }
+        });
+    }
+
     function projectChanged() {
 
         globals.gCurrentProject = $('#project_name option:selected').val();
@@ -3816,7 +3841,7 @@ localise.initLocale(gUserLocale).then(function () {
 	    }
 
 	    if(globals.gCurrentInstance) {
-		    url += "&instanceid=" + globals.gCurrentInstance;
+		    url += "&instanceid=" + encodeURIComponent(globals.gCurrentInstance);
 	    }
 
 	    /*

@@ -61,7 +61,7 @@ import {
 
             localise.setlang();		// Localise HTML
 
-            getLoggedInUser(projectChanged, false, true, undefined);
+            getLoggedInUser(firstLoad, false, true, undefined);
 
             gPanel = 'submit';
 
@@ -247,6 +247,42 @@ import {
                 }
 
             }
+        }
+
+        /*
+         * A link can name a survey, e.g. from the operational issues report.  Show that survey,
+         * in its own project, rather than the user's current project.
+         */
+        function firstLoad() {
+            var sId = parseInt(new URLSearchParams(window.location.search).get("survey"), 10);
+            if(!(sId > 0)) {
+                projectChanged();
+                return;
+            }
+            $.ajax({
+                url: "/surveyKPI/survey/" + sId + "/getMeta",
+                dataType: 'json',
+                cache: false,
+                success: function(meta) {
+                    var pId = meta && (meta.project || meta.p_id);
+                    if(!pId || $('#project_name option[value="' + pId + '"]').length === 0) {
+                        projectChanged();
+                        return;
+                    }
+                    $('#project_name').val(pId);
+                    globals.gCurrentProject = pId;
+                    globals.gCurrentSurvey = sId;
+                    globals.gCurrentTaskGroup = undefined;
+                    loadSurveys(pId, undefined, false, true, function() {
+                        $('#survey').val(sId);
+                        refreshData(pId, sId);
+                    }, false, undefined, undefined, false);
+                    saveCurrentProject(pId, sId, undefined);
+                },
+                error: function() {
+                    projectChanged();
+                }
+            });
         }
 
         function projectChanged() {

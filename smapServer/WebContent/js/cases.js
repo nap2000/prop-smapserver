@@ -31,6 +31,7 @@ import {
     handleLogout,
     htmlEncode,
     removeHourglass,
+    saveCurrentProject,
     setInLocalStorage,
     setupUserProfile
 } from './app/common.js';
@@ -47,6 +48,7 @@ window.gUserLocale = gUserLocale;
 localise.initLocale(gUserLocale).then(function() {
 
         var gCurrentCmsIndex;
+        var gOpenAlertId = 0;       // An alert to open once the alerts are shown, from a link
         var gPanel;
 
         window.gTasks = {
@@ -62,8 +64,19 @@ localise.initLocale(gUserLocale).then(function() {
             setupUserProfile();
             localise.setlang();		// Localise HTML
 
+            /*
+             * A link can name the survey, and an alert to open, e.g. from the operational issues report
+             */
+            var params = new URLSearchParams(window.location.search);
+            var paramSurvey = parseInt(params.get("id"), 10);
+            gOpenAlertId = parseInt(params.get("alert_id"), 10) || 0;
+            if(paramSurvey > 0) {
+                globals.gCurrentSurvey = paramSurvey;
+                saveCurrentProject(-1, paramSurvey, undefined);
+            }
+
             // Get the user details
-            getLoggedInUser(currentSurveyDone, false, true, undefined, false, false);
+            getLoggedInUser(currentSurveyDone, false, true, undefined, false, paramSurvey > 0);
 
             $('#create_cm_alert').click(function () {
                 openCmsDialog(false, -1);
@@ -269,6 +282,16 @@ localise.initLocale(gUserLocale).then(function() {
                 var idx = $(this).data("idx");
                 deleteCms(idx);
             });
+
+            if(gOpenAlertId > 0) {
+                for(i = 0; i < alertList.length; i++) {
+                    if(alertList[i].id === gOpenAlertId) {
+                        openCmsDialog(true, i);
+                        break;
+                    }
+                }
+                gOpenAlertId = 0;
+            }
 
         }
 

@@ -10,6 +10,7 @@ module.exports = {
     managed_forms: "./WebContent/js/managed_forms.js",
     linkages: "./WebContent/js/linkages.js",
     log: "./WebContent/js/log.js",
+    issues: "./WebContent/js/issues.js",
     workflow: "./WebContent/js/workflow.js"
   },
   output: {

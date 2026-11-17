@@ -134,6 +134,18 @@ $(document).ready(function() {
 
 	function projectSet() {
 
+		/*
+		 * A link to a notification names its project, e.g. from the operational issues report, as only
+		 * the current project's notifications are listed
+		 */
+		const linkProject = parseInt(new URLSearchParams(window.location.search).get("project"), 10);
+		if (linkProject > 0 && String(linkProject) !== String(globals.gCurrentProject)
+				&& $('#project_name option[value="' + linkProject + '"]').length > 0) {
+			globals.gCurrentProject = linkProject;
+			$('#project_name').val(linkProject);
+			saveCurrentProject(globals.gCurrentProject, -1, undefined);
+		}
+
 		populateTaskGroupList();
 		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined, false);			// Get surveys
 		getReports(globals.gCurrentProject);	// Get notifications after reports as they are deondent on report names
