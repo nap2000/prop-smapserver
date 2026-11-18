@@ -107,6 +107,7 @@ localise.initLocale(gUserLocale).then(function () {
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
     var gAssignedCol = 0;           // Column that contains the assignment status
+    var gMultipleAssignees = {};    // Survey id -> whether its bundle lets a case have several assignees
     var gReferenced = {};           // Map of instanceid -> true for records referenced by the current user
     var gGetSettings = false;       // Use the settings from the database rather than the client
     var gSavedAssignRole = 0;       // Saved role filter for the assign dialog
@@ -459,12 +460,64 @@ localise.initLocale(gUserLocale).then(function () {
         $('#m_assign_to').click(function(e) {
             e.preventDefault();
             populateAssignRoleFilter();
-            if(gTasks.gSelectedRecord._assigned) {
-                $('#user_to_assign').val(gTasks.gSelectedRecord._assigned);
-            } else {
-                $('#user_to_assign').val("_none");
+            $('#assignUserInfo').hide();
+            loadMultipleAssignees(globals.gCurrentSurvey, function(multiple) {
+                setAssignDialog(multiple);
+                window.bsModalShow('#userAssign');
+            });
+        });
+
+        /*
+         * Assign everyone in the selected role, when the case can have several assignees
+         */
+        $('#assignRoleSave').off().click(function(e) {
+            e.preventDefault();
+            var roleId = $('#assign_role_filter').val();
+            if(!gMultipleAssignees[globals.gCurrentSurvey]) {
+                alert(localise.set["mf_multi_off"]);
+                return;
             }
-            window.bsModalShow('#userAssign');
+            if(!roleId) {
+                return;
+            }
+            assignmentRequest("/surveyKPI/managed/assignrole/" + globals.gCurrentSurvey + "/" + encodeURIComponent(roleId),
+                {record: gTasks.gSelectedRecord.instanceid}, function(data) {
+                    var res = {};
+                    try { res = JSON.parse(data); } catch(err) {}
+                    window.bsModalHide('#userAssign');
+                    showManagedData(globals.gCurrentSurvey, showTable, true);
+                    if(res.notAllowed > 0) {
+                        alert(localise.set["mf_role_assigned"].replace("%s1", res.assigned).replace("%s2", res.notAllowed));
+                    }
+                });
+        });
+
+        /*
+         * Take everybody off the case
+         */
+        $('#unassignAll').off().click(function(e) {
+            e.preventDefault();
+            assignmentRequest("/surveyKPI/managed/unassign/" + globals.gCurrentSurvey,
+                {record: gTasks.gSelectedRecord.instanceid, user: "_all"}, function() {
+                    window.bsModalHide('#userAssign');
+                    gTasks.gSelectedRecord._assigned = "";
+                    showManagedData(globals.gCurrentSurvey, showTable, true);
+                });
+        });
+
+        /*
+         * Take one person off the case
+         */
+        $('#assignee_list').off().on('click', '.remove_assignee', function(e) {
+            e.preventDefault();
+            var user = $(this).data('user');
+            assignmentRequest("/surveyKPI/managed/unassign/" + globals.gCurrentSurvey,
+                {record: gTasks.gSelectedRecord.instanceid, user: user}, function() {
+                    gTasks.gSelectedRecord._assigned = assignedList(gTasks.gSelectedRecord)
+                        .filter(function(u) { return u !== user; }).join(", ");
+                    setAssignDialog(true);
+                    showManagedData(globals.gCurrentSurvey, showTable, true);
+                });
         });
 
         $('#assign_role_filter').change(function() {
@@ -557,7 +610,11 @@ localise.initLocale(gUserLocale).then(function () {
                     removeHourglass();
                     $('#m_lock').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        gTasks.gSelectedRecord._assigned = globals.gLoggedInUser.ident;
+                        var mine = assignedList(gTasks.gSelectedRecord);
+                        if(mine.indexOf(globals.gLoggedInUser.ident) < 0) {
+                            mine.push(globals.gLoggedInUser.ident);
+                        }
+                        gTasks.gSelectedRecord._assigned = mine.sort().join(", ");
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
@@ -577,7 +634,13 @@ localise.initLocale(gUserLocale).then(function () {
             e.preventDefault();
             $('#assignUserSave').prop("disabled", true);     // debounce
 
-            var url = "/surveyKPI/managed/assign/" + globals.gCurrentSurvey + "/" + $('#user_to_assign').val();
+            var assignTo = $('#user_to_assign').val();
+            if(gMultipleAssignees[globals.gCurrentSurvey] && (!assignTo || assignTo === "_none")) {
+                $('#assignUserSave').prop("disabled", false);
+                window.bsModalHide('#userAssign');		// Nobody chosen to add
+                return;
+            }
+            var url = "/surveyKPI/managed/assign/" + globals.gCurrentSurvey + "/" + encodeURIComponent(assignTo);
 
             addHourglass();
             $.ajax({
@@ -592,7 +655,13 @@ localise.initLocale(gUserLocale).then(function () {
                     $('#assignUserSave').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
                         window.bsModalHide('#userAssign');
-                        gTasks.gSelectedRecord._assigned = $('#user_to_assign').val();
+                        if(gMultipleAssignees[globals.gCurrentSurvey]) {
+                            var list = assignedList(gTasks.gSelectedRecord);
+                            if(list.indexOf(assignTo) < 0) list.push(assignTo);
+                            gTasks.gSelectedRecord._assigned = list.sort().join(", ");
+                        } else {
+                            gTasks.gSelectedRecord._assigned = assignTo === "_none" ? "" : assignTo;
+                        }
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
@@ -626,7 +695,8 @@ localise.initLocale(gUserLocale).then(function () {
                     removeHourglass();
                     $('#m_release').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        gTasks.gSelectedRecord._assigned = "";
+                        gTasks.gSelectedRecord._assigned = assignedList(gTasks.gSelectedRecord)
+                            .filter(function(u) { return u !== globals.gLoggedInUser.ident; }).join(", ");
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
@@ -1326,14 +1396,15 @@ localise.initLocale(gUserLocale).then(function () {
             return false;
         }
 
-        var assignment = aData[gAssignedCol];
-        if(myRecords && assignment === globals.gLoggedInUser.ident) {
+        var owners = assignedList({_assigned: aData[gAssignedCol]}),
+            me = globals.gLoggedInUser.ident;
+        if(myRecords && owners.indexOf(me) >= 0) {
             return false;
         }
-        if(unassignedRecords && assignment === '') {
+        if(unassignedRecords && owners.length === 0) {
             return false;
         }
-        if(otherRecords && assignment !== '' && assignment !== globals.gLoggedInUser.ident) {
+        if(otherRecords && owners.some(function(u) { return u !== me; })) {
             return false;
         }
         return true;
@@ -1479,6 +1550,8 @@ localise.initLocale(gUserLocale).then(function () {
      * Show the survey data along with the management columns
      */
     function showManagedData(sId, callback, clearCache) {
+
+        loadMultipleAssignees(globals.gCurrentSurvey);
 
         var groupSurvey,
             subForm,
@@ -2021,6 +2094,102 @@ localise.initLocale(gUserLocale).then(function () {
      * assigned to the user, not just those enabled on the survey.
      * Shows the row only if the user has at least one role.
      */
+    /*
+     * The users a case is assigned to.  _assigned lists them with commas between them.
+     */
+    function assignedList(rec) {
+        if(!rec || !rec._assigned) {
+            return [];
+        }
+        return String(rec._assigned).split(',').map(function(u) { return u.trim(); })
+            .filter(function(u) { return u.length > 0; });
+    }
+
+    /*
+     * Whether the bundle of a survey lets a case have several assignees, cached per survey
+     */
+    function loadMultipleAssignees(sId, callback) {
+        if(typeof gMultipleAssignees[sId] !== "undefined" || !(sId > 0)) {
+            if(callback) callback(!!gMultipleAssignees[sId]);
+            return;
+        }
+        $.ajax({
+            url: "/surveyKPI/cases/settings/" + encodeURIComponent(sId),
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                gMultipleAssignees[sId] = !!(data && data.settings && data.settings.multipleAssignees === true);
+                if(callback) callback(gMultipleAssignees[sId]);
+            },
+            error: function() {
+                gMultipleAssignees[sId] = false;
+                if(callback) callback(false);
+            }
+        });
+    }
+
+    /*
+     * Set up the assign dialog.  With multiple assignees it lists who has the case, each of whom an
+     * administrator can take off, and adds the chosen user to them.  Otherwise it chooses the one assignee.
+     */
+    function setAssignDialog(multiple) {
+        var owners = assignedList(gTasks.gSelectedRecord),
+            admin = globals.gIsAdministrator || globals.gIsConsoleAdmin,
+            h = [];
+
+        if(multiple) {
+            owners.forEach(function(u) {
+                h.push('<li class="list-group-item d-flex justify-content-between align-items-center py-1">'
+                    + htmlEncode(u)
+                    + (admin || u === globals.gLoggedInUser.ident
+                        ? '<button type="button" class="btn btn-sm btn-outline-danger remove_assignee" data-user="'
+                            + htmlEncode(u) + '" title="' + htmlEncode(localise.set["mf_remove_assignee"]) + '">'
+                            + '<i class="fas fa-times"></i></button>'
+                        : '')
+                    + '</li>');
+            });
+            if(owners.length === 0) {
+                h.push('<li class="list-group-item py-1 text-muted">' + htmlEncode(localise.set["c_none"]) + '</li>');
+            }
+            $('#assignee_list').html(h.join(''));
+            $('#assignees_row').show();
+            $('#user_to_assign_label').text(localise.set["mf_add_user"]);
+            $('#user_to_assign').val("_none");
+            $('#unassignAll').toggle(admin && owners.length > 0);
+        } else {
+            $('#assignees_row').hide();
+            $('#unassignAll').hide();
+            $('#user_to_assign_label').text(localise.set["c_user"]);
+            $('#user_to_assign').val(owners.length > 0 ? owners[0] : "_none");
+        }
+    }
+
+    /*
+     * Post a change to who has the selected case
+     */
+    function assignmentRequest(url, data, done) {
+        addHourglass();
+        $.ajax({
+            type: "POST",
+            dataType: 'text',
+            contentType: "application/x-www-form-urlencoded",
+            cache: false,
+            url: url,
+            data: data,
+            success: function (res) {
+                removeHourglass();
+                if(handleLogout(res)) {
+                    done(res);
+                }
+            }, error: function (xhr) {
+                removeHourglass();
+                if(handleLogout(xhr)) {
+                    alert(xhr.responseText);
+                }
+            }
+        });
+    }
+
     function populateAssignRoleFilter() {
         var $row = $('#assign_role_row'),
             $sel = $('#assign_role_filter');
@@ -2602,7 +2771,7 @@ localise.initLocale(gUserLocale).then(function () {
             return;
         }
         var referencedByMe = !!gReferenced[instanceId];
-        var assignedToMe = gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident;
+        var assignedToMe = assignedList(gTasks.gSelectedRecord).indexOf(globals.gLoggedInUser.ident) >= 0;
         gTasks.gSelectedRecord._referencedByMe = referencedByMe;
         if(referencedByMe) {
             // De-reference is available whenever the record is referenced by the current user
@@ -2663,11 +2832,16 @@ localise.initLocale(gUserLocale).then(function () {
 			 */
             //gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
             gTasks.gSelectedRecord = records[0];
-            if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
+            var owners = assignedList(gTasks.gSelectedRecord),
+                mine = owners.indexOf(globals.gLoggedInUser.ident) >= 0;
+            if (mine) {
                 $('.assigned').show();
-            } else if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
+            } else if (owners.length > 0) {
                 $('.assigned_other').show();
                 assignedOther = true;
+                if(gMultipleAssignees[globals.gCurrentSurvey]) {
+                    $('.not_assigned').show();		// Others have it, I can join them
+                }
             } else {
                 $('.not_assigned').show();
             }

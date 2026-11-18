@@ -204,6 +204,7 @@ localise.initLocale(gUserLocale).then(function() {
             $('#cms_fs').val(settings.finalStatus);
             $('#cms_sq').val(settings.statusQuestion);      // The list of questions should have been set by now but it is not guaranteed
             $('#cms_cq').val(settings.criticalityQuestion);
+            $('#cms_multi').prop('checked', settings.multipleAssignees === true);
 
             /*
              * Update alerts table
@@ -306,6 +307,7 @@ localise.initLocale(gUserLocale).then(function() {
             settings.statusQuestion = $('#cms_sq').val();
             settings.finalStatus = $('#cms_fs').val();
             settings.criticalityQuestion = $('#cms_cq').val();
+            settings.multipleAssignees = $('#cms_multi').is(':checked');
 
             $('.org_alert').hide();
             addHourglass();

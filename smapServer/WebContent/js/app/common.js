@@ -6022,6 +6022,26 @@ function saveWebhook() {
 }
 
 /*
+ * An escalation that assigns a role only assigns everyone in it when the case's bundle allows multiple
+ * assignees.  Tell the person who set it up if it does not.  survey is a survey id or a bundle ident.
+ */
+function warnRoleNeedsMultipleAssignees(survey) {
+	if(!survey) {
+		return;
+	}
+	$.ajax({
+		url: "/surveyKPI/cases/multiple/" + encodeURIComponent(survey),
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			if(data && data.multipleAssignees === false) {
+				alert(localise.set["mf_role_single"]);
+			}
+		}
+	});
+}
+
+/*
  * Process a save notification when the target is "escalate"
  */
 function saveEscalate() {
@@ -7722,6 +7742,7 @@ function handleLogout(data) {
 }
 
 export {
+	warnRoleNeedsMultipleAssignees,
 	addDatePickList,
 	addFormPickList,
 	addGeomPickList,

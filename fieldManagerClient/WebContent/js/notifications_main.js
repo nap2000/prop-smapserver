@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, makeSearchableSelect, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveDhis2, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
+import { warnRoleNeedsMultipleAssignees, addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, makeSearchableSelect, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveDhis2, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -313,6 +313,10 @@ $(document).ready(function() {
 					if(handleLogout(data)) {
 						getNotifications(globals.gCurrentProject);
 						window.bsModalHide('#addNotificationPopup');
+						if(notification.target === "escalate" && notification.remote_user
+								&& String(notification.remote_user).indexOf("_role:") === 0) {
+							warnRoleNeedsMultipleAssignees(notification.bundle ? notification.bundle_ident : notification.s_id);
+						}
 					}
 				},
 				error: function(xhr, textStatus, err) {

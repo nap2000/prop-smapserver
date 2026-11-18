@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import { addHourglass, removeHourglass, getLoggedInUser, handleLogout, htmlEncode, setupUserProfile } from "common";
+import { addHourglass, removeHourglass, getLoggedInUser, handleLogout, htmlEncode, setupUserProfile, warnRoleNeedsMultipleAssignees } from "common";
 import globals from "globals";
 
 const CARD_W = 240;
@@ -1684,6 +1684,9 @@ function saveDrawer() {
 				spColumnMap:     spColumnMap
 			});
 		});
+		if (type === "case" && assignee.indexOf("_role:") === 0 && gEditNotifs[0].srcSurveyId) {
+			warnRoleNeedsMultipleAssignees(gEditNotifs[0].srcSurveyId);
+		}
 		promises.push(
 			fetch("/surveyKPI/workflow/edit/notifications", {
 				method:      "PUT",
@@ -2147,6 +2150,9 @@ function executeCreate() {
 		if (!resp.ok) throw new Error(resp.statusText);
 		closeEditDrawer();
 		loadWorkflow(function() { positionNewFormItems(knownIds); });
+		if (payload.target === "escalate" && payload.remoteUser && String(payload.remoteUser).indexOf("_role:") === 0) {
+			warnRoleNeedsMultipleAssignees(payload.srcSurveyId);
+		}
 	})
 	.catch(function(err) { console.error("executeCreate error:", err); })
 	.finally(function() { removeHourglass(); });

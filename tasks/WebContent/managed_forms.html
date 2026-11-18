@@ -669,15 +669,24 @@
 
                 <form class="px-4" role="form">
 
+                    <!-- With multiple assignees, who has the case now -->
+                    <div id="assignees_row" class="row mb-3" style="display:none;">
+                        <label class="col-sm-3 col-form-label lang" data-lang="mf_assignees">Assigned</label>
+                        <div class="col-sm-9">
+                            <ul id="assignee_list" class="list-group"></ul>
+                        </div>
+                    </div>
+
                     <div id="assign_role_row" class="row align-items-center mb-2" style="display:none;">
                         <label for="assign_role_filter" class="col-sm-3 col-form-label lang" data-lang="c_role">Role</label>
-                        <div class="col-sm-9">
-                            <select id="assign_role_filter" class="form-select"></select>
+                        <div class="col-sm-9 d-flex flex-wrap gap-2">
+                            <select id="assign_role_filter" class="form-select w-auto flex-grow-1"></select>
+                            <button id="assignRoleSave" type="button" class="btn btn-outline-primary lang" data-lang="mf_assign_role">role</button>
                         </div>
                     </div>
 
                     <div class="row align-items-center">
-                        <label for="user_to_assign" class="col-sm-3 col-form-label lang" data-lang="c_user">User</label>
+                        <label id="user_to_assign_label" for="user_to_assign" class="col-sm-3 col-form-label lang" data-lang="c_user">User</label>
                         <div class="col-sm-9">
                             <select id="user_to_assign" class="form-select"></select>
                         </div>
@@ -688,6 +697,7 @@
 
             </div>
             <div class="modal-footer">
+                <button id="unassignAll" type="button" class="btn btn-outline-danger me-auto lang" data-lang="mf_unassign_all" style="display:none;"></button>
                 <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
                 <button id="assignUserSave" type="button" data-bs-dismiss="modal" class="btn btn-primary lang " data-lang="c_save"></button>
             </div>

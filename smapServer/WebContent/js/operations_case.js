@@ -98,17 +98,26 @@ function renderCase(c) {
 	$('#ops_case_heading').text(c.title || (localise.set["ops_case_title"] || "Case"));
 
 	var sub = c.bundle ? esc(c.bundle) : "";
-	var ownerLabel = c.assignee
-		? (localise.set["ops_case_owner"] || "Owner") + ": " + esc(c.assignee)
+	// A case can have several owners, each of whom can be taken off
+	var owners = c.assignees || (c.assignee ? String(c.assignee).split(',').map(function (u) { return u.trim(); }) : []);
+	var ownerLabel = owners.length
+		? (localise.set["ops_case_owner"] || "Owner") + ": " + owners.map(function (u) {
+			return '<span class="badge text-bg-light border me-1">' + esc(u)
+				+ (owners.length > 1 ? ' <a href="#" class="ops_remove_owner text-danger" data-user="' + esc(u)
+					+ '" title="' + esc(localise.set["mf_remove_assignee"] || "Remove") + '">&times;</a>' : '')
+				+ '</span>';
+		}).join('')
 		: (localise.set["ops_case_unassigned"] || "Unassigned");
 	var stateLabel = c.closed
 		? '<span class="badge bg-secondary">' + (localise.set["ops_case_closed"] || "Closed") + '</span>'
 		: '<span class="badge bg-success">' + (localise.set["ops_case_open_state"] || "Open") + '</span>';
 	$('#ops_case_sub').html(sub + ' &nbsp; ' + ownerLabel + ' &nbsp; ' + stateLabel);
 
-	if (c.assignee) {
-		$('#ops_case_user').val(c.assignee);
-	}
+	$('#ops_case_user').val(owners.length === 1 ? owners[0] : "");
+	$('.ops_remove_owner').off().on('click', function (e) {
+		e.preventDefault();
+		act('remove', $(this).data('user'));
+	});
 
 	var rows = "";
 	(c.fields || []).forEach(function (f) {
