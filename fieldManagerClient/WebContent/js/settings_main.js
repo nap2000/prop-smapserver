@@ -220,6 +220,7 @@ const moment = window.moment;
 			};
 
 			var sensitiveString = JSON.stringify(sensitiveObj);
+			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: "POST",
@@ -240,7 +241,7 @@ const moment = window.moment;
 						return;  // Not an error
 					} else {
 						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);  // Alerts htmlencode text already
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(msg));
 					}
 				}
 			});
@@ -259,6 +260,7 @@ const moment = window.moment;
 			});
 
 			var otherString = JSON.stringify(otherObj);
+			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: "POST",
@@ -281,7 +283,7 @@ const moment = window.moment;
 							return;  // Not an error
 						} else {
 							var msg = xhr.responseText;
-							alert(localise.set["msg_err_upd"] + msg);    // Alerts htmlencode text already
+							$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(msg));
 						}
 					}
 				}
@@ -304,6 +306,7 @@ const moment = window.moment;
 				accessObj.limits[limitTypes[i].name] = parseInt($('#' + limitTypes[i].id).val()) || 0;
 			}
 
+			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: "POST",
@@ -324,7 +327,7 @@ const moment = window.moment;
 						if(xhr.readyState == 0 || xhr.status == 0) {
 							return;  // Not an error
 						} else {
-							alert(localise.set["msg_err_upd"] + xhr.responseText);    // Alerts htmlencode text already
+							$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 						}
 					}
 				}
@@ -349,6 +352,7 @@ const moment = window.moment;
 				ragAmberPct: parseFloat($('#ops_rag_amber').val()) || 0,
 				ragRedPct: parseFloat($('#ops_rag_red').val()) || 0
 			};
+			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: "POST",
@@ -366,7 +370,7 @@ const moment = window.moment;
 						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 						return;
 					}
-					alert(localise.set["msg_err_upd"] + xhr.responseText);
+					$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 				}
 			});
 		});
@@ -1508,6 +1512,7 @@ const moment = window.moment;
 			s.api_token = token.trim();
 		}
 
+		$('.org_alert').hide();
 		addHourglass();
 		$.ajax({
 			type: 'PUT',
@@ -1529,13 +1534,15 @@ const moment = window.moment;
 			error: function(xhr) {
 				removeHourglass();
 				if(handleLogout(xhr.responseText)) {
-					alert(localise.set["msg_err_upd"] + xhr.responseText);
+					$('.org_alert').show().removeClass('alert-success').addClass('alert-danger')
+						.html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 				}
 			}
 		});
 	}
 
 	function deleteDhis2Server() {
+		$('.org_alert').hide();
 		addHourglass();
 		$.ajax({
 			type: 'DELETE',
@@ -1543,13 +1550,16 @@ const moment = window.moment;
 			success: function(data) {
 				removeHourglass();
 				if(handleLogout(data)) {
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success')
+						.html(localise.set["c_deleted"]);
 					getDhis2Server();
 				}
 			},
 			error: function(xhr) {
 				removeHourglass();
 				if(handleLogout(xhr.responseText)) {
-					alert(localise.set["msg_err_del"] + xhr.responseText);
+					$('.org_alert').show().removeClass('alert-success').addClass('alert-danger')
+						.html(localise.set["msg_err_del"] + htmlEncode(xhr.responseText));
 				}
 			}
 		});
