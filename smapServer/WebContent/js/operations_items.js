@@ -109,7 +109,9 @@ function renderItems(items) {
 			'<td><a href="' + href + '" class="text-decoration-none">' + esc(it.title || "") + '</a>' +
 			'<div class="small text-muted">' + esc(typeLabel) +
 			(it.bundle ? ' &middot; ' + esc(it.bundle) : '') + '</div></td>' +
-			'<td>' + esc(it.assignee || "") + '</td>' +
+			'<td>' + esc(it.assignee || "") + (it.references > 0
+				? ' <span class="badge text-bg-light border ms-1" title="' + esc(localise.set["ops_references"] || "References") + '">'
+					+ '<i class="fas fa-eye"></i> ' + esc(String(it.references)) + '</span>' : '') + '</td>' +
 			'<td class="text-end">' + esc(String(it.ageDays)) + '</td>' +
 			'<td>' + flag + '</td>' +
 			'</tr>';

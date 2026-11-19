@@ -101,12 +101,7 @@ function renderCase(c) {
 	// A case can have several owners, each of whom can be taken off
 	var owners = c.assignees || (c.assignee ? String(c.assignee).split(',').map(function (u) { return u.trim(); }) : []);
 	var ownerLabel = owners.length
-		? (localise.set["ops_case_owner"] || "Owner") + ": " + owners.map(function (u) {
-			return '<span class="badge text-bg-light border me-1">' + esc(u)
-				+ (owners.length > 1 ? ' <a href="#" class="ops_remove_owner text-danger" data-user="' + esc(u)
-					+ '" title="' + esc(localise.set["mf_remove_assignee"] || "Remove") + '">&times;</a>' : '')
-				+ '</span>';
-		}).join('')
+		? (localise.set["ops_case_owner"] || "Owner") + ": " + esc(owners.join(", "))
 		: (localise.set["ops_case_unassigned"] || "Unassigned");
 	var stateLabel = c.closed
 		? '<span class="badge bg-secondary">' + (localise.set["ops_case_closed"] || "Closed") + '</span>'
@@ -114,10 +109,7 @@ function renderCase(c) {
 	$('#ops_case_sub').html(sub + ' &nbsp; ' + ownerLabel + ' &nbsp; ' + stateLabel);
 
 	$('#ops_case_user').val(owners.length === 1 ? owners[0] : "");
-	$('.ops_remove_owner').off().on('click', function (e) {
-		e.preventDefault();
-		act('remove', $(this).data('user'));
-	});
+	renderPeople(c.people || []);
 
 	var rows = "";
 	(c.fields || []).forEach(function (f) {
@@ -127,6 +119,46 @@ function renderCase(c) {
 		rows = '<tr><td class="text-muted">' + (localise.set["ops_case_no_fields"] || "No data") + '</td></tr>';
 	}
 	$('#ops_case_fields').html(rows);
+}
+
+/*
+ * Who has the case: the people assigned to it and those with it as a reference, how each got it,
+ * and a button to take them off
+ */
+function renderPeople(people) {
+	var l = localise.set, html = "";
+	var sources = {
+		console: l["ops_src_console"] || "Console",
+		escalation: l["ops_src_escalation"] || "Escalation",
+		device: l["ops_src_device"] || "Device",
+		ops: l["ops_src_ops"] || "Operations",
+		mcp: "MCP",
+		backfill: l["ops_src_backfill"] || "Before this was recorded"
+	};
+	people.forEach(function (p) {
+		var owner = p.access === 'owner';
+		var how = owner ? (sources[p.source] || p.source || "") : "";
+		if (p.viaRole) {
+			how += (how ? ", " : "") + (l["ops_via_role"] || "via role %s1").replace("%s1", p.viaRole);
+		}
+		html += '<tr>' +
+			'<td>' + esc(p.name || p.ident) + (p.name && p.name !== p.ident ? ' <span class="text-muted small">' + esc(p.ident) + '</span>' : '') + '</td>' +
+			'<td><span class="badge ' + (owner ? 'text-bg-primary' : 'text-bg-light border') + '">'
+				+ esc(owner ? (l["ops_access_owner"] || "Assigned") : (l["ops_access_ref"] || "Reference")) + '</span></td>' +
+			'<td class="small">' + esc(how) + '</td>' +
+			'<td class="small text-muted">' + esc(p.addedBy || "") + (p.added ? ' &middot; ' + esc(p.added) : '') + '</td>' +
+			'<td class="text-end"><button type="button" class="btn btn-sm btn-outline-danger ops_take_off" data-user="' + esc(p.ident)
+				+ '" data-action="' + (owner ? 'remove' : 'unreference') + '" title="' + esc(l["mf_remove_assignee"] || "Remove") + '">'
+				+ '<i class="fas fa-times"></i></button></td>' +
+			'</tr>';
+	});
+	if (!html) {
+		html = '<tr><td class="text-muted">' + esc(l["ops_case_unassigned"] || "Unassigned") + '</td></tr>';
+	}
+	$('#ops_case_people').html(html);
+	$('.ops_take_off').off().on('click', function () {
+		act($(this).data('action'), $(this).data('user'));
+	});
 }
 
 function act(action, user) {

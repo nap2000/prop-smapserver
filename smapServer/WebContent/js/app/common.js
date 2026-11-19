@@ -625,6 +625,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	}
 	if(globals.gIsAdministrator) {
 		$('.admin_role').removeClass('d-none').show();
+		$('.not_admin_role').hide();		// Offered to others in place of something administrators have
 	}
 	if(globals.gIsManage) {
 		$('.manage_role').removeClass('d-none').show();
