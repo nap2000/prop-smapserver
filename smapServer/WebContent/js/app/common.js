@@ -7242,10 +7242,11 @@ function htmlEncode(input) {
 /*
  * Get the list of users from the server
  */
-function getEligibleUsers(sIdent, isNotification, roleId) {
+function getEligibleUsers(sIdent, isNotification, roleId, callback) {
 
 	if(!roleId && window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]) {
 		fillUsersList(isNotification, window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]);
+		if(callback) callback();
 	} else if(sIdent) {
 		addHourglass();
 		var url = "/surveyKPI/userList/survey/" + sIdent;
@@ -7261,6 +7262,7 @@ function getEligibleUsers(sIdent, isNotification, roleId) {
 						window.gTasks.cache.eligibleUsers[sIdent] = data;
 					}
 					fillUsersList(isNotification, data);
+					if(callback) callback();
 				}
 			},
 			error: function (xhr, textStatus, err) {
@@ -7307,7 +7309,7 @@ function fillUsersList(isNotification, data) {
 	if (data && data.length > 0) {
 		for (i = 0; i < data.length; i++) {
 			h[++idx] = '<option value="';
-			h[++idx] = data[i].ident;
+			h[++idx] = htmlEncode(data[i].ident);
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(data[i].name);
 			h[++idx] = '</option>';

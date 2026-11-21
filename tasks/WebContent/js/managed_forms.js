@@ -468,31 +468,6 @@ localise.initLocale(gUserLocale).then(function () {
         });
 
         /*
-         * Assign everyone in the selected role, when the case can have several assignees
-         */
-        $('#assignRoleSave').off().click(function(e) {
-            e.preventDefault();
-            var roleId = $('#assign_role_filter').val();
-            if(!gMultipleAssignees[globals.gCurrentSurvey]) {
-                alert(localise.set["mf_multi_off"]);
-                return;
-            }
-            if(!roleId) {
-                return;
-            }
-            assignmentRequest("/surveyKPI/managed/assignrole/" + globals.gCurrentSurvey + "/" + encodeURIComponent(roleId),
-                {record: gTasks.gSelectedRecord.instanceid}, function(data) {
-                    var res = {};
-                    try { res = JSON.parse(data); } catch(err) {}
-                    window.bsModalHide('#userAssign');
-                    showManagedData(globals.gCurrentSurvey, showTable, true);
-                    if(res.notAllowed > 0) {
-                        alert(localise.set["mf_role_assigned"].replace("%s1", res.assigned).replace("%s2", res.notAllowed));
-                    }
-                });
-        });
-
-        /*
          * Take everybody off the case
          */
         $('#unassignAll').off().click(function(e) {
@@ -522,7 +497,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         $('#assign_role_filter').change(function() {
             var roleId = $(this).val();
-            getEligibleUsers(globals.gCurrentSurveyIdent, false, roleId || undefined);
+            getEligibleUsers(globals.gCurrentSurveyIdent, false, roleId || undefined, setRoleChoice);
         });
 
         /*
@@ -635,6 +610,10 @@ localise.initLocale(gUserLocale).then(function () {
             $('#assignUserSave').prop("disabled", true);     // debounce
 
             var assignTo = $('#user_to_assign').val();
+            if(assignTo === "_role") {
+                assignRole($('#assign_role_filter').val());
+                return;
+            }
             if(gMultipleAssignees[globals.gCurrentSurvey] && (!assignTo || assignTo === "_none")) {
                 $('#assignUserSave').prop("disabled", false);
                 window.bsModalHide('#userAssign');		// Nobody chosen to add
@@ -2162,6 +2141,42 @@ localise.initLocale(gUserLocale).then(function () {
             $('#user_to_assign_label').text(localise.set["c_user"]);
             $('#user_to_assign').val(owners.length > 0 ? owners[0] : "_none");
         }
+        setRoleChoice();
+    }
+
+    /*
+     * With multiple assignees and a role chosen, offer everyone in that role as a choice in the user list
+     */
+    function setRoleChoice() {
+        var $users = $('#user_to_assign'),
+            $role = $('#assign_role_filter'),
+            roleId = $role.val();
+
+        $users.find('option[value="_role"]').remove();
+        if(gMultipleAssignees[globals.gCurrentSurvey] && roleId) {
+            $users.find('option[value="_none"]').after($('<option>').val("_role")
+                .text(localise.set["mf_everyone_in"].replace("%s1", $role.find('option:selected').text())));
+        }
+    }
+
+    /*
+     * Add everyone in a role who can be given the selected case
+     */
+    function assignRole(roleId) {
+        $('#assignUserSave').prop("disabled", false);
+        if(!roleId) {
+            return;
+        }
+        assignmentRequest("/surveyKPI/managed/assignrole/" + globals.gCurrentSurvey + "/" + encodeURIComponent(roleId),
+            {record: gTasks.gSelectedRecord.instanceid}, function(data) {
+                var res = {};
+                try { res = JSON.parse(data); } catch(err) {}
+                window.bsModalHide('#userAssign');
+                showManagedData(globals.gCurrentSurvey, showTable, true);
+                if(res.notAllowed > 0) {
+                    alert(localise.set["mf_role_assigned"].replace("%s1", res.assigned).replace("%s2", res.notAllowed));
+                }
+            });
     }
 
     /*
@@ -2223,14 +2238,14 @@ localise.initLocale(gUserLocale).then(function () {
             return;
         }
 
-        h[++idx] = '<option value="">' + localise.set["c_all"] + '</option>';
+        h[++idx] = '<option value="">' + htmlEncode(localise.set["mf_all_users"]) + '</option>';
         for(i = 0; i < roles.length; i++) {
             h[++idx] = '<option value="' + roles[i].id + '">' + htmlEncode(roles[i].name) + '</option>';
         }
         $sel.html(h.join(''));
         if(gSavedAssignRole) {
             $sel.val(gSavedAssignRole);
-            getEligibleUsers(globals.gCurrentSurveyIdent, false, gSavedAssignRole);
+            getEligibleUsers(globals.gCurrentSurveyIdent, false, gSavedAssignRole, setRoleChoice);
         }
         $row.show();
     }
