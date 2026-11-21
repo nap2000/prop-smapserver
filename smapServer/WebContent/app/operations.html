@@ -17,6 +17,13 @@
     <style>
         .ops-chart-wrap { position: relative; height: 260px; transition: height 0.2s ease; }
         .ops-chart-wrap.chart-expanded { height: 600px; }
+        /* Open alerts scroll within the card so a long list does not push the units table off the screen.
+           Beside the chart the list fills the card, whose height follows the chart; stacked it is capped. */
+        #ops_alerts_body { overflow-y: auto; max-height: 360px; }
+        @media (min-width: 992px) {
+            #ops_alerts_body { position: relative; max-height: none; }
+            #ops_alerts_body > #ops_alerts { position: absolute; inset: 0; overflow-y: auto; }
+        }
     </style>
 
     <script src="/js/libs/modernizr.js"></script>
@@ -114,7 +121,7 @@
         <div class="col-lg-4">
             <div class="card h-100">
                 <div class="card-header lang" data-lang="ops_alerts">Open alerts</div>
-                <div class="card-body p-0">
+                <div class="card-body p-0" id="ops_alerts_body">
                     <ul class="list-group list-group-flush" id="ops_alerts"></ul>
                 </div>
             </div>
