@@ -1571,7 +1571,7 @@ function buildConditionRows() {
 			}
 		} else if (gEditTGs.length > 0) {
 			const tg = gEditTGs[0];
-			const url = "/app/tasks/taskManagement.html?tg_id=" + tg.tgId;
+			const url = "/app/tasks/taskManagement.html?tg_id=" + tg.tgId + (tg.projectId ? "&project=" + tg.projectId : "") + "&edit=rule";
 			advEl.href = url;
 			const needsSwitch = tg.projectId && tg.projectId !== globals.gCurrentProject;
 			if (needsSwitch) {

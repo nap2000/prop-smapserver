@@ -165,7 +165,7 @@ function showIssues() {
 		h.push('<td>');
 		// Fix links are paths on this server built from ids, anything else is not shown
 		if(i.fixUrl && i.fixUrl.indexOf('/') === 0 && i.fixUrl.indexOf('//') !== 0) {
-			h.push('<a class="btn btn-sm btn-primary text-nowrap" target="_blank" rel="noopener" href="' + htmlEncode(i.fixUrl) + '">'
+			h.push('<a class="btn btn-sm btn-primary text-nowrap" href="' + htmlEncode(i.fixUrl) + '">'
 				+ '<i class="fas fa-wrench"></i> ' + htmlEncode(localise.set["iss_fix"]) + '</a>');
 		}
 		h.push('</td>');

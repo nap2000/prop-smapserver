@@ -131,7 +131,7 @@ localise.initLocale(gUserLocale).then(function () {
 		$('#email_subject').prop('placeholder', localise.set['n_esc']);
 		$('#tp_assign_emails, #assign_emails').prop('placeholder', localise.set['n_cs_e']);
 
-		getLoggedInUser(projectChanged, false, true, undefined);
+		getLoggedInUser(projectFromLink, false, true, undefined);
 
 		// Set change function on projects
 		$('#project_name').change(function () {
@@ -1075,6 +1075,23 @@ localise.initLocale(gUserLocale).then(function () {
 	/*
 	 * Function called when the current project is changed
 	 */
+	/*
+	 * A link can name the task group to show, tg_id, and its project, project, which may not be the user's current
+	 * project.  edit=rule also opens the task group's rule for editing.
+	 */
+	function projectFromLink() {
+		const params = new URLSearchParams(window.location.search);
+		const pId = params.get("project");
+		const tgId = parseInt(params.get("tg_id"), 10);
+		if(pId && $('#project_name option').filter(function() { return this.value === pId; }).length > 0) {
+			$('#project_name').val(pId);
+		}
+		if(tgId) {
+			globals.gCurrentTaskGroup = tgId;
+		}
+		projectChanged();
+	}
+
 	function projectChanged() {
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
@@ -1438,38 +1455,44 @@ localise.initLocale(gUserLocale).then(function () {
 		}
 		$('#taskgroup').val(gTaskGroupIndex);
 
-		const openTgId = parseInt(new URLSearchParams(window.location.search).get("tg_id"), 10);
+		const linkParams = new URLSearchParams(window.location.search);
+		const openTgId = parseInt(linkParams.get("tg_id"), 10);
 		if (openTgId) {
 			const tgIdx = taskgroups.findIndex(function(g) { return g.tg_id === openTgId; });
+			history.replaceState(null, "", window.location.pathname);
 			if (tgIdx >= 0) {
 				gTaskGroupIndex = tgIdx;
 				globals.gCurrentTaskGroup = taskgroups[tgIdx].tg_id;
 				$('#taskgroup').val(gTaskGroupIndex);
-				$('#editTaskGroup').trigger('click');
-				history.replaceState(null, "", window.location.pathname);
+				saveCurrentProject(globals.gCurrentProject, undefined, globals.gCurrentTaskGroup);
 
-				// getTaskUsers runs in parallel — re-apply user_id once the options arrive
-				const userId = taskgroups[tgIdx].rule && taskgroups[tgIdx].rule.user_id;
-				if (userId && userId > 0) {
-					const poll = setInterval(function() {
-						if ($('#users_task_group option[value="' + userId + '"]').length) {
-							clearInterval(poll);
-							$('#users_task_group').val(userId);
-						}
-					}, 50);
-					setTimeout(function() { clearInterval(poll); }, 5000);
-				}
+				// Open the rule only when the link asks for it and the task group has one
+				if (linkParams.get("edit") === "rule" && taskgroups[tgIdx].rule) {
+					$('#editTaskGroup').trigger('click');
 
-				// loadSurveys fan-out runs in parallel — re-apply survey_to_complete once its options arrive
-				const targetSId = taskgroups[tgIdx].target_s_id;
-				if (targetSId) {
-					const pollSurvey = setInterval(function() {
-						if ($('#survey_to_complete option[value="' + targetSId + '"]').length) {
-							clearInterval(pollSurvey);
-							$('#survey_to_complete').val(targetSId);
-						}
-					}, 50);
-					setTimeout(function() { clearInterval(pollSurvey); }, 5000);
+					// getTaskUsers runs in parallel — re-apply user_id once the options arrive
+					const userId = taskgroups[tgIdx].rule.user_id;
+					if (userId && userId > 0) {
+						const poll = setInterval(function() {
+							if ($('#users_task_group option[value="' + userId + '"]').length) {
+								clearInterval(poll);
+								$('#users_task_group').val(userId);
+							}
+						}, 50);
+						setTimeout(function() { clearInterval(poll); }, 5000);
+					}
+
+					// loadSurveys fan-out runs in parallel — re-apply survey_to_complete once its options arrive
+					const targetSId = taskgroups[tgIdx].target_s_id;
+					if (targetSId) {
+						const pollSurvey = setInterval(function() {
+							if ($('#survey_to_complete option[value="' + targetSId + '"]').length) {
+								clearInterval(pollSurvey);
+								$('#survey_to_complete').val(targetSId);
+							}
+						}, 50);
+						setTimeout(function() { clearInterval(pollSurvey); }, 5000);
+					}
 				}
 			}
 		}
