@@ -38,13 +38,21 @@ if (typeof localStorage !== "undefined") {
 window.gUserLocale = gUserLocale;	// common.js reads this as a global
 
 var gType;
+var gPerson;			// type person: the person's ident and name
+var gPersonName;
 
 $(document).ready(function () {
 	if (typeof setTheme === "function") {
 		setTheme();
 	}
-	gType = new URLSearchParams(window.location.search).get("type");
-	if (["stale", "overdue", "open_cases", "unassigned", "in_progress", "alerts", "no_unit"].indexOf(gType) < 0) {
+	var params = new URLSearchParams(window.location.search);
+	gType = params.get("type");
+	gPerson = params.get("user");
+	gPersonName = params.get("name") || gPerson;
+	if (gType === "person" && !gPerson) {
+		gType = null;
+	}
+	if (["stale", "overdue", "open_cases", "unassigned", "in_progress", "alerts", "no_unit", "person"].indexOf(gType) < 0) {
 		gType = "overdue";		// page is reached from an L0 card
 	}
 
@@ -68,13 +76,21 @@ function applyHeading() {
 		alerts: "ops_open_alerts",
 		no_unit: "ops_unit_none"
 	};
+	if (gType === "person") {
+		$('#ops_items_heading').text((localise.set["ops_person_items"] || "Open cases and tasks: %s1").replace("%s1", gPersonName));
+		return;
+	}
 	var key = keyByType[gType] || "ops_items_title";
 	$('#ops_items_heading').text(localise.set[key] || "At-risk records");
 }
 
 function loadItems() {
 	$('.hour_glass').show();
-	fetch('/surveyKPI/ops/items?type=' + encodeURIComponent(gType), { credentials: 'same-origin', cache: 'no-store' })
+	var url = '/surveyKPI/ops/items?type=' + encodeURIComponent(gType);
+	if (gType === "person") {
+		url += '&user=' + encodeURIComponent(gPerson);
+	}
+	fetch(url, { credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();

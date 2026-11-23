@@ -134,14 +134,20 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center">
                     <span class="me-auto" id="ops_units_title"></span>
+                    <input type="search" id="ops_people_search" class="form-control form-control-sm me-2 lang_ph"
+                           data-lang_ph="ops_search_people" style="max-width: 14rem; display:none;">
                     <div class="btn-group btn-group-sm" role="group" id="ops_units_toggle">
                         <button type="button" class="btn btn-outline-secondary active lang_tt" data-mode="unit"
-                                data-lang_tt="ops_by_unit" aria-label="By unit">
-                            <i class="fas fa-users"></i>
+                                data-lang_tt="ops_by_unit">
+                            <i class="fas fa-users me-1" aria-hidden="true"></i><span class="lang" data-lang="ops_view_role">By role</span>
                         </button>
                         <button type="button" class="btn btn-outline-secondary lang_tt" data-mode="bundle"
-                                data-lang_tt="ops_by_bundle" aria-label="By bundle">
-                            <i class="fas fa-layer-group"></i>
+                                data-lang_tt="ops_by_bundle">
+                            <i class="fas fa-layer-group me-1" aria-hidden="true"></i><span class="lang" data-lang="ops_view_bundle">By survey bundle</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary lang_tt" data-mode="person"
+                                data-lang_tt="ops_by_person">
+                            <i class="fas fa-user me-1" aria-hidden="true"></i><span class="lang" data-lang="ops_view_person">By person</span>
                         </button>
                     </div>
                 </div>
@@ -150,6 +156,7 @@
                         <thead id="ops_units_head"></thead>
                         <tbody id="ops_units"></tbody>
                     </table>
+                    <p class="text-muted small m-2" id="ops_units_note" style="display:none;"></p>
                 </div>
             </div>
         </div>

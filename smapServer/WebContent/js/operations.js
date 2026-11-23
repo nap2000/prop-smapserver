@@ -42,6 +42,8 @@ var gBacklog = [];				// latest backlog series, kept so the toggle can re-render
 var gBacklogMode = "line";		// "line" (net backlog + opened/closed lines) or "bar" (opened vs closed throughput)
 var gUnits = [];				// latest per-unit (role) breakdown
 var gBundles = [];				// latest per-bundle breakdown
+var gPeople = [];				// latest per-person breakdown
+var PEOPLE_SHOWN = 50;			// people listed before a search is needed
 var gUnitMode = "unit";			// "unit" or "bundle" - which case breakdown the table shows
 var gSparklines = [];
 
@@ -97,6 +99,10 @@ $(document).ready(function () {
 		$(this).addClass('active');
 		renderBreakdown();
 	});
+
+	$('#ops_people_search').on('input', function () {
+		renderPeople(gPeople);
+	});
 });
 
 function loadOverview(force) {
@@ -127,6 +133,7 @@ function renderOverview(data) {
 	renderAlerts(data.alerts || []);
 	gUnits = data.units || [];
 	gBundles = data.bundles || [];
+	gPeople = data.people || [];
 	renderBreakdown();
 	if (data.generatedAt) {
 		$('#ops_generated').text((localise.set["ops_generated"] || "Updated") + ": " + data.generatedAt.replace('T', ' '));
@@ -307,15 +314,19 @@ function renderAlerts(alerts) {
 }
 
 function renderBreakdown() {
+	$('#ops_people_search').toggle(gUnitMode === "person");
+	$('#ops_units_note').hide();
 	if (gUnitMode === "bundle") {
 		renderBundles(gBundles);
+	} else if (gUnitMode === "person") {
+		renderPeople(gPeople);
 	} else {
 		renderUnits(gUnits);
 	}
 }
 
 function renderUnits(units) {
-	$('#ops_units_title').text(localise.set["ops_units"] || "Units (roles)");
+	$('#ops_units_title').text(localise.set["ops_units"] || "Cases and tasks by role");
 	$('#ops_units_head').html('<tr>' +
 		'<th>' + (localise.set["ops_role"] || "Role") + '</th>' +
 		'<th class="text-end">' + (localise.set["ops_open_cases"] || "Open cases") + '</th>' +
@@ -361,10 +372,64 @@ function renderUnits(units) {
 	$('#ops_units').html(html);
 }
 
-function renderBundles(bundles) {
-	$('#ops_units_title').text(localise.set["ops_bundles"] || "Bundles");
+/*
+ * Open cases and tasks for each person.  The most overdue are listed first; a search finds people further down.
+ */
+function renderPeople(people) {
+	$('#ops_units_title').text(localise.set["ops_people_title"] || "Cases and tasks by person");
 	$('#ops_units_head').html('<tr>' +
-		'<th>' + (localise.set["ops_bundle"] || "Bundle") + '</th>' +
+		'<th>' + esc(localise.set["ops_person"] || "Person") + '</th>' +
+		'<th class="text-end">' + esc(localise.set["ops_open_cases"] || "Open cases") + '</th>' +
+		'<th class="text-end">' + esc(localise.set["ops_open_tasks"] || "Open tasks") + '</th>' +
+		'<th class="text-end">' + esc(localise.set["ops_tasks_overdue"] || "Overdue") + '</th>' +
+		'<th class="text-end">' + esc(localise.set["ops_overdue_pct"] || "Overdue %") + '</th>' +
+		'<th class="text-end">' + esc(localise.set["ops_oldest_days"] || "Oldest (days)") + '</th>' +
+		'</tr>');
+
+	const q = ($('#ops_people_search').val() || "").trim().toLowerCase();
+	const matched = q ? people.filter(function (p) {
+		return (p.name || "").toLowerCase().indexOf(q) >= 0 || (p.ident || "").toLowerCase().indexOf(q) >= 0;
+	}) : people;
+	const shown = matched.slice(0, PEOPLE_SHOWN);
+
+	if (!shown.length) {
+		$('#ops_units').html('<tr><td colspan="6" class="text-muted">' +
+			esc(localise.set["ops_no_people"] || "Nobody has open work") + '</td></tr>');
+	} else {
+		let html = "";
+		shown.forEach(function (p) {
+			const colour = RAG[p.rag] || RAG.none;
+			const href = '/app/operations_items.html?type=person&user=' + encodeURIComponent(p.ident) +
+				'&name=' + encodeURIComponent(p.name || p.ident);
+			const name = p.name && p.name !== p.ident
+				? esc(p.name) + ' <span class="text-muted small">' + esc(p.ident) + '</span>'
+				: esc(p.ident);
+			html += '<tr>' +
+				'<td><span class="badge me-1" style="background-color:' + colour + '">&nbsp;</span>' +
+				'<a href="' + href + '" class="text-decoration-none">' + name +
+				' <i class="fas fa-chevron-right text-muted small"></i></a></td>' +
+				'<td class="text-end">' + esc(String(p.openCases)) + '</td>' +
+				'<td class="text-end">' + esc(String(p.openTasks)) + '</td>' +
+				'<td class="text-end">' + esc(String(p.overdue)) + '</td>' +
+				'<td class="text-end" style="color:' + colour + '">' + (p.openTasks > 0 ? p.overduePct.toFixed(0) + '%' : '&mdash;') + '</td>' +
+				'<td class="text-end">' + esc(String(p.oldestDays)) + '</td>' +
+				'</tr>';
+		});
+		$('#ops_units').html(html);
+	}
+
+	let note = localise.set["ops_people_multi"] || "A case with several owners counts once for each of them.";
+	if (matched.length > shown.length) {
+		note += " " + (localise.set["ops_people_shown"] || "Showing %s1 of %s2. Search to find others.")
+			.replace("%s1", shown.length).replace("%s2", matched.length);
+	}
+	$('#ops_units_note').text(note).show();
+}
+
+function renderBundles(bundles) {
+	$('#ops_units_title').text(localise.set["ops_bundles"] || "Case status by survey bundle");
+	$('#ops_units_head').html('<tr>' +
+		'<th>' + (localise.set["ops_bundle"] || "Survey bundle") + '</th>' +
 		'<th class="text-end">' + (localise.set["ops_open_cases"] || "Open cases") + '</th>' +
 		'<th class="text-end">' + (localise.set["ops_stale"] || "Stale") + '</th>' +
 		'<th class="text-end">' + (localise.set["ops_unit_unassigned"] || "Unassigned") + '</th>' +
