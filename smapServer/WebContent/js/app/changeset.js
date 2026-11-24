@@ -229,6 +229,19 @@ export default {
                             h[++idx] = '</ol>';
                             h[++idx] = '</div>';
                         }
+                        // Server expressions elsewhere in the bundle that these changes broke
+                        if (data.warnings && data.warnings.length > 0) {
+                            h[++idx] = '<div class="alert alert-warning" role="alert">';
+                            h[++idx] = htmlEncode(localise.set["c_warning"]);
+                            h[++idx] = '<ol>';
+                            for (i = 0; i < data.warnings.length; i++) {
+                                h[++idx] = '<li>';
+                                h[++idx] = htmlEncode(data.warnings[i]);
+                                h[++idx] = '</li>';
+                            }
+                            h[++idx] = '</ol>';
+                            h[++idx] = '</div>';
+                        }
 
                         window.bootbox.alert(h.join(""));
                     }

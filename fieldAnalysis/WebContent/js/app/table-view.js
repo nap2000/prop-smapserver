@@ -657,7 +657,7 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 		addMoreLessButtons($selMain, view, fId, tableItems);
 	} else {
         if(tableItems && typeof tableItems.message !== "undefined" && tableItems.message !== null && tableItems.message.trim().length > 0) {
-            $selMain.html(tableItems.message);
+            $selMain.text(tableItems.message);
         } else if(tableItems && typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
             $selMain.html(localise.set["an_nmd"]);
         } else {
@@ -681,7 +681,7 @@ function showUserTable(view) {
 		addMoreLessUserButtons($selMain, view);
 	} else {
 		if(tableItems && typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
-			$selMain.html(tableItems.message);
+			$selMain.text(tableItems.message);
 		} else if(tableItems && typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
 			$selMain.html(localise.set["an_nmd"]);
 		} else {

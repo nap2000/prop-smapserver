@@ -1727,12 +1727,25 @@ function saveDrawer() {
 
 	addHourglass();
 	Promise.all(promises)
-		.then(function() {
+		.then(function(resps) {
+			const refused = resps.filter(function(r) { return r && r.ok === false; });
+			if (refused.length > 0) {
+				return refused[0].text().then(function(t) { throw new Error(t || refused[0].statusText); });
+			}
 			closeEditDrawer();
 			loadWorkflow();
 		})
-		.catch(function(err) { console.error("saveDrawer error:", err); })
+		.catch(function(err) { showSaveError("saveDrawer", err); })
 		.finally(function() { removeHourglass(); });
+}
+
+/*
+ * Tell the user why a save was refused, for example a filter that will not work.
+ * alert shows the message as text
+ */
+function showSaveError(where, err) {
+	console.error(where + " error:", err);
+	alert(localise.set["msg_err_save"] + " " + (err && err.message ? err.message : ""));
 }
 
 /*
@@ -2147,14 +2160,16 @@ function executeCreate() {
 		body:        JSON.stringify(payload)
 	})
 	.then(function(resp) {
-		if (!resp.ok) throw new Error(resp.statusText);
+		if (!resp.ok) {
+			return resp.text().then(function(t) { throw new Error(t || resp.statusText); });
+		}
 		closeEditDrawer();
 		loadWorkflow(function() { positionNewFormItems(knownIds); });
 		if (payload.target === "escalate" && payload.remoteUser && String(payload.remoteUser).indexOf("_role:") === 0) {
 			warnRoleNeedsMultipleAssignees(payload.srcSurveyId);
 		}
 	})
-	.catch(function(err) { console.error("executeCreate error:", err); })
+	.catch(function(err) { showSaveError("executeCreate", err); })
 	.finally(function() { removeHourglass(); });
 }
 

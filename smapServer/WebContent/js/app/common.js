@@ -3505,7 +3505,7 @@ function errorMessageText(msg) {
 		return "";
 	}
 
-	if(text.indexOf("<") >= 0) {
+	if(text.indexOf("<") >= 0 || text.indexOf("&") >= 0) {		// Markup, or a message the server encoded
 		try {
 			// DOMParser is used rather than jquery so that nothing in the response is run or loaded
 			var doc = new DOMParser().parseFromString(text, "text/html");

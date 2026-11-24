@@ -391,7 +391,7 @@ window.gUserLocale = gUserLocale;
 					getTemplates();	// Reload templates view
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
-					('#edit_warnings').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_err_del"] + htmlEncode(xhr.responseText));
+					$('#edit_warnings').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(htmlEncode(localise.set["msg_err_save"] + " " + xhr.responseText));
 				}
 			});
 		}
