@@ -1373,15 +1373,22 @@ function renderDrawerContent(type) {
 	if (type === "task" && (gEditTGs.length > 0 || gDrawerCreateMode)) {
 		const tgRoleId = firstTG ? (firstTG.roleId || 0) : 0;
 		const tgUserId = firstTG ? (firstTG.userId || 0) : 0;
-		const taskAssignMode = tgRoleId > 0 ? "role" : (tgUserId > 0 ? "user" : "unassigned");
+		// A rule that takes the assignee from the data is set in task management, here it is shown and kept
+		const tgAssignData = firstTG && firstTG.remoteUser === "_data" ? (firstTG.assignData || "") : null;
+		const taskAssignMode = tgRoleId > 0 ? "role" : (tgUserId > 0 ? "user" : (tgAssignData !== null ? "data" : "unassigned"));
 		bodyHtml += `<div class="wf-field">
 			<label>${l["c_assign_type"]}</label>
 			<div class="btn-group btn-group-sm">
 				<button type="button" id="wfd-task-assign-unassigned" class="btn btn-outline-secondary${taskAssignMode === "unassigned" ? " active" : ""}" style="font-size:11px;">${l["c_unassigned"]}</button>
 				<button type="button" id="wfd-task-assign-user"       class="btn btn-outline-secondary${taskAssignMode === "user"       ? " active" : ""}" style="font-size:11px;">${l["c_user"]}</button>
 				<button type="button" id="wfd-task-assign-role"       class="btn btn-outline-secondary${taskAssignMode === "role"       ? " active" : ""}" style="font-size:11px;">${l["c_role"]}</button>
+				${tgAssignData !== null ? `<button type="button" id="wfd-task-assign-data" class="btn btn-outline-secondary${taskAssignMode === "data" ? " active" : ""}" style="font-size:11px;">${esc(l["t_ad"])}</button>` : ""}
 			</div>
 		</div>
+		${tgAssignData !== null ? `<div class="wf-field" id="wfd-task-data-row"${taskAssignMode === "data" ? "" : ' style="display:none;"'}>
+			<label>${esc(l["t_ad"])}</label>
+			<input type="text" id="wfd-task-assign-data-rule" class="form-control form-control-sm" readonly value="${esc(tgAssignData)}">
+		</div>` : ""}
 		<div class="wf-field" id="wfd-task-user-row"${taskAssignMode === "user" ? "" : ' style="display:none;"'}>
 			<label>${l["c_user"]}</label>
 			<select id="wfd-task-user-select" data-current="${tgUserId}"><option value="">Loading…</option></select>
@@ -1427,16 +1434,18 @@ function renderDrawerContent(type) {
 			});
 		}
 		function setDrawerTaskMode(mode) {
-			["unassigned","user","role"].forEach(function(m) {
+			["unassigned","user","role","data"].forEach(function(m) {
 				const btn = document.getElementById("wfd-task-assign-" + m);
 				if (btn) btn.classList.toggle("active", m === mode);
 			});
 			const uRow = document.getElementById("wfd-task-user-row");
 			const rRow = document.getElementById("wfd-task-role-row");
+			const dRow = document.getElementById("wfd-task-data-row");
 			if (uRow) uRow.style.display = mode === "user" ? "" : "none";
 			if (rRow) rRow.style.display = mode === "role" ? "" : "none";
+			if (dRow) dRow.style.display = mode === "data" ? "" : "none";
 		}
-		["unassigned","user","role"].forEach(function(m) {
+		["unassigned","user","role","data"].forEach(function(m) {
 			const btn = document.getElementById("wfd-task-assign-" + m);
 			if (btn) btn.onclick = function() { setDrawerTaskMode(m); };
 		});
@@ -1623,6 +1632,8 @@ function saveDrawer() {
 	let taskUserId = 0;
 	const taskRoleBtn = document.getElementById("wfd-task-assign-role");
 	const taskUserBtn = document.getElementById("wfd-task-assign-user");
+	const taskDataBtn = document.getElementById("wfd-task-assign-data");
+	const taskFromData = !!(taskDataBtn && taskDataBtn.classList.contains("active"));	// Keeps the rule
 	if (taskRoleBtn && taskRoleBtn.classList.contains("active")) {
 		taskRoleId = parseInt((document.getElementById("wfd-task-role-select") || {}).value || "0", 10);
 	} else if (taskUserBtn && taskUserBtn.classList.contains("active")) {
@@ -1710,7 +1721,8 @@ function saveDrawer() {
 				userId: taskUserId,
 				remoteUser: type === "emailtask"
 				                ? assignee
-				                : ((taskRoleId === 0 && taskUserId === 0) ? (tg.remoteUser || "") : "")
+				                : (taskFromData ? "_data"
+				                	: ((taskRoleId === 0 && taskUserId === 0 && tg.remoteUser !== "_data") ? (tg.remoteUser || "") : ""))
 			};
 			if (targetSurveyId > 0) update.targetSurveyId = targetSurveyId;
 			return Object.assign({}, tg, update);
