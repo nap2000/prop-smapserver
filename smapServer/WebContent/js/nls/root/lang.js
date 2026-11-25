@@ -959,6 +959,7 @@ define({
     "mf_assignees": "Assigned",
     "ops_people": "Who has this case",
     "ops_references": "References",
+    "ops_reopened": "Times the case has been reopened",
     "ops_access_owner": "Assigned",
     "ops_access_ref": "Reference",
     "ops_via_role": "via role %s1",

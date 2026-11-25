@@ -192,7 +192,10 @@ function renderAtRisk(items) {
 		html += '<tr>' +
 			'<td><a href="' + href + '" class="text-decoration-none">' + esc(it.title || "") + '</a>' +
 			'<div class="small text-muted">' + esc(typeLabel) +
-			(it.bundle ? ' &middot; ' + esc(it.bundle) : '') + '</div></td>' +
+			(it.bundle ? ' &middot; ' + esc(it.bundle) : '') +
+			(it.reopened > 0 ? ' <span class="badge text-bg-light border ms-1" title="'
+				+ esc(localise.set["ops_reopened"] || "Reopened") + '"><i class="fas fa-folder-open"></i> '
+				+ esc(String(it.reopened)) + '</span>' : '') + '</div></td>' +
 			'<td>' + esc(it.assignee || "") + (it.references > 0
 				? ' <span class="badge text-bg-light border ms-1" title="' + esc(localise.set["ops_references"] || "References") + '">'
 					+ '<i class="fas fa-eye"></i> ' + esc(String(it.references)) + '</span>' : '') + '</td>' +
