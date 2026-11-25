@@ -69,14 +69,12 @@ var gOpts = {};
 /*
  * Show the timeline
  * data: the record's events, newest first, as returned for the history
- * record: the case record
- * columns: the columns of the record's form
  * opts.details(event, index): html of the event's details, or undefined
  * opts.action(event, index): html of a button that acts on the event, or undefined
  * opts.bind($elem): attach the handlers of the details and buttons
  */
-function showTimeline(data, record, columns, opts) {
-	gLast = { data: data || [], record: record, columns: columns || [] };
+function showTimeline(data, opts) {
+	gLast = { data: data || [] };
 	gOpts = opts || {};
 	render();
 }
@@ -94,7 +92,7 @@ function render() {
 	h[++idx] = getControls(hidden, oldestFirst);
 
 	if(!hidden.files) {
-		h[++idx] = getFiles(gLast.data, gLast.record, gLast.columns);
+		h[++idx] = getFiles(gLast.data);
 	}
 
 	for(i = 0; i < gLast.data.length; i++) {
@@ -136,6 +134,12 @@ function render() {
 		hidden[kind] = !hidden[kind];
 		setInLocalStorage(STORE_HIDDEN, JSON.stringify(hidden));
 		render();
+	});
+	// The link says whether it will show or hide the details
+	$('.change_card', $elem).on('show.bs.collapse hide.bs.collapse', function(e) {
+		if(e.target === this) {
+			$('a[aria-controls="' + this.id + '"]', $elem).html(detailsLabel(e.type === 'show'));
+		}
 	});
 	$('.tl_order', $elem).on('click', function() {
 		setInLocalStorage(STORE_ORDER, getFromLocalStorage(STORE_ORDER) === 'yes' ? 'no' : 'yes');
@@ -224,14 +228,15 @@ function getItem(e, i) {
 	}
 	h[++idx] = who.join(' &middot; ');
 	if(details) {
-		h[++idx] = ' <a href="#' + id + '" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="' + id + '">';
-		h[++idx] = htmlEncode(localise.set["c_details"]);
+		h[++idx] = ' <a href="#' + id + '" class="text-nowrap ms-1" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="' + id + '">';
+		h[++idx] = detailsLabel(false);
 		h[++idx] = '</a>';
 	}
 	h[++idx] = '</div>';
 
 	if(details) {
-		h[++idx] = '<div class="collapse change_card mt-2" id="' + id + '">' + details + '</div>';
+		// Kept to a readable width, maps in particular would otherwise fill a wide screen
+		h[++idx] = '<div class="collapse change_card mt-2" style="max-width:50rem;" id="' + id + '">' + details + '</div>';
 	}
 
 	h[++idx] = '</div>';
@@ -242,6 +247,11 @@ function getItem(e, i) {
 	h[++idx] = '</li>';
 
 	return h.join('');
+}
+
+function detailsLabel(shown) {
+	return '<i class="fas ' + (shown ? 'fa-chevron-up' : 'fa-chevron-down') + ' me-1" aria-hidden="true"></i>'
+		+ htmlEncode(localise.set[shown ? 'tl_hide_details' : 'tl_show_details']);
 }
 
 function getIcon(e) {
@@ -341,72 +351,42 @@ function getTaskCurrent(task) {
 }
 
 /*
- * The files of the case: the record's own file answers, files an update replaced, and files
- * sent or received in email
+ * The files that came with the case's messages: attachments to email replies and the files sent
+ * with notifications.  Files that are answers are data, an update that changes one shows it.
  */
-function getFiles(data, record, columns) {
+function getFiles(data) {
 	var files = [],
 		seen = {},
 		h = [],
 		idx = -1,
-		i, j, e, c, f;
+		i, j, e, n, f;
 
-	function add(value, label, state, when, who) {
+	function add(value, name, label, state, when, who) {
 		var key = fileKey(value);
 		if(key && !seen[key]) {
 			seen[key] = true;
-			files.push({ value: value, label: label, state: state, when: when, who: who });
-		}
-	}
-
-	// Who added a file: the change that set it, otherwise the record's creation
-	function origin(value) {
-		var key = fileKey(value), k, m, created;
-		for(k = 0; k < data.length; k++) {
-			if(data[k].event === 'changes' && data[k].changes) {
-				for(m = 0; m < data[k].changes.length; m++) {
-					if(isAttachment(data[k].changes[m].type) && fileKey(data[k].changes[m].newVal) === key) {
-						return data[k];
-					}
-				}
-			} else if(data[k].event === 'created') {
-				created = data[k];
-			}
-		}
-		return created;
-	}
-
-	// Current answers first
-	if(record) {
-		for(i = 0; i < columns.length; i++) {
-			c = columns[i];
-			if(isAttachment(c.type)) {
-				var v = record[c.column_name];
-				if(v) {
-					e = origin(v);
-					add(v, c.displayName || c.column_name, 'tl_current', e ? e.eventTime : '', e ? e.userName : '');
-				}
-			}
+			files.push({ value: value, name: name, label: label, state: state, when: when, who: who });
 		}
 	}
 
 	for(i = 0; i < data.length; i++) {
 		e = data[i];
-		if(e.event === 'changes' && e.changes) {
-			for(j = 0; j < e.changes.length; j++) {
-				c = e.changes[j];
-				if(isAttachment(c.type)) {
-					add(c.oldVal, c.displayName || c.col, 'tl_replaced', e.eventTime, e.userName);
-					add(c.newVal, c.displayName || c.col, 'tl_replaced', e.eventTime, e.userName);
+		if(e.event === 'email_reply' && e.emailReply && e.emailReply.attachments) {
+			for(j = 0; j < e.emailReply.attachments.length; j++) {
+				add(e.emailReply.attachments[j], undefined, e.emailReply.fromAddress, 'tl_received', e.eventTime, '');
+			}
+		} else if(e.event === 'notification' && e.notification) {
+			n = e.notification;
+			var to = n.emails ? n.emails.join(', ') : '';
+			if(n.attachments) {
+				for(j = 0; j < n.attachments.length; j++) {
+					add(n.attachments[j], undefined, to, 'tl_sent', e.eventTime, e.userName);
 				}
 			}
-		} else if(e.event === 'email_reply' && e.emailReply && e.emailReply.attachments) {
-			for(j = 0; j < e.emailReply.attachments.length; j++) {
-				add(e.emailReply.attachments[j], e.emailReply.fromAddress, 'tl_received', e.eventTime, '');
-			}
-		} else if(e.event === 'notification' && e.notification && e.notification.attachments) {
-			for(j = 0; j < e.notification.attachments.length; j++) {
-				add(e.notification.attachments[j], e.notification.emails ? e.notification.emails.join(', ') : '', 'tl_sent', e.eventTime, e.userName);
+			if(n.extraAttachmentUrls) {
+				for(j = 0; j < n.extraAttachmentUrls.length; j++) {
+					add(n.extraAttachmentUrls[j], n.extraFileNames ? n.extraFileNames[j] : undefined, to, 'tl_sent', e.eventTime, e.userName);
+				}
 			}
 		}
 	}
@@ -427,7 +407,7 @@ function getFiles(data, record, columns) {
 		for(i = 0; i < files.length; i++) {
 			f = files[i];
 			h[++idx] = '<tr>';
-			h[++idx] = '<td>' + fileLink(f.value, true) + '</td>';
+			h[++idx] = '<td>' + fileLink(f.value, true, f.name) + '</td>';
 			h[++idx] = '<td>' + htmlEncode(f.label) + '</td>';
 			h[++idx] = '<td>' + htmlEncode(localise.set[f.state]) + '</td>';
 			h[++idx] = '<td>' + htmlEncode(f.when) + '</td>';
@@ -471,7 +451,7 @@ function fileKey(value) {
 	return i >= 0 ? url.substring(i) : url;
 }
 
-function fileLink(value, thumb) {
+function fileLink(value, thumb, displayName) {
 	var url = fileUrl(value);
 	if(!url) {
 		return htmlEncode(value);
@@ -483,7 +463,7 @@ function fileLink(value, thumb) {
 		var thumbUrl = url.substring(0, url.lastIndexOf('/') + 1) + 'thumbs/' + name + '.jpg';
 		h += '<img src="' + htmlEncode(thumbUrl) + '" alt="" style="width:40px;height:40px;object-fit:cover;" class="me-2">';
 	}
-	h += htmlEncode(name) + '</a>';
+	h += htmlEncode(displayName || name) + '</a>';
 	return h;
 }
 

@@ -1047,9 +1047,9 @@ define({
     "tl_more": "and %s1 more",
     "tl_newest": "Newest first",
     "tl_oldest": "Oldest first",
-    "tl_source": "Question or sender",
-    "tl_current": "Current",
-    "tl_replaced": "Replaced",
+    "tl_source": "From or to",
+    "tl_show_details": "Show details",
+    "tl_hide_details": "Hide details",
     "tl_received": "Received",
     "tl_sent": "Sent",
 

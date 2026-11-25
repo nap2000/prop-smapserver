@@ -2937,9 +2937,7 @@ localise.initLocale(gUserLocale).then(function () {
                         globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
                         gConflictMaps = [];
 
-                        showTimeline(data, record,
-                            gTasks.cache.currentData && gTasks.cache.currentData.schema ? gTasks.cache.currentData.schema.columns : [],
-                            { details: getEventDetails, action: getEventAction, bind: bindTimeline });
+                        showTimeline(data, { details: getEventDetails, action: getEventAction, bind: bindTimeline });
                     }
 
                 },
@@ -3124,16 +3122,8 @@ localise.initLocale(gUserLocale).then(function () {
         taskHistory = state.history;
 
 
+        // The timeline line already gives the task's name and who has it, the steps follow
         h[++idx] = '<div class="card-body">';
-        h[++idx] = '<div>';
-        h[++idx] = htmlEncode(localise.set["c_id"]) + ': ' + htmlEncode(task.assignmentId);
-        if(current.assigned) {
-            h[++idx] = '<br/>' + htmlEncode(localise.set["t_assigned"]) + ': ' + htmlEncode(current.assigned);
-        }
-        if(current.name) {
-            h[++idx] = '<br/>' + htmlEncode(localise.set["c_name"]) + ': ' + htmlEncode(current.name);
-        }
-        h[++idx] = '</div>';
 
         //----------------- Start card body
         if(taskHistory && taskHistory.length > 0) {
