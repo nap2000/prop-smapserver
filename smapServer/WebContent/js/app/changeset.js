@@ -180,6 +180,23 @@ export default {
                     globals.gSaveInProgress = false;
                     if(handleLogout(data)) {
 
+                        // Nothing was saved: say why and keep the changes so that they can be put right
+                        if (data.refused && data.refused.length > 0) {
+                            setHasChanges(globals.changes.length);
+                            h[++idx] = '<div class="alert alert-danger" role="alert">';
+                            h[++idx] = htmlEncode(localise.set["ed_not_saved"]);
+                            h[++idx] = '<ol>';
+                            for (i = 0; i < data.refused.length; i++) {
+                                h[++idx] = '<li>';
+                                h[++idx] = htmlEncode(data.refused[i]);
+                                h[++idx] = '</li>';
+                            }
+                            h[++idx] = '</ol>';
+                            h[++idx] = '</div>';
+                            window.bootbox.alert(h.join(""));
+                            return;
+                        }
+
                         setHasChanges(0);
 
                         if (typeof responseFn === "function") {
