@@ -289,57 +289,6 @@
                         <label class="form-check-label lang" data-lang="mf_fd" for="er_form_data"></label>
                     </div>
 
-                    <div class="row row-cols-1 row-cols-md-2 g-1">
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showtasks" value="yes" id="er_show_tasks" checked="checked">
-                                <label class="form-check-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
-                            </div>
-                        </div>
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
-                                <label class="form-check-label lang" data-lang="m_notify" for="er_show_notifications"></label>
-                            </div>
-                        </div>
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showChanges" value="yes" id="er_show_changes" checked="checked">
-                                <label class="form-check-label lang" data-lang="c_changes" for="er_show_changes"></label>
-                            </div>
-                        </div>
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showAssignments" value="yes" id="er_show_assignments" checked="checked">
-                                <label class="form-check-label lang" data-lang="t_assignments" for="er_show_assignments"></label>
-                            </div>
-                        </div>
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showEmailReplies" value="yes" id="er_show_email_replies" checked="checked">
-                                <label class="form-check-label lang" data-lang="email_reply" for="er_show_email_replies">Email Reply</label>
-                            </div>
-                        </div>
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showConflicts" value="yes" id="er_show_conflicts" checked="checked">
-                                <label class="form-check-label lang" data-lang="c_conflicts" for="er_show_conflicts"></label>
-                            </div>
-                        </div>
-                        <div class="col historyView">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input changes_filter"
-                                       name="showAlerts" value="yes" id="er_show_alerts" checked="checked">
-                                <label class="form-check-label lang" data-lang="c_alerts" for="er_show_alerts"></label>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-end">
@@ -410,7 +359,7 @@
                         <button class="targetSpecific multiSelectOnly lang btn btn-primary mx-1 my-1" data-lang="co_b" id="m_bulk_edit"></button>
                         <a class="targetSpecific singleSelectOnly assigned btn btn-success mx-1 my-1"  id="m_edit" href="#"><span class="lang" data-lang="c_edit"></span> <i class="fas fa-globe"></i></a>
                        <!-- <button class="targetSpecific singleSelectOnly linksOnly assigned not_assigned assigned_other lang btn btn-primary mx-1 my-1" data-lang="c_links" id="m_links"></button> disable -->
-                        <button class="targetSpecific singleSelectOnly assigned not_assigned assigned_other lang btn btn-primary mx-1 my-1" data-lang="c_history" id="m_view">History</button>
+                        <button class="targetSpecific singleSelectOnly assigned not_assigned assigned_other lang btn btn-primary mx-1 my-1" data-lang="tl_timeline" id="m_view">Timeline</button>
                         <button class="targetSpecific singleSelectOnly assigned_console_admin lang btn btn-warning mx-1 my-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
                         <button class="targetSpecific chartOnly lang btn btn-success mx-1 my-1 d-none" type="button" data-lang="d_add_c" id="m_add_chart"></button>
                     </form>
@@ -504,7 +453,7 @@
     <div class="card text-center editRecordSection">
         <div class="card-header">
             <ul id="editTabs" class="nav nav-tabs mt-4" role="tablist">
-                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#changes-view" class="active nav-link"><i class="fa fa-history" aria-hidden="true"></i> <span class="lang" data-lang="c_history"></span></a></li>
+                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#timeline-view" class="active nav-link"><i class="fas fa-stream" aria-hidden="true"></i> <span class="lang" data-lang="tl_timeline"></span></a></li>
                 <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#data-view" class="nav-link"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_data"></span></a></li>
             </ul>
         </div>
@@ -524,12 +473,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="changes-view" role="tabpanel" class="tab-pane active">
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table" id="changes"></table>
-                        </div>
-                    </div>
+                <div id="timeline-view" role="tabpanel" class="tab-pane active">
+                    <div class="panel-body" id="timeline"></div>
                 </div>
             </div>
         </div>

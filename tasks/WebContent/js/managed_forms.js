@@ -84,6 +84,7 @@ import chart from "./app/chart";
 import map from "./app/mapOL3";
 import * as actioncommon from "./app/actioncommon";
 import { showEditRecordForm } from "./app/actioncommon";
+import { showTimeline } from "./app/timeline";
 import { addAnchors } from "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 
 const $ = window.$;
@@ -1005,15 +1006,13 @@ localise.initLocale(gUserLocale).then(function () {
         $('a[data-bs-toggle="tab"]', '#editTabs').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
 
-            $('.historyView,.dataView').hide();
+            $('.dataView').hide();
 
             if (target === '#data-view') {
                 $('.dataView').removeClass('d-none').show();
                 if (gTasks.gSelectedRecord) {
                     loadAndShowSubForms(gTasks.gSelectedRecord);
                 }
-            } else if(target === '#changes-view') {
-                $('.historyView').removeClass('d-none').show();
             }
 
             $('.re_alert').hide();
@@ -1043,12 +1042,6 @@ localise.initLocale(gUserLocale).then(function () {
             }
         });
 
-        /*
-         * Callback when history filter changes
-         */
-        $('.changes_filter').change(function () {
-            showHistory(window.gChanges);
-        });
 
         /*
          * SHow and hide the controls
@@ -2944,7 +2937,9 @@ localise.initLocale(gUserLocale).then(function () {
                         globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
                         gConflictMaps = [];
 
-                        showHistory(data);
+                        showTimeline(data, record,
+                            gTasks.cache.currentData && gTasks.cache.currentData.schema ? gTasks.cache.currentData.schema.columns : [],
+                            { details: getEventDetails, action: getEventAction, bind: bindTimeline });
                     }
 
                 },
@@ -2962,221 +2957,64 @@ localise.initLocale(gUserLocale).then(function () {
         }
     }
 
-    function showHistory(data) {
-        var h = [],
-            idx = -1,
-            $elem = $('#changes'),
-            i,
-            finish,
-            statusClass;
-
-        $('#dashboardInfo').hide();
-        var includeTasks = $('#er_show_tasks').is(':checked');
-        var includeNotifications = $('#er_show_notifications').is(':checked');
-        var includeChanges = $('#er_show_changes').is(':checked');
-        var includeAssignments = $('#er_show_assignments').is(':checked');
-        var includeEmailReplies = $('#er_show_email_replies').is(':checked');
-        var includeConflicts = $('#er_show_conflicts').is(':checked');
-        var includeAlerts = $('#er_show_alerts').is(':checked');
-
-        // Add header
-        h[++idx] = '<thead>';
-        h[++idx] = '<tr>';
-        h[++idx] = '<th scope="col"></th>';     // icon
-        h[++idx] = '<th scope="col" class="mincol">';
-        h[++idx] = localise.set["c_user"];
-        h[++idx] = '</th>';
-        h[++idx] = '<th scope="col" class="mincol">';
-        h[++idx] = localise.set["c_survey"];
-        h[++idx] = '</th>';
-        h[++idx] = '<th scope="col" class="mincol">';
-        h[++idx] = localise.set["c_date"];
-        h[++idx] = '</th>';
-        h[++idx] = '<th scope="col" class="mincol">';
-        h[++idx] = localise.set["c_event"];
-        h[++idx] = '</th>';
-        h[++idx] = '<th scope="col" class="mincol">';
-        h[++idx] = localise.set["c_status"];
-        h[++idx] = '</th>';
-        h[++idx] = '<th scope="col">';
-        h[++idx] = localise.set["c_details"];
-        h[++idx] = '</th>';
-        h[++idx] = '<th scope="col" class="mincol">';
-        h[++idx] = localise.set["c_action"];
-        h[++idx] = '</th>';
-        h[++idx] = '</tr>';
-        h[++idx] = '</thead>';
-
-        h[++idx] = '<tbody>';
-        if(data && data.length > 0) {
-            for(i = 0; i < data.length; i++) {
-
-                if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created' || data[i].event === 'deleted'
-                        || data[i].event === 'restored'
-                        || data[i].event === 'inbound_msg'
-                        || data[i].event === 'new_case'
-                        || data[i].event === 'case_closed'
-                        || data[i].event === 'case_reopened')) ||
-                    (includeTasks && data[i].event === 'task') ||
-                    (includeAssignments && data[i].event === 'assigned') ||
-                    (includeNotifications && data[i].event === 'notification') ||
-                    (includeEmailReplies && data[i].event === 'email_reply') ||
-                    (includeConflicts && data[i].event === 'conflict') ||
-                    (includeAlerts && data[i].event === 'alert')) {
-                    h[++idx] = '<tr>';
-
-                    h[++idx] = '<td>';
-                    if (data[i].event === 'task') {
-                        h[++idx] = '<i class="fa fa-lg fa-tasks text-info"></i>';
-                    } else if (data[i].event === 'created' || data[i].event === 'changes' || data[i].event === 'deleted' || data[i].event === 'restored') {
-                        h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox text-info"></i>';
-                    } else if (data[i].event === 'inbound_msg') {
-                        h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-phone text-info"></i>';
-                    } else if (data[i].event === 'notification') {
-                        if (data[i].notification && data[i].notification.target === 'sms') {
-                            // From http://jsfiddle.net/4Bacg/
-                            h[++idx] = '<span class="text-info" style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack text-info fa-lg pull-left">';
-                            h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o"></i>';
-                            h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
-                            h[++idx] = '</span>';
-                        } else if (data[i].notification && data[i].notification.target === 'conversation') {
-                            if (data[i].notification.msgChannel === 'whatsapp') {
-                                h[++idx] = '<i class="fab fa-lg fa-whatsapp text-info"></i>';
-                            } else {
-                                h[++idx] = '<i class="fas fa-lg fa-sms text-info"></i>';
-                            }
-                        } else {
-                            h[++idx] = '<i class="fa fa-lg fa-envelope text-info"></i>';
-                        }
-                    } else if (data[i].event === 'email_reply') {
-                        h[++idx] = '<i class="fa fa-lg fa-reply text-info"></i>';
-                    } else if (data[i].event === 'conflict') {
-                        h[++idx] = '<i class="fas fa-lg fa-code-branch text-warning"></i>';
-                    } else if (data[i].event === 'alert') {
-                        h[++idx] = '<i class="fas fa-lg fa-bell text-warning"></i>';
-                    } else if (data[i].event === 'case_closed') {
-                        h[++idx] = '<i class="fas fa-lg fa-folder text-info"></i>';
-                    } else if (data[i].event === 'case_reopened') {
-                        h[++idx] = '<i class="fas fa-lg fa-folder-open text-warning"></i>';
-                    }
-
-                    h[++idx] = '</td>';
-                    h[++idx] = '<td class="mincol">';    // user
-                    if(data[i].userName) {
-                        h[++idx] = htmlEncode(data[i].userName);
-                    }
-                    /*
-                     * The person and the program that acted for them are different facts. The user
-                     * is who the change is attributed to; the agent is what made it, and is absent
-                     * for anything a person did themselves in the console.
-                     */
-                    if(data[i].agent) {
-                        h[++idx] = '<div class="text-muted small">';
-                        h[++idx] = localise.set["mcp_via"] + ' ' + htmlEncode(data[i].agent);
-                        h[++idx] = '</div>';
-                    }
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '<td class="mincol">';    // Survey
-                    if(data[i].surveyName) {
-                        h[++idx] = htmlEncode(data[i].surveyName) + ' (' + data[i].surveyVersion + ')';
-                    }
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '<td class="mincol">';    // when
-                    h[++idx] = htmlEncode(data[i].eventTime);
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '<td class="mincol">';    // event
-                    if(data[i].event === 'assigned') {
-                        h[++idx] = htmlEncode(localise.set['t_assign']);
-                    } else {
-                        h[++idx] = htmlEncode(localise.set[data[i].event]);
-                    }
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '<td class="mincol">';    // status
-                    finish = getFinish(data[i]);
-                    statusClass = getStatusClass(data[i].status, data[i].assign_auto);
-                    var statusText;
-                    if(statusClass == 'bg-danger') {
-                        statusText = localise.set["c_late"];
-                    } else if(statusClass == 'bg-orange') {
-                        statusText = localise.set["t_auto2"];
-                    } else {
-                        statusText = localise.set[data[i].status];
-                    }
-                    h[++idx] = '<span class="badge rounded-pill status-badge status-badge-' + statusClass.replace('bg-', '') + '">';
-                    h[++idx] = htmlEncode(statusText);
-                    h[++idx] = '</span>';
-
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '<td>';    // Details
-                    if (data[i].event === 'changes' && data[i].changes) {
-                        h[++idx] = getChangeCard(data[i].changes, i);
-                    } else if (data[i].event === 'task' && data[i].task) {
-                        h[++idx] = getTaskCard(data[i].task, i);
-                    } else if (data[i].event === 'notification' && data[i].notification) {
-                        h[++idx] = getNotificationInfo(data[i].notification, data[i].description, i);
-                    } else if (data[i].event === 'email_reply' && data[i].emailReply) {
-                        h[++idx] = getEmailReplyInfo(data[i].emailReply, i);
-                    } else if (data[i].event === 'conflict' && data[i].conflict) {
-                        h[++idx] = getConflictCard(data[i].conflict, data[i].status, i);
-                    } else {
-                        h[++idx] = htmlEncode(data[i].description);
-                    }
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '<td class="mincol">';    // Action
-                    if (data[i].event === 'notification' && data[i].notification) {
-                        h[++idx] = '<button class="btn btn-secondary edit_notification" data-idx="';
-                        h[++idx] = i;
-                        h[++idx] = '">';
-                        h[++idx] = localise.set["c_resend"];
-                        h[++idx] = '</button>';
-                    } else  if (data[i].event === 'task' && data[i].task && data[i].status !== 'cancelled') {
-                        h[++idx] = '<button class="btn btn-secondary edit_task" data-idx="';
-                        h[++idx] = i;
-                        h[++idx] = '">';
-                        h[++idx] = localise.set["t_edit_task"];
-                        h[++idx] = '</button>';
-                    }
-                    h[++idx] = '</td>';
-
-                    h[++idx] = '</tr>';    // row
-                }
-
-            }
+    /*
+     * The details of an event in the record's timeline, or undefined when it has none
+     */
+    function getEventDetails(e, i) {
+        if (e.event === 'changes' && e.changes && e.changes.length > 0) {
+            return getChangeCard(e.changes, i);
+        } else if (e.event === 'task' && e.task) {
+            return getTaskCard(e.task, i);
+        } else if (e.event === 'notification' && e.notification) {
+            return getNotificationInfo(e.notification, e.description, i);
+        } else if (e.event === 'email_reply' && e.emailReply) {
+            return getEmailReplyInfo(e.emailReply, i);
+        } else if (e.event === 'conflict' && e.conflict) {
+            return getConflictCard(e.conflict, e.status, i);
         }
-        h[++idx] = '</tbody>';
-        $elem.empty().html(h.join(''));
+        return undefined;
+    }
 
-        $('.change_card').on('shown.bs.collapse', function() {
-            var $this = $(this);
-            $('.card-body > .row > .small_map', $this).each(function(){
-                console.log($(this).attr("id"));
+    /*
+     * A button to act on an event, or undefined
+     */
+    function getEventAction(e, i) {
+        if (e.event === 'notification' && e.notification) {
+            return '<button type="button" class="btn btn-sm btn-outline-secondary edit_notification" data-idx="' + i + '">'
+                + htmlEncode(localise.set["c_resend"]) + '</button>';
+        } else if (e.event === 'task' && e.task && e.status !== 'cancelled') {
+            return '<button type="button" class="btn btn-sm btn-outline-secondary edit_task" data-idx="' + i + '">'
+                + htmlEncode(localise.set["t_edit_task"]) + '</button>';
+        }
+        return undefined;
+    }
+
+    /*
+     * Respond to the timeline's details being opened and its buttons
+     */
+    function bindTimeline($elem) {
+
+        // Maps are drawn once they can be seen, when the details open or a repeat row's tab is chosen
+        function showMaps($container) {
+            $('.small_map:visible', $container).each(function(){
                 actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps, $(this).attr("id"));
             });
-            $('.conflict_map', $this).each(function(){
+            $('.conflict_map:visible', $container).each(function(){
                 actioncommon.initialiseDynamicMaps(gConflictMaps, $(this).attr("id"));
             });
+        }
+        $('.change_card', $elem).on('shown.bs.collapse', function() {
+            showMaps($(this));
         });
-        $('.change_card').on('show.bs.collapse', function() {
-            // Give the details the whole width on a small screen only
-            if(window.innerWidth < 1200) {
-                $('.mincol').hide();
-            }
-        });
-        $('.change_card').on('hidden.bs.collapse', function() {
-            $('.mincol').show();
+        $('.change_card a[data-bs-toggle="tab"]', $elem).on('shown.bs.tab', function(e) {
+            showMaps($($(e.target).attr('href')));
         });
 
-        $('.save_conflict').click(function() {
+        $('.save_conflict', $elem).click(function() {
             saveConflict($(this).data("idx"));
         });
 
-        $('.edit_notification').click(function(){
+        $('.edit_notification', $elem).click(function(){
             var n = {
                 notifyDetails: {
 
@@ -3199,7 +3037,7 @@ localise.initLocale(gUserLocale).then(function () {
             window.bsModalShow('#addNotificationPopup');
         });
 
-        $('.edit_task').click(function(){
+        $('.edit_task', $elem).click(function(){
 
             $('#dashboardInfo').hide();
             var idx = $(this).data("idx");
@@ -3286,57 +3124,29 @@ localise.initLocale(gUserLocale).then(function () {
         taskHistory = state.history;
 
 
-        h[++idx] = '<div class="card bg-white">';
-
-        h[++idx] = '<div class="card-header" id="task_heading_';
-        h[++idx] = index;
-        h[++idx] = '">';
-        h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#task_collapse_';
-        h[++idx] = index;
-        h[++idx] = '" aria-expanded="false" aria-controls="task_collapse_';
-        h[++idx] = index;
-        h[++idx] = '">';
-
-        h[++idx] = localise.set["c_id"];
-        h[++idx] = ': ';
-        h[++idx] = task.assignmentId;
+        h[++idx] = '<div class="card-body">';
+        h[++idx] = '<div>';
+        h[++idx] = htmlEncode(localise.set["c_id"]) + ': ' + htmlEncode(task.assignmentId);
         if(current.assigned) {
-            h[++idx] = '<br/>';
-            h[++idx] = localise.set["t_assigned"];
-            h[++idx] = ': ';
-            h[++idx] = htmlEncode(current.assigned);
+            h[++idx] = '<br/>' + htmlEncode(localise.set["t_assigned"]) + ': ' + htmlEncode(current.assigned);
         }
         if(current.name) {
-            h[++idx] = '<br/>';
-            h[++idx] = localise.set["c_name"];
-            h[++idx] = ': ';
-            h[++idx] = htmlEncode(current.name);
+            h[++idx] = '<br/>' + htmlEncode(localise.set["c_name"]) + ': ' + htmlEncode(current.name);
         }
-
-        h[++idx] = '</button>';
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';    // Header
-
-        h[++idx] = '<div id="task_collapse_';
-        h[++idx] = index;
-        h[++idx] = '" class="collapse change_card" aria-labelledby="task_heading_';
-        h[++idx] = index;
-        h[++idx] = '">';
-        h[++idx] = '<div class="card-body">';
+        h[++idx] = '</div>';
 
         //----------------- Start card body
         if(taskHistory && taskHistory.length > 0) {
             for(i = events.length - 1; i >= 0; i--) {
                 event = taskHistory[i];
                 addBreak = false;
-                h[++idx] = event.when;
+                h[++idx] = htmlEncode(event.when);
                 h[++idx] = '<div class="ms-4">';
                 if(event.status) {
                     addBreak = true;
                     h[++idx] = localise.set["c_status"];
                     h[++idx] = ': ';
-                    h[++idx] = localise.set[event.status];
+                    h[++idx] = htmlEncode(localise.set[event.status]);
                 }
                 if(event.assigned) {
                     if(addBreak) {
@@ -3354,7 +3164,7 @@ localise.initLocale(gUserLocale).then(function () {
                     addBreak = true;
                     h[++idx] = localise.set["c_from"];
                     h[++idx] = ': ';
-                    h[++idx] = event.schedule_at;
+                    h[++idx] = htmlEncode(event.schedule_at);
                 }
                 if(event.schedule_finish) {
                     if(addBreak) {
@@ -3363,7 +3173,7 @@ localise.initLocale(gUserLocale).then(function () {
                     addBreak = true;
                     h[++idx] = localise.set["c_to"];
                     h[++idx] = ': ';
-                    h[++idx] = event.schedule_finish;
+                    h[++idx] = htmlEncode(event.schedule_finish);
                 }
                 if(event.name) {
                     if(addBreak) {
@@ -3381,9 +3191,6 @@ localise.initLocale(gUserLocale).then(function () {
 
 
         h[++idx] = '</div>';        // body
-        h[++idx] = '</div>';        // collapse
-
-        h[++idx] = '</div>';        // card
 
 
         return h.join('');
@@ -3478,16 +3285,6 @@ localise.initLocale(gUserLocale).then(function () {
             idx = -1,
             baseUrl = window.location.protocol + '//' + window.location.host + '/';
 
-        var toLine = (localise.set["c_to"] || 'To') + ': ' + (htmlEncode(n.emails ? n.emails.join(', ') : '') || '');
-        var summaryLabel = toLine;
-        if (n.target === 'conversation' || n.target === 'sms') {
-            // Messages have no subject, show the channel instead
-            var channel = n.target === 'sms' ? 'sms' : (n.msgChannel || 'sms');
-            summaryLabel += ' — ' + (channel === 'whatsapp' ? 'WhatsApp' : 'SMS');
-        } else {
-            summaryLabel += ' — ' + (localise.set["c_subject"] || 'Subject') + ': ' + (htmlEncode(n.subject) || '');
-        }
-
         var attachLabel = null;
         if (n.attach === 'pdf' || n.attach === 'pdf_landscape') {
             attachLabel = (localise.set["c_attach"] || 'Attach') + ': ' +
@@ -3501,63 +3298,51 @@ localise.initLocale(gUserLocale).then(function () {
         var hasExtraFiles = (n.extraFileNames && n.extraFileNames.length > 0) || (n.extraAttachmentUrls && n.extraAttachmentUrls.length > 0);
         var expandable = hasBody || hasAttachments || hasExtraFiles || !!attachLabel;
 
-        h[++idx] = '<div class="card bg-white">';
-        h[++idx] = '<div class="card-header" id="notif_heading_' + index + '">';
-        h[++idx] = '<h5 class="mb-0">';
-        if (expandable) {
-            h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#notif_collapse_' + index + '" aria-expanded="false" aria-controls="notif_collapse_' + index + '">';
-            h[++idx] = summaryLabel;
-            h[++idx] = '</button>';
-        } else {
-            h[++idx] = '<span class="ps-3">' + summaryLabel + '</span>';
+        // Only the details, the timeline line already says who it went to
+        if (!expandable) {
+            return undefined;
         }
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';
-
-        if (expandable) {
-            h[++idx] = '<div id="notif_collapse_' + index + '" class="collapse change_card" aria-labelledby="notif_heading_' + index + '">';
-            h[++idx] = '<div class="card-body">';
-            if (description) {
-                h[++idx] = '<p>' + htmlEncode(description) + '</p>';
-            } else if (n.content) {
-                h[++idx] = '<p>' + htmlEncode(n.content) + '</p>';
-            }
-            if (attachLabel || hasAttachments) {
-                h[++idx] = '<p>';
-                if (attachLabel) {
-                    h[++idx] = htmlEncode(attachLabel);
-                    if (hasAttachments) h[++idx] = '<br/>';
-                }
-                if (hasAttachments) {
-                    for (var ai = 0; ai < n.attachments.length; ai++) {
-                        h[++idx] = '<a href="' + attachmentUrl(baseUrl, n.attachments[ai]) + '" target="_blank">';
-                        h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
-                        h[++idx] = '</a>';
-                        if (ai < n.attachments.length - 1) h[++idx] = '<br/>';
-                    }
-                }
-                h[++idx] = '</p>';
-            }
-            if (hasExtraFiles) {
-                var urls = n.extraAttachmentUrls || [];
-                var names = n.extraFileNames || [];
-                var count = Math.max(urls.length, names.length);
-                h[++idx] = '<p>';
-                for (var ei = 0; ei < count; ei++) {
-                    var fname = htmlEncode(names[ei] || (urls[ei] ? urls[ei].split('/').pop() : ''));
-                    if (urls[ei]) {
-                        h[++idx] = '<a href="' + baseUrl + htmlEncode(urls[ei]) + '" target="_blank">' + fname + '</a>';
-                    } else {
-                        h[++idx] = fname;
-                    }
-                    if (ei < count - 1) h[++idx] = '<br/>';
-                }
-                h[++idx] = '</p>';
-            }
-            h[++idx] = '</div>';
-            h[++idx] = '</div>';
+        h[++idx] = '<div class="card-body">';
+        if (n.subject) {
+            h[++idx] = '<p>' + htmlEncode(localise.set["c_subject"]) + ': ' + htmlEncode(n.subject) + '</p>';
         }
-
+        if (description) {
+            h[++idx] = '<p>' + htmlEncode(description) + '</p>';
+        } else if (n.content) {
+            h[++idx] = '<p>' + htmlEncode(n.content) + '</p>';
+        }
+        if (attachLabel || hasAttachments) {
+            h[++idx] = '<p>';
+            if (attachLabel) {
+                h[++idx] = htmlEncode(attachLabel);
+                if (hasAttachments) h[++idx] = '<br/>';
+            }
+            if (hasAttachments) {
+                for (var ai = 0; ai < n.attachments.length; ai++) {
+                    h[++idx] = '<a href="' + htmlEncode(attachmentUrl(baseUrl, n.attachments[ai])) + '" target="_blank" rel="noopener">';
+                    h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
+                    h[++idx] = '</a>';
+                    if (ai < n.attachments.length - 1) h[++idx] = '<br/>';
+                }
+            }
+            h[++idx] = '</p>';
+        }
+        if (hasExtraFiles) {
+            var urls = n.extraAttachmentUrls || [];
+            var names = n.extraFileNames || [];
+            var count = Math.max(urls.length, names.length);
+            h[++idx] = '<p>';
+            for (var ei = 0; ei < count; ei++) {
+                var fname = htmlEncode(names[ei] || (urls[ei] ? urls[ei].split('/').pop() : ''));
+                if (urls[ei]) {
+                    h[++idx] = '<a href="' + baseUrl + htmlEncode(urls[ei]) + '" target="_blank" rel="noopener">' + fname + '</a>';
+                } else {
+                    h[++idx] = fname;
+                }
+                if (ei < count - 1) h[++idx] = '<br/>';
+            }
+            h[++idx] = '</p>';
+        }
         h[++idx] = '</div>';
         return h.join('');
     }
@@ -3567,47 +3352,28 @@ localise.initLocale(gUserLocale).then(function () {
             idx = -1,
             baseUrl = window.location.protocol + '//' + window.location.host + '/';
 
-        var fromLine = (localise.set["c_from"] || 'From') + ': ' + htmlEncode(r.fromAddress || '');
-        var subjectLine = (localise.set["c_subject"] || 'Subject') + ': ' + htmlEncode(r.subject || '');
-        var summaryLabel = fromLine + ' — ' + subjectLine;
-
         var hasBody = !!r.body;
         var hasAttachments = r.attachments && r.attachments.length > 0;
         var expandable = hasBody || hasAttachments;
 
-        h[++idx] = '<div class="card bg-white">';
-        h[++idx] = '<div class="card-header" id="reply_heading_' + index + '">';
-        h[++idx] = '<h5 class="mb-0">';
-        if (expandable) {
-            h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#reply_collapse_' + index + '" aria-expanded="false" aria-controls="reply_collapse_' + index + '">';
-            h[++idx] = summaryLabel;
-            h[++idx] = '</button>';
-        } else {
-            h[++idx] = '<span class="ps-3">' + summaryLabel + '</span>';
+        // Only the details, the timeline line already says who it is from
+        if (!expandable) {
+            return undefined;
         }
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';
-
-        if (expandable) {
-            h[++idx] = '<div id="reply_collapse_' + index + '" class="collapse change_card" aria-labelledby="reply_heading_' + index + '">';
-            h[++idx] = '<div class="card-body">';
-            if (hasBody) {
-                h[++idx] = '<pre style="white-space:pre-wrap;max-height:10em;overflow-y:auto;">' + htmlEncode(r.body) + '</pre>';
-            }
-            if (hasAttachments) {
-                h[++idx] = '<p>';
-                for (var ai = 0; ai < r.attachments.length; ai++) {
-                    h[++idx] = '<a href="' + attachmentUrl(baseUrl, r.attachments[ai]) + '" target="_blank">';
-                    h[++idx] = htmlEncode(r.attachments[ai].split('/').pop());
-                    h[++idx] = '</a>';
-                    if (ai < r.attachments.length - 1) h[++idx] = '<br/>';
-                }
-                h[++idx] = '</p>';
-            }
-            h[++idx] = '</div>';
-            h[++idx] = '</div>';
+        h[++idx] = '<div class="card-body">';
+        if (hasBody) {
+            h[++idx] = '<pre style="white-space:pre-wrap;max-height:10em;overflow-y:auto;">' + htmlEncode(r.body) + '</pre>';
         }
-
+        if (hasAttachments) {
+            h[++idx] = '<p>';
+            for (var ai = 0; ai < r.attachments.length; ai++) {
+                h[++idx] = '<a href="' + htmlEncode(attachmentUrl(baseUrl, r.attachments[ai])) + '" target="_blank" rel="noopener">';
+                h[++idx] = htmlEncode(r.attachments[ai].split('/').pop());
+                h[++idx] = '</a>';
+                if (ai < r.attachments.length - 1) h[++idx] = '<br/>';
+            }
+            h[++idx] = '</p>';
+        }
         h[++idx] = '</div>';
         return h.join('');
     }
@@ -3627,26 +3393,6 @@ localise.initLocale(gUserLocale).then(function () {
             label;
 
         var count = conflict.items ? conflict.items.length : 0;
-        h[++idx] = '<div class="card bg-white">';
-        h[++idx] = '<div class="card-header" id="heading_';
-        h[++idx] = index;
-        h[++idx] = '">';
-        h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#collapse_';
-        h[++idx] = index;
-        h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
-        h[++idx] = index;
-        h[++idx] = '">';
-        h[++idx] = count + ' ' + htmlEncode(count === 1 ? localise.set["cf_answer"] : localise.set["cf_answers"]);
-        h[++idx] = '</button>';
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';    // Header
-
-        h[++idx] = '<div id="collapse_';
-        h[++idx] = index;
-        h[++idx] = '" class="collapse change_card" aria-labelledby="heading_';
-        h[++idx] = index;
-        h[++idx] = '">';
         h[++idx] = '<div class="card-body">';
 
         h[++idx] = '<div>';
@@ -3731,8 +3477,6 @@ localise.initLocale(gUserLocale).then(function () {
         }
 
         h[++idx] = '</div>';    // Body
-        h[++idx] = '</div>';    // Collapse
-        h[++idx] = '</div>';    // Card
 
         return h.join('');
     }
@@ -3845,27 +3589,6 @@ localise.initLocale(gUserLocale).then(function () {
             idx = -1,
             i, j;
 
-        h[++idx] = '<div class="card bg-white">';
-
-        h[++idx] = '<div class="card-header" id="heading_';
-        h[++idx] = index;
-        h[++idx] = '">';
-        h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#collapse_';
-        h[++idx] = index;
-        h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
-        h[++idx] = index;
-        h[++idx] = '">';
-        h[++idx] = changes.length + ' '  + (changes.length > 1 ? localise.set["c_changes"] : localise.set["c_change"]);
-        h[++idx] = '</button>';
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';    // Header
-
-        h[++idx] = '<div id="collapse_';
-        h[++idx] = index;
-        h[++idx] = '" class="collapse change_card" aria-labelledby="heading_';
-        h[++idx] = index;
-        h[++idx] = '">';
         h[++idx] = '<div class="card-body">';
 
         var baseUrl = window.location.protocol + "//" + window.location.host + "/";
@@ -3893,7 +3616,7 @@ localise.initLocale(gUserLocale).then(function () {
                 // Add the tab nav links
                 h[++idx] = '<ul class="nav nav-tabs" role="tablist">';
                 for(j = 0; j < rowArray.length; j++) {
-                    id = i + '_' + j;
+                    id = index + '_' + i + '_' + j;     // Unique across all the events shown
                     var rowType = rowArray[j].type;  // present in new format, undefined in legacy
                     var tabLabel, tabClass;
                     if(rowType === 'new_record') {
@@ -3937,7 +3660,7 @@ localise.initLocale(gUserLocale).then(function () {
                 h[++idx] = '<div class="tab-content">';
 
                 for(j = 0; j < rowArray.length; j++) {
-                    id = i + '_' + j;
+                    id = index + '_' + i + '_' + j;     // Unique across all the events shown
                     // new format row has .changes; legacy format row IS the changes array
                     var rowChanges = rowArray[j].changes !== undefined ? rowArray[j].changes : rowArray[j];
 
@@ -3961,9 +3684,14 @@ localise.initLocale(gUserLocale).then(function () {
 
                 var newVal = changes[i].newVal;
                 var oldVal = changes[i].oldVal;
-                if(type === 'image') {
-                    newVal = baseUrl + newVal;
-                    oldVal = baseUrl + oldVal;
+                if(type === 'image' || type === 'video' || type === 'audio' || type === 'file') {
+                    // Files are given as paths on this server
+                    if(newVal) {
+                        newVal = baseUrl + newVal;
+                    }
+                    if(oldVal) {
+                        oldVal = baseUrl + oldVal;
+                    }
                 }
 
                 if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace' || type === 'geocompound') {
@@ -3984,7 +3712,7 @@ localise.initLocale(gUserLocale).then(function () {
                     h[++idx] = '</div>';
 
                     h[++idx] = '<div class="col-md-4">';
-                    h[++idx] = actioncommon.addCellMarkup(oldVal);
+                    h[++idx] = actioncommon.addCellMarkup(htmlEncode(oldVal));     // Event values are not encoded by the server
                     h[++idx] = '</div>';
 
                     h[++idx] = '<div class="col-md-1">';        // Separator
@@ -3992,7 +3720,7 @@ localise.initLocale(gUserLocale).then(function () {
                     h[++idx] = '</div>';
 
                     h[++idx] = '<div class="col-md-4">';
-                    h[++idx] = actioncommon.addCellMarkup(newVal);
+                    h[++idx] = actioncommon.addCellMarkup(htmlEncode(newVal));     // Event values are not encoded by the server
                     h[++idx] = '</div>';
                 }
             }
@@ -4002,9 +3730,6 @@ localise.initLocale(gUserLocale).then(function () {
 
 
         h[++idx] = '</div>';        // body
-        h[++idx] = '</div>';        // collapse
-
-        h[++idx] = '</div>';        // card
 
         return h.join('');
     }
