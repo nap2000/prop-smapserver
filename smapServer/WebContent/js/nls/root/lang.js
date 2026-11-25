@@ -126,6 +126,9 @@ define({
     "c_opened": "Opened",
     "c_periodic": "Periodic",
     "c_conflict": "Conflicting update",
+    "c_case_reopened": "Case reopened",
+    "case_closed": "Case closed",
+    "case_reopened": "Case reopened",
     "c_project": "Project",
     "c_sub_form": "Sub Form",
     "c_threshold": "Threshold",
@@ -1869,7 +1872,9 @@ define({
     "li_continue": "Return to applications",
 
     // Case Management
-    "cm_fs": "Final status",
+    "cm_fs": "Closed statuses",
+    "cm_fs_h": "The status values that close a case, separated by commas. A case reopens when its status changes to any other value.",
+    "cm_fs_sel_h": "Select the answers that close a case. Hold Ctrl, or Cmd on a Mac, to select more than one. A case reopens when its status changes to any other answer.",
     "cm_sq": "Status Question",
     "cm_cq": "Criticality Question",
     "cm_aa": "Add an Alert",

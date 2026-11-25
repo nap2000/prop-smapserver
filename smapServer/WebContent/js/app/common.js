@@ -5571,7 +5571,7 @@ function applyPeriodicRestrictions() {
 
 function setTriggerDependencies(trigger) {
 	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options, .sc_options').hide();
-	if(trigger === "submission" || trigger === "conflict") {
+	if(trigger === "submission" || trigger === "conflict" || trigger === "case_reopened") {
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
 		$('.task_reminder_options').show();

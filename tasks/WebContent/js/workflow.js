@@ -68,6 +68,7 @@ const TYPE_COLOURS = {
 	periodic:         "#8e44ad",
 	reminder:         "#16a085",
 	conflict:         "#d39e00",
+	case_reopened:    "#d39e00",
 	email:            "#e74c3c",
 	sms:              "#c0392b",
 	sharepoint_list:  "#0078d4"
@@ -90,6 +91,7 @@ const TYPE_ICONS = {
 	periodic:        "fas fa-clock",
 	reminder:        "fas fa-bell",
 	conflict:        "fas fa-code-branch",
+	case_reopened:   "fas fa-folder-open",
 	email:           "fas fa-envelope",
 	sms:             "fas fa-comment-alt",
 	decision:        "fas fa-filter",
@@ -112,6 +114,7 @@ function typeLabel(type) {
 		scheduled: l["c_scheduled"],
 		reminder: l["c_reminder"],
 		conflict: l["c_conflict"],
+		case_reopened: l["c_case_reopened"],
 		email:    l["c_email"],
 		sms:      l["c_sms"],
 		decision:        l["c_decision"],
@@ -201,7 +204,7 @@ function nodeCard(x, y, item) {
 	const icon       = TYPE_ICONS[item.type] || "fas fa-circle";
 	const label      = typeLabel(item.type);
 	const isDecision  = item.role === "decision";
-	const isConflict  = item.type === "conflict";		// Edited through the notification it starts
+	const isConflict  = item.type === "conflict" || item.type === "case_reopened";		// Edited through the notification it starts
 	const hasStartIds = (item.startIds || []).length > 0;
 	const isEditable  = EDITABLE_TYPES.includes(item.type) || (item.type === "form" && hasStartIds);
 

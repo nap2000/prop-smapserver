@@ -3014,7 +3014,9 @@ localise.initLocale(gUserLocale).then(function () {
                 if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created' || data[i].event === 'deleted'
                         || data[i].event === 'restored'
                         || data[i].event === 'inbound_msg'
-                        || data[i].event === 'new_case')) ||
+                        || data[i].event === 'new_case'
+                        || data[i].event === 'case_closed'
+                        || data[i].event === 'case_reopened')) ||
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
                     (includeNotifications && data[i].event === 'notification') ||
@@ -3052,6 +3054,10 @@ localise.initLocale(gUserLocale).then(function () {
                         h[++idx] = '<i class="fas fa-lg fa-code-branch text-warning"></i>';
                     } else if (data[i].event === 'alert') {
                         h[++idx] = '<i class="fas fa-lg fa-bell text-warning"></i>';
+                    } else if (data[i].event === 'case_closed') {
+                        h[++idx] = '<i class="fas fa-lg fa-folder text-info"></i>';
+                    } else if (data[i].event === 'case_reopened') {
+                        h[++idx] = '<i class="fas fa-lg fa-folder-open text-warning"></i>';
                     }
 
                     h[++idx] = '</td>';

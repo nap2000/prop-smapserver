@@ -103,6 +103,13 @@ localise.initLocale(gUserLocale).then(function() {
             $('#cms_sq, #cms_cq').change(function(){
                 $('.save_alert').hide();
             })
+            $('#cms_fs_sel').change(function(){
+                $('.save_alert').hide();
+            })
+            // A select one status question offers its answers to choose the closed ones from
+            $('#cms_sq').change(function(){
+                showClosedStatuses($(this).val(), currentClosedStatuses());
+            })
 
             // Set up the tabs
             $('#keysTab a').click(function (e) {
@@ -201,7 +208,11 @@ localise.initLocale(gUserLocale).then(function() {
              */
             $('#cms_bn').val(settings.name);
             $('#cms_bd').val(settings.description);
-            $('#cms_fs').val(settings.finalStatus);
+            // Several status values can close a case; settings from before there could be several have one
+            var closed = (settings.closedStatuses && settings.closedStatuses.length > 0)
+                ? settings.closedStatuses : (settings.finalStatus ? [settings.finalStatus] : []);
+            $('#cms_fs').val(closed.join(', '));
+            showClosedStatuses(settings.statusQuestion, closed);
             $('#cms_sq').val(settings.statusQuestion);      // The list of questions should have been set by now but it is not guaranteed
             $('#cms_cq').val(settings.criticalityQuestion);
             $('#cms_multi').prop('checked', settings.multipleAssignees === true);
@@ -297,6 +308,70 @@ localise.initLocale(gUserLocale).then(function() {
         }
 
         /*
+         * The closed statuses as entered: picked from the status question's answers, or typed when it has none
+         */
+        var gClosedFromChoices = false;		// The closed statuses are picked from the status question's answers
+        function currentClosedStatuses() {
+            if(gClosedFromChoices) {
+                return $('#cms_fs_sel').val() || [];
+            }
+            return ($('#cms_fs').val() || '').split(',')
+                .map(function(v) { return v.trim(); })
+                .filter(function(v) { return v.length > 0; });
+        }
+
+        /*
+         * Offer the answers of a select one status question to pick the closed statuses from.  A question without
+         * fixed answers keeps the text box.  A closed status that is no longer an answer is kept in the list.
+         */
+        function showClosedStatuses(column, closed) {
+            var useText = function() {
+                gClosedFromChoices = false;
+                $('#cms_fs_sel, #cms_fs_sel_h').hide();
+                $('#cms_fs, #cms_fs_h').show();
+                $('#cms_fs').val((closed || []).join(', '));
+            };
+            if(!column) {
+                useText();
+                return;
+            }
+            $.ajax({
+                url: '/surveyKPI/cases/statuses/' + globals.gCurrentSurvey + '?question=' + encodeURIComponent(column),
+                dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    if(!handleLogout(data)) {
+                        return;
+                    }
+                    if(!data || data.length === 0) {
+                        useText();
+                        return;
+                    }
+                    var values = data.map(function(c) { return c.value; });
+                    var h = [];
+                    data.forEach(function(c) {
+                        h.push('<option value="' + htmlEncode(c.value) + '">'
+                            + htmlEncode(c.label && c.label !== c.value ? c.label + ' (' + c.value + ')' : c.value) + '</option>');
+                    });
+                    (closed || []).forEach(function(v) {
+                        if(values.indexOf(v) < 0) {
+                            h.push('<option value="' + htmlEncode(v) + '">' + htmlEncode(v) + '</option>');
+                        }
+                    });
+                    $('#cms_fs_sel').html(h.join('')).val(closed || []);
+                    gClosedFromChoices = true;
+                    $('#cms_fs, #cms_fs_h').hide();
+                    $('#cms_fs_sel, #cms_fs_sel_h').show();
+                },
+                error: function(xhr) {
+                    if(handleLogout(xhr.responseText)) {
+                        useText();
+                    }
+                }
+            });
+        }
+
+        /*
          * Save a new or updated case management setting
          */
         function saveSettings() {
@@ -305,7 +380,8 @@ localise.initLocale(gUserLocale).then(function() {
             settings.name = $('#cms_bn').val();
             settings.description = $('#cms_bd').val();
             settings.statusQuestion = $('#cms_sq').val();
-            settings.finalStatus = $('#cms_fs').val();
+            settings.closedStatuses = currentClosedStatuses();
+            settings.finalStatus = settings.closedStatuses.length > 0 ? settings.closedStatuses[0] : '';
             settings.criticalityQuestion = $('#cms_cq').val();
             settings.multipleAssignees = $('#cms_multi').is(':checked');
 
