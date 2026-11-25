@@ -30,6 +30,7 @@ import {
 	executeUsageReport,
 	getLoggedInUser,
 	handleLogout,
+	htmlDecode,
 	htmlEncode,
 	populateLanguageSelect,
 	removeHourglass,
@@ -418,7 +419,8 @@ import {
                 h[++idx] = localise.set["c_warning"];
             }
             h[++idx] =  ': ';
-            h[++idx] = htmlEncode(msg.message);
+            // The server encodes the parts of a message it fills in, so decode them first or they show as &quot;
+            h[++idx] = htmlEncode(msg.message && msg.message.indexOf("&") >= 0 ? htmlDecode(msg.message) : msg.message);
 
             return h.join('');
         }
