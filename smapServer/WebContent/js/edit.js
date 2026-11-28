@@ -469,6 +469,13 @@ $(function() {
 				}
 			}
 		}
+		if(question.type === "range") {
+			const rangeError = checkRangeParams();
+			if(rangeError) {
+				$('#parameter_msg').show().text(rangeError);
+				return false;
+			}
+		}
 		other=$('#p_other').val();
 		// validate
 		if(other.length > 0) {
@@ -1258,6 +1265,120 @@ $(function() {
 	return compatible;
 }
 
+	/*
+	 * Get the value of a parameter from the array of name=value strings in a question's parameters
+	 */
+	function getParamValue(paramArray, name) {
+		for(let i = 0; i < paramArray.length; i++) {
+			const p = paramArray[i].split('=');
+			if(p.length > 1 && p[0].trim() === name) {
+				return p[1].trim();
+			}
+		}
+		return '';
+	}
+
+	/*
+	 * Fill the select for a parameter that names a choice list
+	 * With repeats, also offer each repeat that has a question called geometry, as ${repeat}
+	 */
+	function setListParamOptions($sel, current, repeats) {
+		const survey = globals.model.survey;
+		const values = [];
+
+		$sel.empty();
+		$sel.append($('<option>').val('').text(localise.set["c_none"]));
+
+		if(survey && survey.optionLists) {
+			Object.keys(survey.optionLists).sort().forEach(function(listName) {
+				values.push(listName);
+				$sel.append($('<option>').val(listName).text(listName));
+			});
+		}
+
+		if(repeats && survey && survey.forms) {
+			for(let i = 0; i < survey.forms.length; i++) {
+				const form = survey.forms[i];
+				if(form.parentFormIndex == -1) {
+					continue;
+				}
+				const hasGeometry = (form.questions || []).some(function(q) {
+					return q.name === 'geometry' && !q.deleted;
+				});
+				if(hasGeometry) {
+					const v = '${' + form.name + '}';
+					values.push(v);
+					$sel.append($('<option>').val(v).text(form.name + ' (' + localise.set["c_repeat"] + ')'));
+				}
+			}
+		}
+
+		// Keep a value that is not one of the choices so that saving the dialog does not lose it
+		if(current && values.indexOf(current) < 0) {
+			$sel.append($('<option>').val(current).text(current));
+		}
+	}
+
+	/*
+	 * Check the settings of a range question in the parameters dialog, following the rules applied when
+	 * an XLSForm is uploaded.  Returns an error message or undefined
+	 */
+	function checkRangeParams() {
+		const num = function(id, def) {
+			const v = $(id).val();
+			if(v === undefined || v === null || v.trim() === '') {
+				return def;
+			}
+			return Number(v);
+		};
+		// Remainder that copes with decimals such as 0.1
+		const isMultiple = function(value, of) {
+			const r = Math.abs(value / of);
+			return Math.abs(r - Math.round(r)) < 1e-9;
+		};
+		const start = num('#p_start', 1);
+		const end = num('#p_end', 10);
+		const step = num('#p_step', 1);
+		const tick = num('#p_tick_interval', undefined);
+		const placeholder = num('#p_placeholder', undefined);
+		const labelset = $('#p_tick_labelset').val();
+		const width = Math.abs(end - start);
+
+		if(tick === undefined && placeholder === undefined && !labelset) {
+			return undefined;
+		}
+		if([start, end, step, tick, placeholder].some(function(v) { return v !== undefined && isNaN(v); })) {
+			return localise.set["ed_rng_num"];
+		}
+		if(step === 0 || Math.abs(step) > width) {
+			return localise.set["ed_rng_step"];
+		}
+		if(tick !== undefined && (tick === 0 || Math.abs(tick) > width || !isMultiple(tick, step))) {
+			return localise.set["ed_rng_tick"];
+		}
+		if(placeholder !== undefined && (!isMultiple(placeholder - start, step)
+				|| placeholder < Math.min(start, end) || placeholder > Math.max(start, end))) {
+			return localise.set["ed_rng_ph"];
+		}
+		if(labelset) {
+			const list = globals.model.survey.optionLists[labelset];
+			const options = list && list.options ? list.options.filter(function(o) { return !o.deleted; }) : [];
+			if(options.length === 0) {
+				return localise.set["ed_rng_list"];
+			}
+			const noTicks = (globals.model.survey.forms[globals.gFormIndex].questions[globals.gItemIndex].appearance || '').indexOf('no-ticks') >= 0;
+			for(let i = 0; i < options.length; i++) {
+				const v = Number(options[i].value);
+				if(isNaN(v) || v < Math.min(start, end) || v > Math.max(start, end)
+						|| !isMultiple(v - start, tick !== undefined ? tick : step)
+						|| (noTicks && v !== start && v !== end)) {
+					return localise.set["ed_rng_label"];
+				}
+			}
+		}
+		return undefined;
+	}
+
 	function getSurveyList() {
 	if(globals.gCurrentSurvey > 0) {
 		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false, undefined, false);
@@ -2030,6 +2151,10 @@ $(function() {
 			getQuestionsInSurvey($('#p_key_question'), undefined,  sIdent, true, true, undefined, true, qChild);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
+		} else if(qType === "range") {
+			setListParamOptions($('#p_tick_labelset'), getParamValue(paramArray, 'tick_labelset'), false);
+		} else if(qType === "geopoint" || qType === "geotrace" || qType === "geoshape") {
+			setListParamOptions($('#p_reference_geometry'), getParamValue(paramArray, 'reference-geometry'), true);
 		}
 
 		/*

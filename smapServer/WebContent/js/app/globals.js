@@ -394,6 +394,25 @@ import localise from "./localise.js";
     }
 
     /*
+     * The server holds a background-geopoint as a geopoint that is not shown and has no calculation.
+     * Show it in the editor as its own type, which the server stores as a geopoint again
+     */
+    function markBackgroundGeopoints(data) {
+        if(data && data.forms) {
+            for(let i = 0; i < data.forms.length; i++) {
+                const questions = data.forms[i].questions || [];
+                for(let j = 0; j < questions.length; j++) {
+                    const q = questions[j];
+                    if(q.type === "geopoint" && !q.visible
+                            && !(q.calculation && q.calculation.trim().length > 0)) {
+                        q.type = "background-geopoint";
+                    }
+                }
+            }
+        }
+    }
+
+    /*
      * Model for Survey editing
      */
     function Model() {
@@ -425,7 +444,7 @@ import localise from "./localise.js";
 		    geotrace:['placement-map', 'w'],
 		    geoshape:['placement-map', 'w'],
 		    acknowledge:['w'],
-		    range:['w', 'rating', 'vertical', 'picker'],
+		    range:['w', 'rating', 'vertical', 'no-ticks', 'picker'],
 		    file:['w'],
 		    rank:['w'],
             geocompound:['w', 'placement-map']
@@ -516,6 +535,11 @@ import localise from "./localise.js";
 			    type: 'boolean',
 			    rex: 'vertical'
 		    },
+		    'no-ticks': {
+			    field: 'a_no_ticks',
+			    type: 'boolean',
+			    rex: 'no-ticks'
+		    },
 		    'picker': {
 			    field: 'a_picker',
 			    type: 'boolean',
@@ -569,15 +593,15 @@ import localise from "./localise.js";
             image: ['max-pixels', 'auto'],
 	        video: ['auto'],
 	        audio: ['auto', 'quality'],
-            range: ['start', 'end', 'step'],
+            range: ['start', 'end', 'step', 'tick_interval', 'placeholder', 'tick_labelset'],
             select: ['randomize'],
             select1: ['randomize'],
             rank: ['randomize'],
             parent_form: ['form_identifier', 'key_question', 'auto'],
 	        child_form: ['form_identifier', 'key_question', 'auto'],
-	        geopoint: ['auto'],
-            geotrace: ['geotextlength'],
-            geoshape: ['geotextlength'],
+	        geopoint: ['auto', 'reference-geometry'],
+            geotrace: ['geotextlength', 'reference-geometry'],
+            geoshape: ['geotextlength', 'reference-geometry'],
             geocompound: ['geotextlength'],
             'begin repeat':['ref', 'instance_order', 'instance_count', 'key_policy'],
 	        chart: ['chart_type', 'stacked', 'normalized']
@@ -607,6 +631,22 @@ import localise from "./localise.js";
 	        step: {
 		        field: 'p_step',
 		        type: 'number'
+	        },
+	        tick_interval: {
+		        field: 'p_tick_interval',
+		        type: 'number'
+	        },
+	        placeholder: {
+		        field: 'p_placeholder',
+		        type: 'number'
+	        },
+	        tick_labelset: {
+		        field: 'p_tick_labelset',
+		        type: 'select'
+	        },
+	        'reference-geometry': {
+		        field: 'p_reference_geometry',
+		        type: 'select'
 	        },
 	        randomize: {
 		        field: 'p_randomize',
@@ -789,7 +829,18 @@ import localise from "./localise.js";
                 icon: "map-marker-alt",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["background-geopoint"]
+            },
+            {
+                name: "Background GPS Point",
+                type: "background-geopoint",
+                trans: "ed_bg_gps",
+                icon: "map-marker-alt, sync-alt",
+                canSelect: true,
+                visible: false,
+                source: "user",
+                compatTypes: ["geopoint", "background-geopoint"]
             },
             {
                 name: "Calculation",
@@ -995,6 +1046,7 @@ import localise from "./localise.js";
 
         // Set the survey model
         this.setSurveyData = function (data) {
+            markBackgroundGeopoints(data);
             this.survey = data;
             this.survey.forms_orig = $.extend(true, {}, data.forms);
             this.survey.optionLists_orig = $.extend(true, {}, data.optionLists);
